@@ -4,6 +4,19 @@
 
 本文对应 v0.1.1。主服务安装见[部署与常见问题](deployment.md)，业务流程见[操作说明](user-guide.md)，客户端位于 [apps/employee-miniapp](../apps/employee-miniapp/README.md)。建议主服务和客户端使用同一固定版本。小程序源码包不是已编译、已上传微信或已通过审核的制品。
 
+## 界面预览
+
+图片来自本项目开源 WXML/WXSS 和页面逻辑的隔离浏览器模拟，使用虚构员工、企业和任务。**源码界面模拟演示·非真机／虚构数据**，不代表真实微信编译、手机验收或审核结果；真实配置与授权仍需按下文完成。真实性确认与回填分别展示确认前、确认后的页面状态。
+
+<p>
+  <a href="images/miniapp-simulated-login.png"><img src="images/miniapp-simulated-login.png" width="230" alt="账号登录，模拟演示，非真机，虚构数据" /></a>
+  <a href="images/miniapp-simulated-tasks.png"><img src="images/miniapp-simulated-tasks.png" width="230" alt="本人任务，模拟演示，非真机，虚构数据" /></a>
+</p>
+<p>
+  <a href="images/miniapp-simulated-facts.png"><img src="images/miniapp-simulated-facts.png" width="230" alt="当前版本真实性确认，模拟演示，非真机，虚构数据" /></a>
+  <a href="images/miniapp-simulated-publication.png"><img src="images/miniapp-simulated-publication.png" width="230" alt="复制与回填，模拟演示，非真机，虚构数据" /></a>
+</p>
+
 ## 1. 准备自己的服务和微信应用
 
 1. 按部署说明启动主服务，完成网页中的管理员与组织设置。

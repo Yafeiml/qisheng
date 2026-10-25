@@ -106,6 +106,21 @@ docker compose -f deploy/compose.yml run --rm -it bootstrap token
 
 默认使用管理员创建的员工账号密码，Web 与小程序访问相同员工任务；短信和微信订阅通知均按需配置。微信通知的 AppSecret 仅保存在服务端，不能放进小程序。源码包不是已上传或审核通过的微信应用。
 
+员工可以查看本人任务，确认当前版本内容真实后复制文案、保存图片，在小红书中手动发布并回填链接。企业仍在工作台审核和复核，不需要为小程序再维护一套员工任务。
+
+#### 小程序界面预览
+
+以下图片使用开源 WXML/WXSS 和页面逻辑，在隔离浏览器中模拟渲染。**均为“源码界面模拟演示·非真机／虚构数据”**，没有连接真实员工账号或供应商，不表示已经通过微信编译、真机验收或审核。点击图片可查看大图。
+
+<p>
+  <a href="docs/images/miniapp-simulated-login.png"><img src="docs/images/miniapp-simulated-login.png" width="230" alt="账号登录，源码界面模拟演示，非真机，虚构数据" /></a>
+  <a href="docs/images/miniapp-simulated-tasks.png"><img src="docs/images/miniapp-simulated-tasks.png" width="230" alt="员工任务，源码界面模拟演示，非真机，虚构数据" /></a>
+</p>
+<p>
+  <a href="docs/images/miniapp-simulated-facts.png"><img src="docs/images/miniapp-simulated-facts.png" width="230" alt="确认内容真实，源码界面模拟演示，非真机，虚构数据" /></a>
+  <a href="docs/images/miniapp-simulated-publication.png"><img src="docs/images/miniapp-simulated-publication.png" width="230" alt="手动发布与回填，源码界面模拟演示，非真机，虚构数据" /></a>
+</p>
+
 ## 首版范围与依赖
 
 - 模型、内容审核和可选回读接口使用部署者自己的账号，测试及调用费用由相应供应商计收。

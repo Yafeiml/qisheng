@@ -703,6 +703,26 @@
       "path": "docs/images/publication-readback-1080p.png",
       "sha256": "db989c25804eab11e952f63c6df706284f68ce38f5ee9e7b02c52b1a31610b95",
       "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
+    },
+    {
+      "path": "docs/images/miniapp-simulated-login.png",
+      "sha256": "05feafdde2a33928547c402bf721884cd4ca324c14eb5b303a15a6ac98c7b2eb",
+      "reason": "Individually viewed source-based miniapp browser simulation, explicitly watermarked as non-device demonstration with fictional data. Original WXML/WXSS and page logic with offline fixtures; no live API, real app identity, private domain, employee contact details or credentials. PNG text and EXIF metadata absent. 390x844 viewport at DPR 3; see docs/images/README.md. Distributed under project Apache-2.0."
+    },
+    {
+      "path": "docs/images/miniapp-simulated-tasks.png",
+      "sha256": "bd62f035ac24bfb2d0622d021c05b84f0f04d7d772adc5f0bf5754d00a09d978",
+      "reason": "Individually viewed source-based miniapp browser simulation, explicitly watermarked as non-device demonstration with fictional data. Original WXML/WXSS and page logic with offline fixtures; no live API, real app identity, private domain, employee contact details or credentials. PNG text and EXIF metadata absent. 390x844 viewport at DPR 3; see docs/images/README.md. Distributed under project Apache-2.0."
+    },
+    {
+      "path": "docs/images/miniapp-simulated-facts.png",
+      "sha256": "a697200d1446aa74f463363501fa64de94c386804f20a17180698232fb9b0cd8",
+      "reason": "Individually viewed source-based miniapp browser simulation, explicitly watermarked as non-device demonstration with fictional data. Original WXML/WXSS and page logic with offline fixtures; no live API, real app identity, private domain, employee contact details or credentials. PNG text and EXIF metadata absent. 390x844 viewport at DPR 3; see docs/images/README.md. Distributed under project Apache-2.0."
+    },
+    {
+      "path": "docs/images/miniapp-simulated-publication.png",
+      "sha256": "be29624ff9dbb054a295aaf79d5d7b3bec9e0b40c99a18b5baa630dfdf0f8708",
+      "reason": "Individually viewed source-based miniapp browser simulation, explicitly watermarked as non-device demonstration with fictional data. Original WXML/WXSS and page logic with offline fixtures; no live API, real app identity, private domain, employee contact details or credentials. PNG text and EXIF metadata absent. 390x844 viewport at DPR 3; see docs/images/README.md. Distributed under project Apache-2.0."
     }
   ]
 }
