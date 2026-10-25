@@ -23,9 +23,14 @@
   display: flex;
   max-width: 100%;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
   flex: 0 0 auto;
+}
+.entrySwitch {
+  width: 180px;
+  max-width: 100%;
+  min-width: 0;
 }
 .headerActions button {
   width: auto;
@@ -121,6 +126,13 @@
   cursor: not-allowed;
 }
 @media (max-width: 700px) {
+  .headerActions {
+    width: 100%;
+  }
+  .entrySwitch {
+    flex: 1 1 100%;
+    width: 100%;
+  }
   .page {
     width: calc(100% - 24px);
     margin: 16px auto;

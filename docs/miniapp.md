@@ -2,7 +2,7 @@
 
 员工微信小程序是企声发布的可选客户端。企业可以使用自己的微信小程序账号，连接自己部署的企声发布服务；没有微信小程序账号时，直接使用员工网页 `/employee` 即可。
 
-本文对应 v0.1.1。主服务安装见[部署与常见问题](deployment.md)，业务流程见[操作说明](user-guide.md)，客户端位于 [apps/employee-miniapp](../apps/employee-miniapp/README.md)。建议主服务和客户端使用同一固定版本。小程序源码包不是已编译、已上传微信或已通过审核的制品。
+本文对应 v0.1.2。主服务安装见[部署与常见问题](deployment.md)，业务流程见[操作说明](user-guide.md)，客户端位于 [apps/employee-miniapp](../apps/employee-miniapp/README.md)。建议主服务和客户端使用同一固定版本。小程序源码包不是已编译、已上传微信或已通过审核的制品。
 
 ## 界面预览
 
@@ -41,7 +41,7 @@
 在构建或开发电脑上准备本版本完整源码和 Node.js 24，进入源码根目录。将以下三项替换为自己的值，输出目录使用尚不存在的新目录，其父目录须已存在：
 
 ```sh
-node scripts/miniapp/export.mjs --app-id "替换为自己的AppID" --api-base "https://qisheng.example.com/api" --output "../qisheng-employee-v0.1.1"
+node scripts/miniapp/export.mjs --app-id "替换为自己的AppID" --api-base "https://qisheng.example.com/api" --output "../qisheng-employee-v0.1.2"
 ```
 
 命令可在 PowerShell 或支持 Node.js 的终端执行。`qisheng.example.com` 是示例，不提供实际服务。`--api-base` 是带 `/api` 的 API 前缀，通常使用与网页相同的站点，便于本机存储图片经同一 HTTPS 地址交付。
@@ -50,7 +50,7 @@ node scripts/miniapp/export.mjs --app-id "替换为自己的AppID" --api-base "h
 
 ### 使用独立小程序源码包或手动配置
 
-直接下载 [v0.1.1 独立小程序源码 ZIP](https://github.com/Yafeiml/qisheng/releases/download/v0.1.1/qisheng-employee-miniapp-v0.1.1.zip)。先查看同一 Release 的 [SHA256SUMS.txt](https://github.com/Yafeiml/qisheng/releases/download/v0.1.1/SHA256SUMS.txt)，将下载文件的 SHA-256 与对应文件名条目比对后再解压。PowerShell 可用 `Get-FileHash -Algorithm SHA256`，Linux 可用 `sha256sum` 计算本地文件的校验值。
+直接下载 [v0.1.2 独立小程序源码 ZIP](https://github.com/Yafeiml/qisheng/releases/download/v0.1.2/qisheng-employee-miniapp-v0.1.2.zip)。先查看同一 Release 的 [SHA256SUMS.txt](https://github.com/Yafeiml/qisheng/releases/download/v0.1.2/SHA256SUMS.txt)，将下载文件的 SHA-256 与对应文件名条目比对后再解压。PowerShell 可用 `Get-FileHash -Algorithm SHA256`，Linux 可用 `sha256sum` 计算本地文件的校验值。
 
 解压后先确认项目根目录含 `app.json`、`project.config.json`、`config.ts` 和 `pages/`，并保留 `LICENSE`、`NOTICE` 及随包第三方许可。它是源项目，需由自己的开发者工具编译；仅有客户端源码的目录不能执行完整仓库中的导出脚本。
 

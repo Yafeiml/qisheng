@@ -36,19 +36,6 @@
   display: none;
 }
 
-.developmentInfo {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.developmentInfo summary {
-  cursor: pointer;
-}
-
-.developmentInfo p {
-  margin: 6px 0 0;
-}
-
 .roleFocusCard {
   display: flex;
   align-items: center;
@@ -2413,6 +2400,56 @@ h1 {
   display: none;
 }
 
+.mobileScopeControl:empty {
+  display: none;
+}
+
+.mobileEntrySwitcher {
+  display: none;
+}
+
+.entrySwitcher {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: 5px;
+  text-align: left;
+}
+
+.entrySwitcher > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+:root .entrySwitcher select:not([multiple]) {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 38px 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg);
+  background-color: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+:root .entrySwitcher select:not([multiple]):hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+:root .entrySwitcher select:not([multiple]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+:root .entrySwitcher select:not([multiple]):disabled {
+  color: var(--muted);
+  background-color: var(--surface-warm);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .appNavScroll {
   min-height: 0;
   margin: 10px -8px 0;
@@ -2586,11 +2623,6 @@ h1 {
   background: var(--bg);
 }
 
-.appSidebarBottom > .ghostButton {
-  width: 100%;
-  min-width: 0;
-}
-
 .sidebarAccountCard {
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr) auto;
@@ -2668,11 +2700,6 @@ h1 {
 }
 .appSidebarFoot .sidebarExit {
   margin: 0;
-}
-.appSidebarFoot p {
-  margin: 8px 0 0;
-  color: var(--muted);
-  font-size: 11px;
 }
 .prototypeFlag {
   display: inline-flex;
@@ -5321,6 +5348,10 @@ h1 {
   .sidebarFoot,
   .appSidebarBottom {
     display: none;
+  }
+  .mobileEntrySwitcher {
+    display: block;
+    padding: 16px 18px 0;
   }
   .appNavScroll {
     min-height: auto;

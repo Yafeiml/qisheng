@@ -681,27 +681,27 @@
     },
     {
       "path": "docs/images/overview-1080p.png",
-      "sha256": "c102b7f65e51a690e54acf67d3badba59d3c3ff81c50e3dbb8964c79dffb3507",
+      "sha256": "18fda5b2b76635b429797490dfef6ae360d9d1fa55cac4c8a7f0a730056379a8",
       "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
     },
     {
       "path": "docs/images/campaigns-1080p.png",
-      "sha256": "b634ed6a1f1815e6a365e5a29cbd54f9084e866892e5e1b0ed3de7751d16ef22",
+      "sha256": "3d04504db81bdbcbfa7ed8595f2cd2e54411841a8913ac6e46c2941e20122c72",
       "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
     },
     {
       "path": "docs/images/geo-coverage-1080p.png",
-      "sha256": "fca4b29dd4f23daacb5e225956a8724fe30a8d26bd4ca785eb1b77045f089ce2",
+      "sha256": "bdf415a59cecff995cb14ae01ebf65ee937d75ad4ef72a2556e244330fc21846",
       "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
     },
     {
       "path": "docs/images/publication-review-1080p.png",
-      "sha256": "772f6f629fda54b26bfc32b21bb48d776cd4cc8fb1ec904bc3f3daa7982c01dd",
+      "sha256": "ac99a1d86cf1ca4fa29953f24d1b42dbb9d6336e46435c0e3bdce99e5de7f365",
       "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
     },
     {
       "path": "docs/images/publication-readback-1080p.png",
-      "sha256": "db989c25804eab11e952f63c6df706284f68ce38f5ee9e7b02c52b1a31610b95",
+      "sha256": "16497298544a639b6326b296397b7fac66b1b459d1b061b5031895ba97d9cbda",
       "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
     },
     {

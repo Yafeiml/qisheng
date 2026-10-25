@@ -1,6 +1,6 @@
 {
   "name": "xhs-agentic-v2",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "企声发布：单企业与集团自托管的小红书全员营销与GEO内容协作",
   "packageManager": "pnpm@12.6.0",

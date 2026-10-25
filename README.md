@@ -64,28 +64,28 @@
 5. **审核与发布**：管理员批准内容后开放任务，员工确认当前版本真实，手动发布并回填链接。
 6. **复核与复盘**：管理员人工复核发布情况；需要自动数据时再配置回读服务。外部数据缺失时保持未知，不作为零或发布成功处理。
 
-页面说明和角色分工见[操作说明](docs/user-guide.md)。首版保留“运营工作台”和“系统设置”两个入口，使用同一管理员账号与会话；后台入口统一属于后续体验整理。
+页面说明和角色分工见[操作说明](docs/user-guide.md)。通过“切换入口”下拉菜单在“工作空间”“员工发布”和“系统设置”之间切换，可用选项随账号权限变化。手机端和员工页面也保留切换入口，使用同一管理员账号与会话。
 
 ## 3. 怎样部署
 
-当前 `v0.1.1` 发布源码和固定版本标签，**暂不提供官方预构建镜像**。先在自己的本机或构建机生成镜像，再导入运行主机；直接执行 Compose 不会自动获得尚未发布的 `qisheng/*` 镜像。
+当前 `v0.1.2` 发布源码和固定版本标签，**暂不提供官方预构建镜像**。先在自己的本机或构建机生成镜像，再导入运行主机；直接执行 Compose 不会自动获得尚未发布的 `qisheng/*` 镜像。
 
 已验证的构建目标为 Linux amd64。准备 Node.js 24.21.0 和 Docker，项目依赖由 Docker 构建阶段安装。
 
 ```sh
-git clone --branch v0.1.1 --depth 1 https://github.com/Yafeiml/qisheng.git
+git clone --branch v0.1.2 --depth 1 https://github.com/Yafeiml/qisheng.git
 cd qisheng
-node deploy/self-host.mjs build v0.1.1
-docker save -o qisheng-v0.1.1.tar \
-  qisheng/api:v0.1.1 qisheng/web:v0.1.1 \
-  qisheng/worker:v0.1.1 qisheng/migrate:v0.1.1
+node deploy/self-host.mjs build v0.1.2
+docker save -o qisheng-v0.1.2.tar \
+  qisheng/api:v0.1.2 qisheng/web:v0.1.2 \
+  qisheng/worker:v0.1.2 qisheng/migrate:v0.1.2
 ```
 
 将镜像归档及同版本部署文件交付到运行主机。在包含 `deploy/` 的项目目录执行：
 
 ```sh
-docker load -i /替换为镜像归档的绝对路径/qisheng-v0.1.1.tar
-export QISHENG_VERSION=v0.1.1
+docker load -i /替换为镜像归档的绝对路径/qisheng-v0.1.2.tar
+export QISHENG_VERSION=v0.1.2
 export QISHENG_DATA_DIR=/srv/qisheng/data
 docker compose -f deploy/compose.yml up -d --no-build --pull never
 ```
@@ -102,7 +102,7 @@ docker compose -f deploy/compose.yml run --rm -it bootstrap token
 
 ### 配对员工微信小程序
 
-小程序源码位于 `apps/employee-miniapp`，也可从 [v0.1.1 Release](https://github.com/Yafeiml/qisheng/releases/tag/v0.1.1) 下载独立源码包。使用自己的 AppID 和已配置微信合法域名的 HTTPS API，通过 `node scripts/miniapp/export.mjs` 导出独立项目，在微信开发者工具中编译、预览并由自己的账号提交审核。具体参数和流程见[小程序自部署说明](docs/miniapp.md)。
+小程序源码位于 `apps/employee-miniapp`，也可从 [v0.1.2 Release](https://github.com/Yafeiml/qisheng/releases/tag/v0.1.2) 下载独立源码包。使用自己的 AppID 和已配置微信合法域名的 HTTPS API，通过 `node scripts/miniapp/export.mjs` 导出独立项目，在微信开发者工具中编译、预览并由自己的账号提交审核。具体参数和流程见[小程序自部署说明](docs/miniapp.md)。
 
 默认使用管理员创建的员工账号密码，Web 与小程序访问相同员工任务；短信和微信订阅通知均按需配置。微信通知的 AppSecret 仅保存在服务端，不能放进小程序。源码包不是已上传或审核通过的微信应用。
 

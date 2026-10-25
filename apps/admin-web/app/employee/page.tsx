@@ -4,6 +4,7 @@ import type { components } from "@xhs-agentic/contracts";
 import Image from "next/image";
 import Link from "next/link";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { EntrySwitcher } from "../components/entry-switcher";
 import { FeedbackMessage } from "../components/feedback-toast";
 import { PlatformName } from "../components/platform-branding";
 import { SessionExitButton } from "../components/session-exit-button";
@@ -242,6 +243,9 @@ export default function EmployeePage() {
           <p>领取 → 确认真实 → 发布 → 回填</p>
         </div>
         <div className={styles.headerActions}>
+          <div className={styles.entrySwitch}>
+            <EntrySwitcher current="employee" />
+          </div>
           <button
             className="ghostButton"
             disabled={busy}

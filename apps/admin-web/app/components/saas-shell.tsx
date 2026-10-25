@@ -11,6 +11,7 @@ import {
 } from "../lib/mvp-client";
 import { useMvpSession } from "../lib/use-mvp-session";
 import { ConsoleScopeSwitcher } from "./console-scope-switcher";
+import { EntrySwitcher } from "./entry-switcher";
 import { GenerationServiceNotice } from "./generation-service-notice";
 import { PlatformLogo, PlatformName } from "./platform-branding";
 import { SessionExitButton } from "./session-exit-button";
@@ -464,6 +465,9 @@ export function SaasRouteLayout({
         scopeName={scopeName}
       />
       <div className="appWorkspaceColumn">
+        <div className="mobileEntrySwitcher">
+          <EntrySwitcher current={mode} />
+        </div>
         <Link className="mobileAccountLink" href={accountHref}>
           <span>{accountProfile.name?.trim().slice(0, 1) || accountProfile.phone?.slice(-2)}</span>
           <strong>{accountProfile.name ?? "个人中心"}</strong>
@@ -535,6 +539,9 @@ export function SaasShell({
         scopeName={scopeName}
       />
       <div className="appWorkspaceColumn">
+        <div className="mobileEntrySwitcher">
+          <EntrySwitcher current={mode} />
+        </div>
         {scopeControl ? <div className="mobileScopeControl">{scopeControl}</div> : null}
         {workspace}
       </div>
@@ -585,18 +592,7 @@ function SaasSidebar({
       </div>
 
       <div className="appSidebarBottom">
-        {isPlatform ? (
-          <Link className="ghostButton" href="/console">
-            进入工作空间
-          </Link>
-        ) : auth.session && platformNavigationPermissions(auth.session).length > 0 ? (
-          <Link className="ghostButton" href="/platform">
-            系统设置
-          </Link>
-        ) : null}
-        <Link className="ghostButton" href="/employee">
-          员工发布入口
-        </Link>
+        <EntrySwitcher current={mode} />
         <Link
           aria-current={pathname === accountHref ? "page" : undefined}
           className={`sidebarAccountCard ${pathname === accountHref ? "active" : ""}`}
@@ -619,12 +615,6 @@ function SaasSidebar({
         </div>
         <div className="appSidebarFoot">
           <SessionExitButton />
-          {auth.session?.mode !== "FORMAL" ? (
-            <details className="developmentInfo">
-              <summary>开发环境信息</summary>
-              <p>本机开发数据 · 不影响正式客户</p>
-            </details>
-          ) : null}
         </div>
       </div>
     </aside>

@@ -296,20 +296,22 @@ for (const viewport of [
       const bottom = sidebar.locator(".appSidebarBottom");
       if (viewport.width > 1040) {
         await expect(bottom).toBeVisible();
-        await separatedControls(bottom.locator(".ghostButton"));
+        const entry = bottom.getByRole("combobox", { name: "切换入口", exact: true });
+        await expect(entry).toBeVisible();
+        await entry.focus();
+        await expect(entry).toBeFocused();
         const blockRectangles = await bottom.evaluate((element) => {
-          const actions = [...element.querySelectorAll(".ghostButton")];
+          const entry = element.querySelector(".entrySwitcher");
           const account = element.querySelector(".sidebarAccountCard");
           const scope = element.querySelector(".scopeCard");
           const foot = element.querySelector(".appSidebarFoot");
-          if (!account || !scope || !foot || !actions.length)
-            throw new Error("Missing sidebar controls");
+          if (!account || !scope || !foot || !entry) throw new Error("Missing sidebar controls");
           const rectangle = (node: Element) => {
             const { top, bottom, left, right } = node.getBoundingClientRect();
             return { top, bottom, left, right };
           };
           return {
-            lastAction: rectangle(actions[actions.length - 1] as Element),
+            lastAction: rectangle(entry),
             account: rectangle(account),
             scope: rectangle(scope),
             foot: rectangle(foot),

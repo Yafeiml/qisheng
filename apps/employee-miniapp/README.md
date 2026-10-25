@@ -2,18 +2,18 @@
 
 默认自托管员工入口是 Web `/employee`，无需微信账号或 AppID。此目录是可选的原生微信客户端，连接部署者自己的服务；员工与管理 Token 的 audience 隔离。普通员工只查看本人有效成员身份对应的任务、图文、历史与回填。
 
-完整的[自部署、导入、预览和排障说明](https://github.com/Yafeiml/qisheng/blob/v0.1.1/docs/miniapp.md)面向部署者；业务流程见[操作说明](https://github.com/Yafeiml/qisheng/blob/v0.1.1/docs/user-guide.md)，主服务安装见[部署说明](https://github.com/Yafeiml/qisheng/blob/v0.1.1/docs/deployment.md)。在线链接也适用于独立导出的小程序源码包。
+完整的[自部署、导入、预览和排障说明](https://github.com/Yafeiml/qisheng/blob/v0.1.2/docs/miniapp.md)面向部署者；业务流程见[操作说明](https://github.com/Yafeiml/qisheng/blob/v0.1.2/docs/user-guide.md)，主服务安装见[部署说明](https://github.com/Yafeiml/qisheng/blob/v0.1.2/docs/deployment.md)。在线链接也适用于独立导出的小程序源码包。
 
-直接下载 [v0.1.1 独立小程序源码 ZIP](https://github.com/Yafeiml/qisheng/releases/download/v0.1.1/qisheng-employee-miniapp-v0.1.1.zip)；先查看同 Release 的 [SHA256SUMS.txt](https://github.com/Yafeiml/qisheng/releases/download/v0.1.1/SHA256SUMS.txt)，比对文件 SHA-256 后解压。保留随包 `LICENSE`、`NOTICE` 和第三方许可，再在解压目录根配置 `config.ts` 与 `project.config.json`。
+直接下载 [v0.1.2 独立小程序源码 ZIP](https://github.com/Yafeiml/qisheng/releases/download/v0.1.2/qisheng-employee-miniapp-v0.1.2.zip)；先查看同 Release 的 [SHA256SUMS.txt](https://github.com/Yafeiml/qisheng/releases/download/v0.1.2/SHA256SUMS.txt)，比对文件 SHA-256 后解压。保留随包 `LICENSE`、`NOTICE` 和第三方许可，再在解压目录根配置 `config.ts` 与 `project.config.json`。
 
 ## 接入前配置
 
-建议主服务与小程序使用同一固定版本。v0.1.1 默认使用管理员创建的员工网页账号密码登录，不开放注册，也不要求短信或微信身份登录。
+建议主服务与小程序使用同一固定版本。v0.1.2 默认使用管理员创建的员工网页账号密码登录，不开放注册，也不要求短信或微信身份登录。
 
 在完整仓库根目录运行，先替换 AppID、HTTPS 地址和新的输出目录：
 
 ```sh
-node scripts/miniapp/export.mjs --app-id "替换为自己的AppID" --api-base "https://qisheng.example.com/api" --output "../qisheng-employee-v0.1.1"
+node scripts/miniapp/export.mjs --app-id "替换为自己的AppID" --api-base "https://qisheng.example.com/api" --output "../qisheng-employee-v0.1.2"
 ```
 
 导出工具生成独立项目的 `config.ts` 和 `project.config.json`，不会替你上传微信。使用微信开发者工具导入输出目录；`example.com` 是示例地址，仓库的 `touristappid` 也是未配置模板，均须替换。原生编译、预览和真机验收须使用自己的有效 AppID 完成。
