@@ -8,14 +8,20 @@
 
 图片来自本项目开源 WXML/WXSS 和页面逻辑的隔离浏览器模拟，使用虚构员工、企业和任务。**源码界面模拟演示·非真机／虚构数据**，不代表真实微信编译、手机验收或审核结果；真实配置与授权仍需按下文完成。真实性确认与回填分别展示确认前、确认后的页面状态。
 
-<p>
-  <a href="images/miniapp-simulated-login.png"><img src="images/miniapp-simulated-login.png" width="230" alt="账号登录，模拟演示，非真机，虚构数据" /></a>
-  <a href="images/miniapp-simulated-tasks.png"><img src="images/miniapp-simulated-tasks.png" width="230" alt="本人任务，模拟演示，非真机，虚构数据" /></a>
-</p>
-<p>
-  <a href="images/miniapp-simulated-facts.png"><img src="images/miniapp-simulated-facts.png" width="230" alt="当前版本真实性确认，模拟演示，非真机，虚构数据" /></a>
-  <a href="images/miniapp-simulated-publication.png"><img src="images/miniapp-simulated-publication.png" width="230" alt="复制与回填，模拟演示，非真机，虚构数据" /></a>
-</p>
+<table width="100%">
+  <tr>
+    <th width="25%">1 · 账号登录</th>
+    <th width="25%">2 · 员工任务</th>
+    <th width="25%">3 · 确认真实</th>
+    <th width="25%">4 · 发布回填</th>
+  </tr>
+  <tr>
+    <td width="25%" align="center" valign="top"><a href="images/miniapp-simulated-login.png"><img src="images/miniapp-simulated-login.png" width="100%" alt="账号登录，模拟演示，非真机，虚构数据" /></a></td>
+    <td width="25%" align="center" valign="top"><a href="images/miniapp-simulated-tasks.png"><img src="images/miniapp-simulated-tasks.png" width="100%" alt="本人任务，模拟演示，非真机，虚构数据" /></a></td>
+    <td width="25%" align="center" valign="top"><a href="images/miniapp-simulated-facts.png"><img src="images/miniapp-simulated-facts.png" width="100%" alt="当前版本真实性确认，模拟演示，非真机，虚构数据" /></a></td>
+    <td width="25%" align="center" valign="top"><a href="images/miniapp-simulated-publication.png"><img src="images/miniapp-simulated-publication.png" width="100%" alt="复制与回填，模拟演示，非真机，虚构数据" /></a></td>
+  </tr>
+</table>
 
 ## 1. 准备自己的服务和微信应用
 
