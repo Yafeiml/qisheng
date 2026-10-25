@@ -1356,7 +1356,7 @@ export const platformSettingCatalog = [
     "STRING",
     "新任务通知模板 ID",
     "在此小程序的微信后台添加订阅消息模板后，填写个人模板 ID。",
-    "F2Vwz548apm3jIVCeJDwsaMr3q9h1vKXtwCBT8oPP6c",
+    "",
     {
       maxLength: 128,
       pattern: "^$|^[A-Za-z0-9_-]{1,128}$",

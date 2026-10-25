@@ -57,7 +57,7 @@
   <scroll-view class="enterprise-scroll" scroll-x enhanced show-scrollbar="{{false}}">
     <view class="enterprise-filters">
       <view wx:for="{{enterpriseFilters}}" wx:key="id" class="enterprise-pill {{item.active ? 'active' : ''}}" data-enterprise-id="{{item.id}}" bindtap="chooseEnterprise">{{item.name}}</view>
-    <view class="enterprise-pill add" bindtap="joinEnterprise" role="button" aria-label="加入其他企业">＋ 加入其他企业</view>
+      <view wx:if="{{smsLoginEnabled}}" class="enterprise-pill add" bindtap="joinEnterprise" role="button" aria-label="加入其他企业">＋ 加入其他企业</view>
     </view>
   </scroll-view>
 
@@ -97,13 +97,13 @@
     <view class="empty-illustration">{{emptyIcon}}</view>
     <text class="empty-title">{{emptyTitle}}</text>
     <text>{{emptyDescription}}</text>
-    <button wx:if="{{emptyAction === 'JOIN'}}" class="primary-button empty-action" bindtap="joinEnterprise">加入企业</button>
+    <button wx:if="{{smsLoginEnabled && emptyAction === 'JOIN'}}" class="primary-button empty-action" bindtap="joinEnterprise">加入企业</button>
     <button wx:else class="plain-button empty-action" bindtap="loadTasks">刷新任务</button>
   </view>
 
   <view class="account-actions">
-    <text bindtap="joinEnterprise">加入其他企业</text>
-    <text>·</text>
-    <text bindtap="logout">退出绑定</text>
+    <text wx:if="{{smsLoginEnabled}}" bindtap="joinEnterprise">加入其他企业</text>
+    <text wx:if="{{smsLoginEnabled}}">·</text>
+    <text bindtap="logout">退出登录</text>
   </view>
 </view>

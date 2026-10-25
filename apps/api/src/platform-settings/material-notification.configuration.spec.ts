@@ -29,6 +29,7 @@ describe("material notification channel configuration", () => {
     vi.stubEnv("NODE_ENV", "production");
     expect(() => validateMaterialNotificationConfiguration(configured())).not.toThrow();
     expect(platformSettingDefinition("notification.enabled")?.defaultValue).toBe(false);
+    expect(platformSettingDefinition("notification.wechat_template_id")?.defaultValue).toBe("");
     expect(platformSettingDefinition("notification.sms_daily_limit")?.defaultValue).toBe(3);
   });
 

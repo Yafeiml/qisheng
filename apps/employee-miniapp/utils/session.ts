@@ -1,9 +1,12 @@
+import { miniappConfig } from "../config";
 import type { EmployeeApp, EmployeeSession } from "../types";
 
-const SESSION_KEY = "xhs-agentic:employee-session:v1";
-const ENTERPRISE_FILTER_KEY = "xhs-agentic:employee-enterprise-filter:v1";
-const FIRST_GUIDE_KEY = "xhs-agentic:employee-first-guide:v1";
-const FLASH_NOTICE_KEY = "xhs-agentic:employee-flash-notice:v1";
+// A new deployment must never receive credentials saved for a different API.
+const instance = miniappConfig.apiBaseUrl.replace(/\/+$/u, "");
+const SESSION_KEY = `qisheng:employee:${instance}:session:v2`;
+const ENTERPRISE_FILTER_KEY = `qisheng:employee:${instance}:enterprise-filter:v2`;
+const FIRST_GUIDE_KEY = `qisheng:employee:${instance}:first-guide:v2`;
+const FLASH_NOTICE_KEY = `qisheng:employee:${instance}:flash-notice:v2`;
 
 export function loadSession(): EmployeeSession | null {
   const value: unknown = wx.getStorageSync(SESSION_KEY);

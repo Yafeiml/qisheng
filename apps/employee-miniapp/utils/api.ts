@@ -1,7 +1,5 @@
+import { miniappConfig } from "../config";
 import { clearSession, loadSession } from "./session";
-
-// Replace with your deployment's HTTPS API URL before previewing or publishing.
-const API_BASE_URL = "https://api.example.com/api";
 
 export class ApiError extends Error {
   constructor(
@@ -14,7 +12,7 @@ export class ApiError extends Error {
 }
 
 export function getApiBaseUrl(): string {
-  return API_BASE_URL;
+  return miniappConfig.apiBaseUrl.replace(/\/+$/u, "");
 }
 
 export function storageObjectUrl(value: string): string {

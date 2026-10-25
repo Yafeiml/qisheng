@@ -2,7 +2,7 @@
 
 本文面向自托管用户。一套安装服务一家企业或一个集团；Docker 同时运行 API、Web 和内容 Worker，默认带 PostgreSQL、Redis 和本机文件存储。数据库、模型供应商、存储文件与应用密钥均由部署者管理。
 
-日常操作见[操作说明](user-guide.md)，容器定义见[Compose 文件](../deploy/compose.yml)。首版 **v0.1.0 发布源码和固定版本标签，不提供官方预构建镜像**。先在自己的本机或构建机制作镜像，再交付到运行主机；不要直接执行默认 Compose 并期待自动下载 `qisheng/*` 镜像。
+日常操作见[操作说明](user-guide.md)，容器定义见[Compose 文件](../deploy/compose.yml)。默认使用员工网页；微信客户端另按[小程序自部署说明](miniapp.md)配对自己的应用。**v0.1.1 发布源码和固定版本标签，不提供官方预构建镜像**。先在自己的本机或构建机制作镜像，再交付到运行主机；不要直接执行默认 Compose 并期待自动下载 `qisheng/*` 镜像。
 
 以下命令从源码根目录执行。`VERSION` 对应固定发布版本，`IMAGE_ARCHIVE` 是你已制作并安全交付的镜像归档路径。本文不假设某个镜像仓库已经可用。
 
@@ -21,18 +21,18 @@ uname -m
 首版可在构建机获取固定版本源码：
 
 ```sh
-git clone --branch v0.1.0 --depth 1 https://github.com/Yafeiml/qisheng.git
+git clone --branch v0.1.1 --depth 1 https://github.com/Yafeiml/qisheng.git
 cd qisheng
 ```
 
-也可以从仓库的 v0.1.0 标签下载源码压缩包并解压。随后按[第 9 节](#9-从源码在构建机制作镜像)构建、导出和交付镜像，再进行下面的导入与启动。不要把个人开发环境、真实 `.env` 或其他安装的密钥复制成一套“通用配置”。
+也可以从仓库的 v0.1.1 标签下载源码压缩包并解压。随后按[第 9 节](#9-从源码在构建机制作镜像)构建、导出和交付镜像，再进行下面的导入与启动。不要把个人开发环境、真实 `.env` 或其他安装的密钥复制成一套“通用配置”。
 
 ### 已有构建镜像的用户
 
 收到自己或可信构建者制作的离线镜像归档后，先与构建机记录的校验值比对，再导入：
 
 ```sh
-VERSION='v0.1.0'
+VERSION='v0.1.1'
 IMAGE_ARCHIVE='/替换为已下载镜像归档的绝对路径'
 sha256sum "$IMAGE_ARCHIVE"
 docker load -i "$IMAGE_ARCHIVE"
@@ -277,7 +277,7 @@ Running 只表示进程存在。尚未完成图文审核、模型或存储配置
 在源码根目录执行：
 
 ```sh
-VERSION='v0.1.0'
+VERSION='v0.1.1'
 node deploy/self-host.mjs build "$VERSION"
 ```
 

@@ -1,5 +1,6 @@
+import { miniappConfig } from "../../config";
 import type { BindCandidate, EmployeeMembership } from "../../types";
-import { ApiError, apiRequest, getApiBaseUrl, messageOf } from "../../utils/api";
+import { apiRequest, getApiBaseUrl, messageOf } from "../../utils/api";
 import { retrySeconds, type SmsChallenge, solveSmsChallenge } from "../../utils/generated/captcha";
 import {
   loadSession,
@@ -12,20 +13,7 @@ interface CandidateView extends BindCandidate {
   selected: boolean;
 }
 
-const REVIEW_LOGIN_PHONE = "13800138000";
-type EmployeeAuthMode = "TEMPORARY_DEBUG" | "SMS";
-const employeeAuthPaths = {
-  TEMPORARY_DEBUG: {
-    request: "/auth/employee/debug/request-code",
-    candidates: "/auth/employee/debug/candidates",
-    bind: "/auth/employee/debug/bind",
-  },
-  SMS: {
-    request: "/auth/employee/request-code",
-    candidates: "/auth/employee/candidates",
-    bind: "/auth/employee/bind",
-  },
-} as const;
+type EmployeeAuthMode = "PASSWORD" | "SMS";
 
 interface LoginData {
   authMode: EmployeeAuthMode;
@@ -33,12 +21,14 @@ interface LoginData {
   candidates: CandidateView[];
   code: string;
   developmentCode: string;
-  debugUnavailable: boolean;
   error: string;
   joinMode: boolean;
   notice: string;
   phone: string;
   phoneMasked: string;
+  username: string;
+  password: string;
+  smsLoginEnabled: boolean;
   selectedCount: number;
   stage: "PHONE" | "CODE" | "SELECT";
   retryRemaining: number;
@@ -47,20 +37,22 @@ interface LoginData {
 
 Page({
   retryTimer: undefined as number | undefined,
+  passwordAttempt: 0,
   active: true,
-  forceFormalSms: false,
   data: {
-    authMode: "SMS",
+    authMode: "PASSWORD",
     busy: false,
     candidates: [],
     code: "",
     developmentCode: "",
-    debugUnavailable: false,
     error: "",
     joinMode: false,
     notice: "",
     phone: "",
     phoneMasked: "",
+    username: "",
+    password: "",
+    smsLoginEnabled: miniappConfig.smsLoginEnabled,
     selectedCount: 0,
     stage: "PHONE",
     retryRemaining: 0,
@@ -74,6 +66,8 @@ Page({
   },
   onHide() {
     this.active = false;
+    this.passwordAttempt += 1;
+    this.setData({ busy: false, password: "", securityProgress: -1 });
     if (this.retryTimer !== undefined) clearInterval(this.retryTimer);
     this.retryTimer = undefined;
   },
@@ -92,23 +86,102 @@ Page({
 
   onLoad(options: Record<string, string | undefined>) {
     const session = loadSession();
-    const joinMode = options.mode === "join";
+    const joinMode = options.mode === "join" && miniappConfig.smsLoginEnabled;
     if (session && !joinMode) {
       wx.redirectTo({ url: "/pages/tasks/tasks" });
       return;
     }
-    this.setData({ joinMode, phone: session?.phone ?? "" });
+    this.setData({
+      authMode: joinMode ? "SMS" : "PASSWORD",
+      joinMode,
+      phone: session?.phone ?? "",
+    });
+  },
+
+  onUsernameInput(event: { detail: { value: string } }) {
+    if (!this.data.busy) this.setData({ username: event.detail.value.trim(), error: "" });
+  },
+
+  onPasswordInput(event: { detail: { value: string } }) {
+    if (!this.data.busy) this.setData({ password: event.detail.value, error: "" });
+  },
+
+  useSmsLogin() {
+    if (this.data.busy || !miniappConfig.smsLoginEnabled) return;
+    this.backToPhone();
+    this.setData({ authMode: "SMS", password: "" });
+  },
+
+  usePasswordLogin() {
+    if (this.data.busy) return;
+    this.backToPhone();
+    this.setData({ authMode: "PASSWORD", joinMode: false, password: "" });
+  },
+
+  async loginPassword() {
+    if (this.data.busy) return;
+    const username = this.data.username.trim();
+    const password = this.data.password;
+    if (!/^[A-Za-z0-9][A-Za-z0-9_.-]{2,63}$/u.test(username)) {
+      this.setData({ error: "请输入管理员创建的账号（3–64 位字母、数字或 _ . -）" });
+      return;
+    }
+    if (password.length < 12 || password.length > 128) {
+      this.setData({ error: "请输入 12–128 位账号密码" });
+      return;
+    }
+    this.setData({ busy: true, error: "", notice: "", securityProgress: 0 });
+    const attempt = ++this.passwordAttempt;
+    try {
+      const challenge = await apiRequest<SmsChallenge>("/auth/captcha/password-challenge", {
+        method: "POST",
+        body: { username, purpose: "PASSWORD_LOGIN" },
+      });
+      if (!this.active || attempt !== this.passwordAttempt) return;
+      const captcha = await solveSmsChallenge(
+        challenge,
+        (securityProgress) => {
+          if (this.active && attempt === this.passwordAttempt) this.setData({ securityProgress });
+        },
+        () => !this.active || attempt !== this.passwordAttempt,
+      );
+      if (!this.active || attempt !== this.passwordAttempt) return;
+      this.setData({ securityProgress: -1 });
+      const account = await apiRequest<{ accessToken: string }>("/auth/admin/password-login", {
+        method: "POST",
+        body: { username, password, ...(captcha ? { captcha } : {}) },
+      });
+      if (!this.active || attempt !== this.passwordAttempt) return;
+      const employee = await apiRequest<{
+        accessToken: string;
+        memberships: EmployeeMembership[];
+      }>("/auth/employee/web-session", { method: "POST", token: account.accessToken });
+      if (!this.active || attempt !== this.passwordAttempt) return;
+      saveEnterpriseFilter("ALL");
+      saveSession({
+        accessToken: employee.accessToken,
+        memberships: employee.memberships,
+        phone: "",
+        username,
+      });
+      this.setData({ password: "" });
+      wx.reLaunch({ url: "/pages/tasks/tasks" });
+    } catch (reason) {
+      if (this.active && attempt === this.passwordAttempt)
+        this.setData({ error: messageOf(reason) });
+    } finally {
+      if (this.active && attempt === this.passwordAttempt)
+        this.setData({ busy: false, password: "", securityProgress: -1 });
+    }
   },
 
   onPhoneInput(event: { detail: { value: string } }) {
     if (this.data.busy) return;
     const phone = event.detail.value.trim();
-    if (phone !== this.data.phone) this.forceFormalSms = false;
     this.setData({
       authMode: "SMS",
       code: "",
       developmentCode: "",
-      debugUnavailable: false,
       error: "",
       notice: "",
       phone,
@@ -121,33 +194,17 @@ Page({
     this.setData({ code: event.detail.value.trim(), error: "" });
   },
 
-  useFormalSms() {
-    if (this.data.busy) return;
-    this.forceFormalSms = true;
-    this.setData({
-      authMode: "SMS",
-      code: "",
-      developmentCode: "",
-      debugUnavailable: false,
-      error: "",
-      notice: "已切换为正式短信验证。点击发送后，验证码将通过短信送达。",
-    });
-  },
-
   async requestCode() {
-    if (this.data.busy || this.data.retryRemaining > 0) return;
+    if (!miniappConfig.smsLoginEnabled || this.data.busy || this.data.retryRemaining > 0) return;
     if (!/^1[3-9]\d{9}$/u.test(this.data.phone)) {
       this.setData({ error: "请输入正确的 11 位手机号" });
       return;
     }
-    const mode: EmployeeAuthMode =
-      this.data.phone === REVIEW_LOGIN_PHONE && !this.forceFormalSms ? "TEMPORARY_DEBUG" : "SMS";
     this.setData({
-      authMode: mode,
+      authMode: "SMS",
       busy: true,
       code: "",
       developmentCode: "",
-      debugUnavailable: false,
       error: "",
       notice: "",
     });
@@ -170,44 +227,32 @@ Page({
         expiresInSeconds: number;
         phoneMasked: string;
         retryAfterSeconds: number;
-      }>(employeeAuthPaths[mode].request, {
+      }>("/auth/employee/request-code", {
         body: { phone: this.data.phone, ...(captcha ? { captcha } : {}) },
         method: "POST",
       });
       this.startCountdown(this.data.phone, result.retryAfterSeconds);
       this.setData({
-        code: result.delivery === "TEMPORARY_DEBUG" ? "000000" : "",
+        code: "",
         developmentCode: result.developmentCode ?? "",
         notice:
-          result.delivery === "TEMPORARY_DEBUG"
-            ? "限时调试验证码已生成，不会发送短信。"
-            : result.delivery === "DEVELOPMENT_ADAPTER"
-              ? "开发短信适配器已发送验证码；它不会调用真实短信服务。"
-              : "验证码已发送，请在 5 分钟内完成绑定。",
+          result.delivery === "DEVELOPMENT_ADAPTER"
+            ? "开发短信适配器已发送验证码；它不会调用真实短信服务。"
+            : "验证码已发送，请在 5 分钟内完成绑定。",
         phoneMasked: result.phoneMasked,
         stage: "CODE",
       });
     } catch (reason) {
       const retry = retrySeconds(reason);
       if (retry > 0) this.startCountdown(this.data.phone, retry);
-      const debugUnavailable =
-        mode === "TEMPORARY_DEBUG" &&
-        reason instanceof ApiError &&
-        reason.statusCode === 404 &&
-        (reason.message === "临时验证码接口未启用。" ||
-          reason.message.includes("Cannot POST /auth/employee/debug/request-code"));
-      this.setData({
-        debugUnavailable,
-        error: debugUnavailable
-          ? "临时调试验证码尚未在正式服务启用。可改用正式短信验证，或等待服务更新。"
-          : messageOf(reason),
-      });
+      this.setData({ error: messageOf(reason) });
     } finally {
       this.setData({ busy: false, securityProgress: -1 });
     }
   },
 
   async loadCandidates() {
+    if (!miniappConfig.smsLoginEnabled || this.data.busy) return;
     if (!/^\d{6}$/u.test(this.data.code)) {
       this.setData({ error: "请输入 6 位验证码" });
       return;
@@ -215,7 +260,7 @@ Page({
     this.setData({ busy: true, error: "", notice: "" });
     try {
       const result = await apiRequest<{ candidates: BindCandidate[]; phoneMasked: string }>(
-        employeeAuthPaths[this.data.authMode].candidates,
+        "/auth/employee/candidates",
         {
           body: { code: this.data.code, phone: this.data.phone },
           method: "POST",
@@ -256,6 +301,7 @@ Page({
   },
 
   toggleCandidate(event: { currentTarget: { dataset: { enterpriseId?: string } } }) {
+    if (this.data.busy) return;
     const enterpriseId = event.currentTarget.dataset.enterpriseId;
     if (!enterpriseId) return;
     const candidates = this.data.candidates.map((candidate) =>
@@ -270,6 +316,7 @@ Page({
   },
 
   async bindSelected() {
+    if (!miniappConfig.smsLoginEnabled || this.data.busy) return;
     const enterpriseIds = this.data.candidates
       .filter(({ selected }) => selected)
       .map(({ enterpriseId }) => enterpriseId);
@@ -288,10 +335,11 @@ Page({
   },
 
   async completeAuthentication(enterpriseIds: string[], joining: boolean) {
+    if (!miniappConfig.smsLoginEnabled) return;
     const result = await apiRequest<{
       accessToken: string;
       memberships: EmployeeMembership[];
-    }>(employeeAuthPaths[this.data.authMode].bind, {
+    }>("/auth/employee/bind", {
       body: {
         code: this.data.code,
         enterpriseIds,
@@ -331,7 +379,6 @@ Page({
       candidates: [],
       code: "",
       developmentCode: "",
-      debugUnavailable: false,
       error: "",
       notice: "",
       selectedCount: 0,

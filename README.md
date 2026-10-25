@@ -2,7 +2,7 @@
 
 **面向小红书企业全员营销的自托管协作系统，让企业资料成为员工可以真实分享的内容，并用 GEO 内容覆盖检查保持品牌表达一致。**
 
-[操作说明](docs/user-guide.md) · [部署与常见问题](docs/deployment.md) · [版本记录](CHANGELOG.md) · [参与贡献](CONTRIBUTING.md) · [Apache-2.0](LICENSE)
+[操作说明](docs/user-guide.md) · [部署与常见问题](docs/deployment.md) · [员工微信小程序](docs/miniapp.md) · [版本记录](CHANGELOG.md) · [参与贡献](CONTRIBUTING.md) · [Apache-2.0](LICENSE)
 
 一套安装服务一家企业或一个集团。管理员维护资料、配置模型、组织活动并审核内容；员工确认当前内容符合真实情况，再手动发布到小红书并回填链接。新安装默认本机存储、人工复核，无需先购买 S3、配置域名或部署独立 Worker 服务器。
 
@@ -68,24 +68,24 @@
 
 ## 3. 怎样部署
 
-首版 `v0.1.0` 发布源码和固定版本标签，**暂不提供官方预构建镜像**。先在自己的本机或构建机生成镜像，再导入运行主机；直接执行 Compose 不会自动获得尚未发布的 `qisheng/*` 镜像。
+当前 `v0.1.1` 发布源码和固定版本标签，**暂不提供官方预构建镜像**。先在自己的本机或构建机生成镜像，再导入运行主机；直接执行 Compose 不会自动获得尚未发布的 `qisheng/*` 镜像。
 
 已验证的构建目标为 Linux amd64。准备 Node.js 24.21.0 和 Docker，项目依赖由 Docker 构建阶段安装。
 
 ```sh
-git clone --branch v0.1.0 --depth 1 https://github.com/Yafeiml/qisheng.git
+git clone --branch v0.1.1 --depth 1 https://github.com/Yafeiml/qisheng.git
 cd qisheng
-node deploy/self-host.mjs build v0.1.0
-docker save -o qisheng-v0.1.0.tar \
-  qisheng/api:v0.1.0 qisheng/web:v0.1.0 \
-  qisheng/worker:v0.1.0 qisheng/migrate:v0.1.0
+node deploy/self-host.mjs build v0.1.1
+docker save -o qisheng-v0.1.1.tar \
+  qisheng/api:v0.1.1 qisheng/web:v0.1.1 \
+  qisheng/worker:v0.1.1 qisheng/migrate:v0.1.1
 ```
 
 将镜像归档及同版本部署文件交付到运行主机。在包含 `deploy/` 的项目目录执行：
 
 ```sh
-docker load -i /替换为镜像归档的绝对路径/qisheng-v0.1.0.tar
-export QISHENG_VERSION=v0.1.0
+docker load -i /替换为镜像归档的绝对路径/qisheng-v0.1.1.tar
+export QISHENG_VERSION=v0.1.1
 export QISHENG_DATA_DIR=/srv/qisheng/data
 docker compose -f deploy/compose.yml up -d --no-build --pull never
 ```
@@ -99,6 +99,12 @@ docker compose -f deploy/compose.yml run --rm -it bootstrap token
 填写管理员与组织后即完成安装，默认本机存储。域名与反向代理按需配置，没有域名不会阻止 IP 加端口访问。普通部署同时启动 API、Web 和内容 Worker。
 
 完整步骤以[部署与常见问题](docs/deployment.md)为准，包括源码构建与交付、1Panel／已有数据库、持久化目录、反向代理、模型与审核门禁、S3 切换限制、同机回读、升级和恢复。Windows 构建机使用现有 WSLC Linux 容器环境；运行主机使用已经构建的镜像。
+
+### 配对员工微信小程序
+
+小程序源码位于 `apps/employee-miniapp`，也可从 [v0.1.1 Release](https://github.com/Yafeiml/qisheng/releases/tag/v0.1.1) 下载独立源码包。使用自己的 AppID 和已配置微信合法域名的 HTTPS API，通过 `node scripts/miniapp/export.mjs` 导出独立项目，在微信开发者工具中编译、预览并由自己的账号提交审核。具体参数和流程见[小程序自部署说明](docs/miniapp.md)。
+
+默认使用管理员创建的员工账号密码，Web 与小程序访问相同员工任务；短信和微信订阅通知均按需配置。微信通知的 AppSecret 仅保存在服务端，不能放进小程序。源码包不是已上传或审核通过的微信应用。
 
 ## 首版范围与依赖
 

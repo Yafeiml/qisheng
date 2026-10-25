@@ -6,7 +6,13 @@ import type {
 import { ApiError } from "../../apps/employee-miniapp/utils/api";
 import type { PendingSubscription } from "../../apps/employee-miniapp/utils/notifications";
 
-const mocks = vi.hoisted(() => ({ request: vi.fn(), loadSession: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  request: vi.fn(),
+  loadSession: vi.fn(),
+  config: { smsLoginEnabled: false },
+}));
+
+vi.mock("../../apps/employee-miniapp/config", () => ({ miniappConfig: mocks.config }));
 
 vi.mock("../../apps/employee-miniapp/utils/api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../../apps/employee-miniapp/utils/api")>();
@@ -26,6 +32,9 @@ type TasksPage = {
   data: {
     busy: boolean;
     error: string;
+    phone: string;
+    emptyAction: string;
+    emptyDescription: string;
     subscriptionAuthorizationGeneration: number | null;
     subscriptionBusy: boolean;
     subscriptionEnabled: boolean;
@@ -42,6 +51,7 @@ type TasksPage = {
   pendingSubscription: PendingSubscription | null;
   setData(data: object): void;
   onShow(): void;
+  joinEnterprise(): void;
   openTask(event: { currentTarget: { dataset: { taskId: string } } }): void;
   loadNotificationConfiguration(): Promise<void>;
   applyNotificationConfiguration(config: EmployeeNotificationConfiguration): void;
@@ -72,6 +82,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.config.smsLoginEnabled = false;
   mocks.loadSession.mockReturnValue({
     accessToken: "employee-token",
     memberships: [],
@@ -87,6 +98,32 @@ beforeEach(() => {
 });
 
 describe("employee new-task notification subscription", () => {
+  it("shows a password account name and guides missing employee access to the administrator", async () => {
+    mocks.loadSession.mockReturnValue({
+      accessToken: "employee-token",
+      memberships: [],
+      phone: "",
+      username: "employee.demo",
+    });
+    const page = makePage();
+    page.onShow();
+    await vi.waitFor(() => expect(page.data.busy).toBe(false));
+    expect(page.data.phone).toBe("employee.demo");
+    expect(page.data.emptyAction).toBe("REFRESH");
+    expect(page.data.emptyDescription).toContain("联系企业管理员");
+    page.joinEnterprise();
+    expect(navigateTo).not.toHaveBeenCalled();
+  });
+
+  it("allows joining another enterprise only when the deployment enabled SMS", () => {
+    const page = makePage();
+    page.joinEnterprise();
+    expect(navigateTo).not.toHaveBeenCalled();
+    mocks.config.smsLoginEnabled = true;
+    page.joinEnterprise();
+    expect(navigateTo).toHaveBeenCalledWith({ url: "/pages/login/login?mode=join" });
+  });
+
   it("prepares identity on entry without asking for notification permission", async () => {
     const page = makePage();
     page.onShow();

@@ -1,7 +1,7 @@
 {
   "appid": "touristappid",
   "compileType": "miniprogram",
-  "description": "企声共创员工端",
+  "description": "企声发布员工端",
   "libVersion": "3.7.12",
   "miniprogramRoot": "./",
   "packOptions": {
@@ -25,7 +25,7 @@
     ],
     "include": []
   },
-  "projectname": "xhs-agentic-employee-miniapp",
+  "projectname": "qisheng-employee-miniapp",
   "setting": {
     "compileHotReLoad": true,
     "es6": true,

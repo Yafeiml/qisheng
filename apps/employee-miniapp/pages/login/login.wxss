@@ -23,6 +23,7 @@
 
 .hero-title {
   width: 620rpx;
+  max-width: 100%;
   margin: 15rpx 0 18rpx;
   font-family: "STSong", "Songti SC", serif;
   font-size: 60rpx;
@@ -32,6 +33,7 @@
 
 .hero-copy {
   width: 600rpx;
+  max-width: 100%;
   color: #74696b;
   font-size: 26rpx;
   line-height: 1.7;
@@ -149,6 +151,15 @@
   opacity: 0.85;
 }
 
+.text-field:focus {
+  border-color: #ff8d9d;
+}
+
+.text-field[disabled] {
+  color: #8a7d80;
+  background: #f5efed;
+}
+
 .development-code {
   margin: 0 0 28rpx;
   padding: 22rpx;
@@ -182,6 +193,8 @@
   box-sizing: border-box;
   width: 100%;
   margin-top: 14rpx;
+  min-height: 66rpx;
+  padding: 0 16rpx;
   color: #a01c3b;
   background: transparent;
   font-size: 24rpx;
@@ -214,6 +227,10 @@
 .candidate.selected {
   background: #fff4f5;
   border-color: #ff9eac;
+}
+
+.candidate.disabled {
+  opacity: 0.65;
 }
 
 .candidate-check {

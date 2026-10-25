@@ -12,6 +12,7 @@ import { NestFactory } from "@nestjs/core";
 import type { AdminUser, PlatformSetting, Prisma, Role, Tenant } from "@xhs-agentic/database";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { platformAccessScope, tenantAccessScope } from "../access/access-scope";
+import { AuthTokenService } from "../access/auth-token.service";
 import { AuthorizationRepository } from "../access/authorization.repository";
 import { seedAuthorizationCatalog } from "../access/authorization.seed";
 import { AppModule } from "../app.module";
@@ -178,6 +179,86 @@ describe("formal SaaS administrator authentication", { concurrent: false }, () =
       cookie: cookiePair(employeeLogin),
     });
     expect((await apiRequest("/employee/tasks", { token: employeeToken })).status).toBe(401);
+  });
+
+  it("exchanges a password login for a revocable employee token without sending cookies", async () => {
+    const username = `miniapp-${randomUUID().slice(0, 8)}`;
+    const password = "Miniapp-password-2026";
+    const identity = await prisma.globalUser.create({ data: {} });
+    employeeUserIds.push(identity.id);
+    const account = await prisma.adminUser.create({
+      data: {
+        username,
+        passwordHash: await hashPassword(password),
+        name: "小程序员工",
+        employeeUserId: identity.id,
+      },
+    });
+    users.push(account);
+    const tenant = await prisma.tenant.create({
+      data: { name: `${username} enterprise`, customerType: "SINGLE_ENTERPRISE" },
+    });
+    tenants.push(tenant);
+    const enterprise = await prisma.enterprise.create({
+      data: { tenantId: tenant.id, name: "小程序测试企业", code: username },
+    });
+    const membership = await prisma.enterpriseMembership.create({
+      data: {
+        tenantId: tenant.id,
+        enterpriseId: enterprise.id,
+        globalUserId: identity.id,
+        phone: uniquePhone(),
+        name: account.name ?? "小程序员工",
+        status: "ACTIVE",
+        seatStatus: "ENABLED",
+        seatEnabledAt: new Date(),
+        boundAt: new Date(),
+      },
+    });
+    expect(identity.phone).toBeNull();
+    expect(await prisma.roleBinding.count({ where: { userId: account.id } })).toBe(0);
+
+    // Native requests intentionally ignore the refresh cookie returned by password login.
+    const login = await apiRequest("/auth/admin/password-login", {
+      method: "POST",
+      body: { username, password },
+    });
+    expect(login.status).toBe(200);
+    expect(login.headers.get("set-cookie")).toContain("HttpOnly");
+    expect(asRecord(login.body)).not.toHaveProperty("refreshToken");
+    const accountToken = stringField(login.body, "accessToken");
+    const exchange = await apiRequest("/auth/employee/web-session", {
+      method: "POST",
+      token: accountToken,
+    });
+    expect(exchange.status).toBe(200);
+    expect(asRecord(exchange.body)).toMatchObject({
+      audience: "xhs-employee-miniapp",
+      userId: identity.id,
+      memberships: [{ membershipId: membership.id, enterpriseId: enterprise.id }],
+    });
+    const employeeToken = stringField(exchange.body, "accessToken");
+    expect(app.get(AuthTokenService).verifyEmployeeAccessToken(employeeToken)).toEqual({
+      sessionId: stringField(login.body, "sessionId"),
+      userId: identity.id,
+    });
+    expect((await apiRequest("/employee/tasks", { token: employeeToken })).status).toBe(200);
+    expect((await apiRequest("/employee/tasks", { token: accountToken })).status).toBe(401);
+    expect(
+      (await apiRequest("/auth/employee/web-session", { method: "POST", token: employeeToken }))
+        .status,
+    ).toBe(401);
+    expect(DysmsClient.prototype.sendSmsWithOptions).not.toHaveBeenCalled();
+
+    await prisma.adminSession.update({
+      where: { id: stringField(login.body, "sessionId") },
+      data: { revokedAt: new Date() },
+    });
+    expect((await apiRequest("/employee/tasks", { token: employeeToken })).status).toBe(401);
+    expect(
+      (await apiRequest("/auth/employee/web-session", { method: "POST", token: accountToken }))
+        .status,
+    ).toBe(401);
   });
 
   it("does not disclose whether an administrator phone exists when requesting a code", async () => {

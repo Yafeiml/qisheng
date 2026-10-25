@@ -1,6 +1,6 @@
 {
   "name": "xhs-agentic-v2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "企声发布：单企业与集团自托管的小红书全员营销与GEO内容协作",
   "packageManager": "pnpm@12.6.0",
@@ -49,7 +49,8 @@
     "test:e2e": "bash scripts/dev/run-e2e.sh",
     "typecheck": "pnpm -r --if-present typecheck && tsc --noEmit -p benchmarks/tsconfig.json",
     "miniapp:captcha": "pnpm --filter @xhs-agentic/captcha-client build && node scripts/dev/build-miniapp-captcha.mjs",
-    "test:scripts": "node --test deploy/*.test.mjs scripts/publication/*.test.mjs"
+    "miniapp:export": "node scripts/miniapp/export.mjs",
+    "test:scripts": "node --test deploy/*.test.mjs scripts/publication/*.test.mjs scripts/miniapp/*.test.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

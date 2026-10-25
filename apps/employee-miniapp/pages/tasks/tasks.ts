@@ -1,3 +1,4 @@
+import { miniappConfig } from "../../config";
 import type {
   EmployeeNotificationConfiguration,
   EmployeeSubscriptionResult,
@@ -61,6 +62,7 @@ interface TasksData {
   phone: string;
   selectedEnterpriseName: string;
   statusFilter: StatusFilter;
+  smsLoginEnabled: boolean;
   subscriptionAppId: string;
   subscriptionAuthorizationGeneration: number | null;
   subscriptionBusy: boolean;
@@ -101,6 +103,7 @@ Page({
     phone: "",
     selectedEnterpriseName: "",
     statusFilter: "CURRENT",
+    smsLoginEnabled: miniappConfig.smsLoginEnabled,
     subscriptionAppId: "",
     subscriptionAuthorizationGeneration: null,
     subscriptionBusy: false,
@@ -130,7 +133,7 @@ Page({
       guideVisible: session.memberships.length > 0 && !hasSeenFirstGuide(),
       membershipCount: session.memberships.length,
       notice: consumeFlashNotice(),
-      phone: maskPhone(session.phone),
+      phone: session.phone ? maskPhone(session.phone) : session.username || "员工账号",
       selectedEnterpriseName:
         session.memberships.find((item) => item.enterpriseId === enterpriseId)?.enterpriseName ??
         "",
@@ -471,12 +474,15 @@ Page({
       scopedTaskCount: counts.total,
       statusFilter: this.data.statusFilter,
     });
+    const employeeAccessRequired = !miniappConfig.smsLoginEnabled && empty.action === "JOIN";
     this.setData({
       completedCount: counts.completed,
-      emptyAction: empty.action,
-      emptyDescription: empty.description,
-      emptyIcon: empty.icon,
-      emptyTitle: empty.title,
+      emptyAction: employeeAccessRequired ? "REFRESH" : empty.action,
+      emptyDescription: employeeAccessRequired
+        ? "请联系企业管理员为账号启用员工身份和任务资格。"
+        : empty.description,
+      emptyIcon: employeeAccessRequired ? "○" : empty.icon,
+      emptyTitle: employeeAccessRequired ? "员工身份尚未启用" : empty.title,
       expiredCount: counts.expired,
       filteredTasks,
       historyCount: counts.history,
@@ -497,6 +503,7 @@ Page({
   },
 
   joinEnterprise() {
+    if (!miniappConfig.smsLoginEnabled) return;
     wx.navigateTo({ url: "/pages/login/login?mode=join" });
   },
 
@@ -505,7 +512,7 @@ Page({
       cancelText: "取消",
       confirmColor: "#ff2442",
       confirmText: "退出",
-      content: "退出后需要重新验证手机号。",
+      content: "退出后需要重新登录员工账号。",
       success(result) {
         if (!result.confirm) return;
         clearSession();

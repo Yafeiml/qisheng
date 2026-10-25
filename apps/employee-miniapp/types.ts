@@ -18,6 +18,7 @@ export interface EmployeeSession {
   accessToken: string;
   memberships: EmployeeMembership[];
   phone: string;
+  username?: string;
 }
 
 export interface EmployeeNotificationConfiguration {
