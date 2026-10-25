@@ -1,0 +1,34 @@
+name: 问题反馈
+description: 报告可复现的功能或部署问题
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: 请勿上传密钥、Cookie、员工资料或数据库。安全漏洞按 SECURITY.md 私密反馈。
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 部署与浏览器环境
+      description: 操作系统、CPU架构、Docker/Compose版本及浏览器；隐藏真实服务地址。
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 复现步骤与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+  - type: textarea
+    id: logs
+    attributes:
+      label: 脱敏日志或演示截图
+      description: 不上传 .env、runtime.json、Token 或业务数据。

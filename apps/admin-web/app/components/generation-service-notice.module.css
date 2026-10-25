@@ -1,0 +1,28 @@
+.notice {
+  margin: 20px 28px 0;
+  padding: 16px 20px;
+  border: 1px solid #e8bd75;
+  border-radius: 12px;
+  background: #fff8eb;
+  color: #714713;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.notice strong {
+  display: block;
+  font-size: 15px;
+}
+.notice p {
+  margin: 8px 0;
+  line-height: 1.65;
+  font-size: 14px;
+}
+.notice small {
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .notice {
+    margin: 12px 12px 0;
+    padding: 14px;
+  }
+}

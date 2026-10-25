@@ -1,0 +1,113 @@
+page {
+  min-height: 100%;
+  background: #fff8f5;
+  color: #272223;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+}
+
+button {
+  margin: 0;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  font-weight: 650;
+  line-height: 88rpx;
+}
+
+button::after {
+  border: 0;
+}
+
+.page-shell {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 28rpx 28rpx calc(44rpx + env(safe-area-inset-bottom));
+}
+
+.primary-button {
+  color: #fff;
+  background: #ff2442;
+  box-shadow: 0 14rpx 28rpx rgba(255, 36, 66, 0.2);
+}
+
+.primary-button[disabled] {
+  color: rgba(255, 255, 255, 0.78);
+  background: #d9a7ad;
+  box-shadow: none;
+}
+
+.secondary-button {
+  color: #9f1d3c;
+  background: #fff0f1;
+  border: 2rpx solid #ffd8dd;
+}
+
+.plain-button {
+  color: #696162;
+  background: #fff;
+  border: 2rpx solid #eee4e1;
+}
+
+.eyebrow {
+  color: #c51f43;
+  font-size: 21rpx;
+  font-weight: 800;
+  letter-spacing: 3rpx;
+}
+
+.surface {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2rpx solid #f0e6e3;
+  border-radius: 28rpx;
+  box-shadow: 0 18rpx 48rpx rgba(82, 39, 47, 0.07);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 12rpx;
+  color: #5f5657;
+  font-size: 24rpx;
+  font-weight: 650;
+}
+
+.text-field {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 88rpx;
+  padding: 0 24rpx;
+  color: #272223;
+  background: #fffdfc;
+  border: 2rpx solid #e9ddda;
+  border-radius: 18rpx;
+}
+
+.message {
+  margin: 20rpx 0;
+  padding: 20rpx 22rpx;
+  border-radius: 18rpx;
+  font-size: 25rpx;
+  line-height: 1.55;
+}
+
+.message.error {
+  color: #9f1836;
+  background: #fff0f1;
+  border: 2rpx solid #ffcbd2;
+}
+
+.message.success {
+  color: #286443;
+  background: #edf9f2;
+  border: 2rpx solid #cdebd9;
+}
+
+.synthetic-label {
+  display: inline-flex;
+  padding: 6rpx 12rpx;
+  color: #9f1d3c;
+  background: #ffe9ec;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  font-weight: 800;
+  letter-spacing: 1rpx;
+}

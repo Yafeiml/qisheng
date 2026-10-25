@@ -1,0 +1,27 @@
+services:
+  readback:
+    image: qisheng/readback:${QISHENG_VERSION:-local}
+    restart: unless-stopped
+    init: true
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    environment:
+      READBACK_MANAGED: "true"
+      PUBLICATION_READBACK_API_BASE_URL: http://api:3100
+      PUBLICATION_READBACK_NODE_ID: selfhost-readback
+      PUBLICATION_READBACK_NODE_KEY_FILE: /run/qisheng-readback/readback-node-key
+    volumes:
+      - type: bind
+        source: ${QISHENG_DATA_DIR:-./data}/config/readback-node-key
+        target: /run/qisheng-readback/readback-node-key
+        read_only: true
+        bind: { create_host_path: false }
+    tmpfs: ["/tmp:uid=1000,gid=1000,mode=0700"]
+    stop_grace_period: 45s
+    depends_on:
+      bootstrap: { condition: service_completed_successfully }
+      api: { condition: service_started }
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

@@ -1,0 +1,209 @@
+.panel {
+  min-width: 0;
+}
+.heading {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.heading h2 {
+  margin: 0;
+  font-size: 19px;
+}
+.heading p,
+.hint {
+  font-size: 13px;
+  color: #7a6d73;
+  line-height: 1.7;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  flex: 0 0 auto;
+}
+.actions button,
+.form button {
+  width: auto;
+  min-height: 42px;
+  padding: 9px 15px;
+  border: 1px solid #d9cbd0;
+  border-radius: 9px;
+  background: #fff;
+  color: #6b3947;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.actions button:hover,
+.form button:hover {
+  border-color: #c74560;
+  background: #fff1f4;
+}
+.actions button.primary,
+.form button.primary {
+  border-color: #c63852;
+  background: #c63852;
+  color: #fff;
+}
+.actions button.primary:hover,
+.form button.primary:hover {
+  background: #a92e45;
+}
+.actions button:focus-visible,
+.form button:focus-visible,
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: 3px solid #ffd0da;
+  outline-offset: 2px;
+}
+.actions button:disabled,
+.form button:disabled {
+  color: #9b8990;
+  border-color: #ddd2d6;
+  background: #eee7ea;
+  cursor: not-allowed;
+}
+.history {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+.card {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #e8dfe3;
+  border-radius: 12px;
+  background: #fffdfa;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.card header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 15px;
+  justify-content: space-between;
+}
+.card time,
+.card small {
+  color: #86777e;
+}
+.card p {
+  white-space: pre-wrap;
+  margin: 9px 0;
+}
+.card a {
+  display: inline-block;
+  color: #a2344b;
+  text-decoration: underline;
+  margin: 0 16px 8px 0;
+}
+.card details {
+  margin-top: 12px;
+  color: #75656d;
+}
+.card summary {
+  cursor: pointer;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin: 17px 0;
+}
+.metrics dt {
+  color: #82727b;
+  font-size: 12px;
+}
+.metrics dd {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: #503a45;
+}
+.form {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.form label {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.form input,
+.form select,
+.form textarea {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid #d9cdd2;
+  border-radius: 9px;
+  font: inherit;
+  font-weight: 400;
+  color: #46333e;
+  background-color: #fff;
+}
+.form select {
+  appearance: none;
+  padding-right: 33px;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%236c6166' stroke-width='1.6'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+}
+.form input:hover,
+.form select:hover,
+.form textarea:hover {
+  border-color: #ae929e;
+}
+.form input:disabled,
+.form select:disabled,
+.form textarea:disabled {
+  color: #94858d;
+  background-color: #f3eff1;
+  cursor: not-allowed;
+}
+.form textarea {
+  resize: vertical;
+}
+.form > button {
+  justify-self: start;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.tabs button[aria-selected="true"] {
+  background: #fff0f4;
+  color: #a5314b;
+  border-color: #d88c9f;
+}
+@media (max-width: 640px) {
+  .heading {
+    flex-direction: column;
+  }
+  .grid,
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .form > button {
+    justify-self: stretch;
+    width: 100%;
+  }
+  .card {
+    padding: 14px;
+  }
+}

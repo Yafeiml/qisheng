@@ -1,0 +1,51 @@
+{
+  "name": "@xhs-agentic/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "openapi": "node dist/generate-openapi.js",
+    "production:audit": "node dist/production-audit.js",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@alicloud/dysmsapi20170525": "4.6.0",
+    "@alicloud/openapi-core": "1.0.8",
+    "@darabonba/typescript": "1.0.5",
+    "@nestjs/common": "12.1.0",
+    "@nestjs/core": "12.1.0",
+    "@nestjs/platform-express": "12.1.0",
+    "@nestjs/swagger": "12.0.2",
+    "@wecom/crypto": "1.0.1",
+    "@xhs-agentic/ai-gateway": "workspace:*",
+    "@xhs-agentic/content-safety": "workspace:*",
+    "@xhs-agentic/network-security": "workspace:*",
+    "@xhs-agentic/object-storage": "workspace:*",
+    "@xhs-agentic/observability": "workspace:*",
+    "@xhs-agentic/sms": "workspace:*",
+    "bullmq": "6.3.9",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "fast-xml-parser": "5.11.1",
+    "ioredis": "6.0.0",
+    "jsonwebtoken": "9.0.3",
+    "nodemailer": "10.0.10",
+    "pg": "8.23.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "sharp": "0.35.4",
+    "@xhs-agentic/database": "workspace:*",
+    "@xhs-agentic/wechat-miniapp": "workspace:*",
+    "@xhs-agentic/xhs-api-collector": "workspace:*"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "12.0.7",
+    "@types/jsonwebtoken": "9.0.10",
+    "@types/nodemailer": "8.0.2",
+    "@types/pg": "8.23.1",
+    "typescript": "6.0.3"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,13 @@
+{
+  "pages": ["pages/login/login", "pages/tasks/tasks", "pages/task-detail/task-detail"],
+  "window": {
+    "backgroundColor": "#fff8f5",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#fffaf8",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "员工任务"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

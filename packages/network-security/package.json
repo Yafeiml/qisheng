@@ -1,0 +1,15 @@
+{
+  "name": "@xhs-agentic/network-security",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "undici": "8.11.2"
+  },
+  "license": "Apache-2.0"
+}

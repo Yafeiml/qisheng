@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="720" viewBox="0 0 540 720" role="img" aria-labelledby="title description">
+  <title id="title">内容排版示意图</title>
+  <desc id="description">以抽象图形和文字区块展示笔记封面布局，实际图片由配置模型生成。</desc>
+  <!-- Original layout illustration authored as SVG for this release; no third-party media. -->
+  <rect width="540" height="720" rx="32" fill="#fff8ef"/>
+  <rect x="40" y="40" width="460" height="640" rx="24" fill="#fffdf9" stroke="#ead9ca" stroke-width="2"/>
+  <rect x="66" y="72" width="124" height="40" rx="20" fill="#f6e0dd"/>
+  <g font-family="sans-serif" fill="#342b26">
+    <text x="128" y="99" font-size="21" font-weight="700" text-anchor="middle">示意图</text>
+    <text x="66" y="162" font-size="29" font-weight="700">一条笔记的内容布局</text>
+    <text x="66" y="201" font-size="20" fill="#75685f">标题 · 配图 · 正文</text>
+  </g>
+  <rect x="66" y="232" width="408" height="280" rx="22" fill="#f4eee5"/>
+  <circle cx="164" cy="331" r="48" fill="#e8bf83"/>
+  <rect x="248" y="285" width="120" height="116" rx="26" fill="#adc7b6"/>
+  <path d="M112 443h316" stroke="#ce8a83" stroke-width="16" stroke-linecap="round"/>
+  <text x="270" y="482" font-family="sans-serif" font-size="19" text-anchor="middle" fill="#75685f">抽象图形占位</text>
+  <g fill="#dfd5cb">
+    <rect x="66" y="548" width="290" height="14" rx="7"/>
+    <rect x="66" y="578" width="408" height="12" rx="6"/>
+    <rect x="66" y="606" width="346" height="12" rx="6"/>
+  </g>
+  <text x="270" y="655" font-family="sans-serif" font-size="19" text-anchor="middle" fill="#75685f">实际图片由配置模型生成</text>
+</svg>

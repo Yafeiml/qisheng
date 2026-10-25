@@ -1,0 +1,15 @@
+ALTER TABLE "campaign_preflight_snapshots"
+RENAME CONSTRAINT "campaign_preflight_snapshots_campaign_id_enterprise_id_tenant_i"
+TO "campaign_preflight_snapshots_campaign_id_enterprise_id_ten_fkey";
+
+ALTER INDEX "campaign_preflight_snapshots_campaign_id_enterprise_id_tenant_i"
+RENAME TO "campaign_preflight_snapshots_campaign_id_enterprise_id_tena_key";
+
+ALTER INDEX "campaign_preflight_snapshots_tenant_id_enterprise_id_created_at"
+RENAME TO "campaign_preflight_snapshots_tenant_id_enterprise_id_create_idx";
+
+ALTER INDEX "model_route_qualifications_configuration_fingerprint_status_exp"
+RENAME TO "model_route_qualifications_configuration_fingerprint_status_idx";
+
+ALTER TABLE "runtime_policies"
+ALTER COLUMN "updated_at" DROP DEFAULT;

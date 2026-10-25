@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "benchmarkId": "p014-provider-date",
+  "synthetic": false,
+  "providerDeclaration": {
+    "name": "replace-with-production-provider",
+    "productionService": false,
+    "dataTermsReviewed": false
+  },
+  "qualityGates": {
+    "minimumExpectedAvailableResolutionRate": 0.95,
+    "minimumUnavailableRecognitionRate": 0.8,
+    "minimumCanonicalConsistencyRate": 1,
+    "minimumMatchAutoPassRate": 0.85,
+    "maximumFalseAcceptRate": 0,
+    "maximumFalseRejectRate": 0.05,
+    "maximumManualReviewRate": 0.25,
+    "maximumP95LatencyMs": 15000
+  },
+  "policyCandidates": [
+    {
+      "policyVersion": "p014-candidate-a",
+      "textSimilarityThreshold": 0.6,
+      "imageSimilarityThreshold": 0.8,
+      "manualReviewMargin": 0.1,
+      "requireImageMatch": true
+    },
+    {
+      "policyVersion": "p014-candidate-b",
+      "textSimilarityThreshold": 0.65,
+      "imageSimilarityThreshold": 0.85,
+      "manualReviewMargin": 0.08,
+      "requireImageMatch": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "same-note-long",
+      "label": "MATCH",
+      "scenarios": ["LONG_LINK", "REWRITTEN_TEXT", "IMAGE_COMPRESSED", "DIFFERENT_ACCOUNT"],
+      "canonicalGroup": "same-note-001",
+      "input": "https://www.xiaohongshu.com/explore/replace001?xsec_token=replace",
+      "notes": "替换为真实长链和人工确认的匹配标签",
+      "expectedContent": {
+        "title": "替换为员工任务标题",
+        "body": "替换为员工任务正文",
+        "hashtags": ["替换标签"],
+        "images": [
+          {
+            "imageUrl": "https://authorized-assets.example/employee-001.png",
+            "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "perceptualHash": "0123456789abcdef"
+          }
+        ]
+      }
+    },
+    {
+      "id": "same-note-short",
+      "label": "MATCH",
+      "scenarios": ["SHORT_LINK", "SHARE_TEXT", "IMAGE_CROPPED", "IMAGE_WATERMARKED"],
+      "canonicalGroup": "same-note-001",
+      "input": "复制后打开小红书 https://xhslink.com/replace001",
+      "notes": "替换为与上一条指向同一帖子的真实短链",
+      "expectedContent": {
+        "title": "替换为同一员工任务标题",
+        "body": "替换为同一员工任务正文",
+        "hashtags": ["替换标签"],
+        "images": [
+          {
+            "imageUrl": "https://authorized-assets.example/employee-001.png",
+            "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "perceptualHash": "0123456789abcdef"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unrelated-note",
+      "label": "MISMATCH",
+      "scenarios": ["QUERY_VARIANT", "UNRELATED_CONTENT"],
+      "canonicalGroup": null,
+      "input": "https://www.xiaohongshu.com/discovery/item/replace002?utm_source=replace",
+      "notes": "替换为真实但与任务无关的公开帖子",
+      "expectedContent": {
+        "title": "替换为员工任务标题",
+        "body": "替换为员工任务正文",
+        "hashtags": ["替换标签"],
+        "images": [
+          {
+            "imageUrl": "https://authorized-assets.example/employee-002.png",
+            "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "perceptualHash": "fedcba9876543210"
+          }
+        ]
+      }
+    },
+    {
+      "id": "temporarily-unavailable-note",
+      "label": "UNAVAILABLE",
+      "scenarios": ["UNAVAILABLE_CONTENT"],
+      "canonicalGroup": null,
+      "input": "https://www.xiaohongshu.com/explore/replace003",
+      "notes": "替换为人工确认暂不可访问的真实帖子",
+      "expectedContent": {
+        "title": "替换为员工任务标题",
+        "body": "替换为员工任务正文",
+        "hashtags": ["替换标签"],
+        "images": [
+          {
+            "imageUrl": "https://authorized-assets.example/employee-003.png",
+            "checksum": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "perceptualHash": "0011223344556677"
+          }
+        ]
+      }
+    }
+  ]
+}

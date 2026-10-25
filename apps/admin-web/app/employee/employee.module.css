@@ -1,0 +1,151 @@
+.page {
+  width: min(100% - 48px, 1280px);
+  margin: 32px auto;
+}
+.page > :global(.panel) {
+  margin-bottom: 24px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.header h1 {
+  font-size: 32px;
+  margin: 8px 0;
+}
+.header p {
+  color: var(--muted);
+}
+.headerActions {
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.headerActions button {
+  width: auto;
+  min-width: 88px;
+  min-height: 44px;
+  margin: 0;
+  white-space: nowrap;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.page .grid > :global(.panel) {
+  margin-top: 0;
+}
+.tasks {
+  display: grid;
+  gap: 12px;
+}
+.tasks button {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  text-align: left;
+  background: var(--surface);
+}
+.tasks button[aria-pressed="true"],
+.tasks button:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.tasks span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.content {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+.content h2 {
+  overflow-wrap: anywhere;
+}
+.copy {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.images {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.images figure {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.images img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+.confirm input {
+  appearance: auto;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+}
+.page button:focus-visible,
+.confirm input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.page button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 700px) {
+  .page {
+    width: calc(100% - 24px);
+    margin: 16px auto;
+  }
+  .page > :global(.panel) {
+    margin-bottom: 16px;
+  }
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .images {
+    grid-template-columns: 1fr;
+  }
+  .header h1 {
+    font-size: 26px;
+  }
+  .page :global(.buttonRow) {
+    flex-wrap: wrap;
+  }
+  .page :global(.panel) {
+    padding: 18px;
+  }
+}

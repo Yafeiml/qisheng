@@ -1,0 +1,32 @@
+{
+  "name": "@xhs-agentic/xhs-api-collector",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=24.21.0 <25"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-public.mjs",
+    "start": "node dist/main.js",
+    "smoke": "node dist/smoke.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config vitest.config.mts"
+  },
+  "dependencies": {
+    "@xhs-agentic/network-security": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  },
+  "license": "Apache-2.0"
+}

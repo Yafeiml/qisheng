@@ -1,0 +1,109 @@
+<view class="page-shell tasks-page">
+  <view class="tasks-header">
+    <view>
+      <view class="greeting">今天，也发布一条好内容</view>
+      <text class="identity">{{phone}} · 仅展示本人数据</text>
+    </view>
+    <view class="avatar">我</view>
+  </view>
+
+  <view class="summary surface">
+    <view>
+      <text class="summary-value">{{pendingCount}}</text>
+      <text>待处理</text>
+    </view>
+    <view>
+      <text class="summary-value">{{completedCount}}</text>
+      <text>已完成</text>
+    </view>
+    <view>
+      <text class="summary-value">{{expiredCount}}</text>
+      <text>未完成/取消</text>
+    </view>
+  </view>
+
+  <view class="notification-card surface" role="region" aria-label="新任务通知">
+    <view class="notification-heading">
+      <text class="notification-title">新任务通知</text>
+      <text wx:if="{{subscriptionRemaining > 0}}" class="notification-count">剩余 {{subscriptionRemaining}} 次</text>
+    </view>
+    <text class="notification-status">{{subscriptionStatusText}}</text>
+    <text wx:if="{{subscriptionEnabled}}" class="notification-detail">每次允许可接收 1 次新任务提醒，用完后需再次订阅。</text>
+    <text wx:if="{{subscriptionError}}" class="notification-error" role="alert">{{subscriptionError}}</text>
+    <button wx:if="{{subscriptionPending}}" class="notification-button notification-retry" hover-class="notification-button-hover" bindtap="retrySubscriptionSave" disabled="{{subscriptionBusy}}" loading="{{subscriptionBusy}}">{{subscriptionBusy ? '正在保存…' : '重试保存'}}</button>
+    <button wx:elif="{{subscriptionError && !subscriptionIdentityReady}}" class="notification-button notification-retry" hover-class="notification-button-hover" bindtap="loadNotificationConfiguration" disabled="{{subscriptionLoading}}" loading="{{subscriptionLoading}}">重新准备通知</button>
+    <button wx:elif="{{subscriptionEnabled}}" class="notification-button" hover-class="notification-button-hover" bindtap="subscribeToNewTasks" disabled="{{subscriptionLoading || subscriptionBusy || !subscriptionIdentityReady}}" loading="{{subscriptionLoading || subscriptionBusy}}">{{subscriptionRemaining > 0 ? '再订阅一次' : '接收新任务通知'}}</button>
+  </view>
+
+  <view wx:if="{{guideVisible}}" class="first-guide surface" role="region" aria-label="首次使用说明">
+    <view class="guide-heading">
+      <view>
+        <text class="guide-kicker">第一次使用</text>
+        <text class="guide-title">只需完成 4 步</text>
+      </view>
+      <button class="guide-close" bindtap="dismissGuide" aria-label="关闭首次使用说明">×</button>
+    </view>
+    <view class="guide-steps">
+      <view><text>1</text><view><text class="guide-step-title">领取企业安排的内容</text><text class="guide-step-detail">到开放时间查看本人的任务</text></view></view>
+      <view><text>2</text><view><text class="guide-step-title">核对事实与素材真实</text><text class="guide-step-detail">信息不符时退回企业复核</text></view></view>
+      <view><text>3</text><view><text class="guide-step-title">复制保存并手动发布</text><text class="guide-step-detail">使用当前任务分配的文案与图片</text></view></view>
+      <view><text>4</text><view><text class="guide-step-title">回填发布链接</text><text class="guide-step-detail">开放后 24 小时内提交链接</text></view></view>
+    </view>
+    <button class="guide-confirm" bindtap="dismissGuide">我知道了</button>
+  </view>
+
+  <view wx:if="{{notice}}" class="message success">{{notice}}</view>
+
+  <scroll-view class="enterprise-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="enterprise-filters">
+      <view wx:for="{{enterpriseFilters}}" wx:key="id" class="enterprise-pill {{item.active ? 'active' : ''}}" data-enterprise-id="{{item.id}}" bindtap="chooseEnterprise">{{item.name}}</view>
+    <view class="enterprise-pill add" bindtap="joinEnterprise" role="button" aria-label="加入其他企业">＋ 加入其他企业</view>
+    </view>
+  </scroll-view>
+
+  <view class="status-tabs">
+    <view class="{{statusFilter === 'CURRENT' ? 'active' : ''}}" data-status="CURRENT" bindtap="chooseStatus" role="button" aria-label="查看当前任务">当前任务 <text>{{pendingCount}}</text></view>
+    <view class="{{statusFilter === 'HISTORY' ? 'active' : ''}}" data-status="HISTORY" bindtap="chooseStatus" role="button" aria-label="查看历史记录">历史记录 <text>{{historyCount}}</text></view>
+  </view>
+
+  <view wx:if="{{error}}" class="message error">{{error}}</view>
+
+  <view wx:if="{{busy}}" class="loading-state">
+    <view class="loading-dot"></view>
+    <text>正在读取本人任务…</text>
+  </view>
+
+  <view wx:elif="{{filteredTasks.length}}" class="task-list">
+    <view wx:for="{{filteredTasks}}" wx:key="id" class="task-card surface" data-task-id="{{item.id}}" bindtap="openTask">
+      <view class="task-accent {{item.tone}}"></view>
+      <view class="task-topline">
+        <text class="enterprise-name">{{item.enterprise.name}}</text>
+        <text class="status-badge {{item.tone}}">{{item.statusLabel}}</text>
+      </view>
+      <view class="task-title">{{item.campaign.title}}</view>
+      <view class="task-time">{{item.timingLabel}}</view>
+      <view wx:if="{{item.metricText}}" class="metric-strip">
+        <text>本人公开指标</text>
+        <text class="metric-value">{{item.metricText}}</text>
+      </view>
+      <view class="task-footer">
+        <text>{{item.status === 'LOCKED' ? '到时自动开放' : ((item.status === 'COMPLETED' || item.status === 'LATE_CORRECTED' || item.status === 'EXPIRED' || item.status === 'CANCELLED') ? '查看任务记录' : '查看专属图文')}}</text>
+        <text class="arrow">→</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-state surface">
+    <view class="empty-illustration">{{emptyIcon}}</view>
+    <text class="empty-title">{{emptyTitle}}</text>
+    <text>{{emptyDescription}}</text>
+    <button wx:if="{{emptyAction === 'JOIN'}}" class="primary-button empty-action" bindtap="joinEnterprise">加入企业</button>
+    <button wx:else class="plain-button empty-action" bindtap="loadTasks">刷新任务</button>
+  </view>
+
+  <view class="account-actions">
+    <text bindtap="joinEnterprise">加入其他企业</text>
+    <text>·</text>
+    <text bindtap="logout">退出绑定</text>
+  </view>
+</view>

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "backwardCompatible": {
+    "20260926010000_dynamic_model_incidents": "46bdd70a2c0ada30f027b2946ea691b3ebe97c01966b1a268cc8ab4ef70bf794",
+    "20260926011000_dynamic_model_incident_indexes": "03aace2a953197db8adf280427609dc86e3a7802a502791333c5c40a74e60354",
+    "20260927010000_registration_company_size": "6d5c5215cc49dbe05ae3016eca897fccbbc42867dde9bb8d783aed78b1579bb0",
+    "20260927020000_credit_grant_classification": "57a1e8970feac43c48e8db5de4087377bdfbd9b01f2fb1578c163030508d0fa9",
+    "20260927030000_miniapp_debug_settings": "344aa932575feb881199bafd8f9c54204561e47d5129a54d83092f37f96553ec",
+    "20260928010000_generation_lab": "154199c35d839680b7e47ca5dbe56ecdea90467ee8ccd2da4aa96abba8373e34",
+    "20261006080000_employee_task_notifications": "dceadee401bf07f3bdb7efddf745a48ca247933edd73cce589538e438d25db85",
+    "20261006090000_employee_notification_authorization_generation": "c190f06d27668e156fc63cc0511d43c447e660ab4431d647a5e764059a11906d",
+    "20261009010000_admin_email_verification": "57961378c97d5c376eeadc78e4fdf7db732b73b8314e4d4879e42a22dd8f5f0e",
+    "20261010080000_industry_generation_guidance": "392b30886f2c5a7b65a0f889ce388a4ba249f8e5e9ec60721d25d57a4191fa95",
+    "20261013010000_employee_sms_notifications": "57775812845dc102d1e0b0202743a6659b153c2c0f9bbb968480c343199839f0",
+    "20261013020000_employee_sms_delivery": "0f3c1c3bab5e7151961ecd61b1216150c0a45b30f2aec9a56651b4ef324bab40",
+    "20261013030000_medical_selection_plan": "344d7995f8451c442a262f0f2b37aedb4b0550f40c7fa6743e05b1235047d08c",
+    "20261015010000_password_accounts": "465b8b721a12929f13f6a2fa913d755043f26506b9b63e00eccd49bce6e18c39",
+    "20261015020000_allow_overlapping_campaign_windows": "faa45afc707761cbc504be8eba774292735ca64cbedcf019e99f3fe157899aea",
+    "20261015030000_readback_panel_url": "6861198af95727c2bb73096ccd7395cf44fb109cf6e0dc99011e6135940f0853",
+    "20261025010000_platform_display_name": "e177c596ef4bd3f0283733b619f75e97cfce9b24a92a2b176da3d5df3c0fab7c"
+  },
+  "maintenanceRequired": {
+    "20261024010000_remove_content_points": "a546fc873cc6c2184035e061cd2bc58ddfbccdccdff5afb560b3dd1d053e42c4"
+  }
+}

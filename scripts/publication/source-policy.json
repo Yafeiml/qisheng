@@ -1,0 +1,708 @@
+{
+  "version": 1,
+  "reviewedFindings": [
+    {
+      "path": ".env.example",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "c45b760bba01cb12696c8f32274aef037431438807e075e3509dbf80b31a0f6d",
+      "reason": "Explicit development-only loopback PostgreSQL/Redis sample credentials shared with local bootstrap examples; not production configuration. Production installs must replace them."
+    },
+    {
+      "path": ".env.example",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "39d5fb5b43117108a784ca58a1db8d123cd28fb176d057930914170081e40093",
+      "reason": "Explicit development-only loopback PostgreSQL/Redis sample credentials shared with local bootstrap examples; not production configuration. Production installs must replace them."
+    },
+    {
+      "path": ".env.example",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "bb16f4bed1de8d73ac7e7a9c197450492a584dcd95597bc11ce678c68797297b",
+      "reason": "Explicit development-only loopback PostgreSQL/Redis sample credentials shared with local bootstrap examples; not production configuration. Production installs must replace them."
+    },
+    {
+      "path": "apps/api/src/campaign/campaign-effect.service.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "c2822cabec9335e7d510a275c3fba03ba2a8669f3e0ce25f438c516096c9b011",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "apps/api/src/employee-notifications/employee-notifications.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "a37903b96ed210b5d18cb1dbe9dfeb6668365b23a75325b0a174a722da54a89d",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/api/src/employee-notifications/employee-notifications.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "97ed66a75c473a53873f014670f2941386bfc79c07ce7ef16d573d2cd6296665",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "1b655af52e7b4481c47e7ea1b24030099f3b2e0380504df79b6dac6fc8f7ae7d",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "ea3ef332335f00f05805559155bdd9bf7fe9ff081ebd19da85eed3112c240300",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "98f8f0c6672c2bbec0dd668509ac458524ecfc92330f449afb2d5950488feff9",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "c653253bb8ddf1bab6897a89cf224569a0e9d3c2c4ed4dbe9c6249094ea856d7",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "4940ce2ccaa755d644333536f9773d3896aeaaac471b7c08f2bdf4600b0976ea",
+      "reason": "Generic RFC1918 web origin deliberately rejected by the production readiness validator; required negative security fixture."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "f4685e70dad672322119cf12708e023b9a23591316a995f5f7c5775c3eefbfd5",
+      "reason": "Generic RFC1918 web origin deliberately rejected by the production readiness validator; required negative security fixture."
+    },
+    {
+      "path": "apps/api/src/platform-operations/production-readiness.service.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "1f307870f51874798625d578429bf89af2656b72a266d91ae8b38de1e2470fbd",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/api/src/platform-settings/cap-endpoint.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "ed4358de9663ee6066a24a4f71d133edea2a71995970027d039930151ceb4c97",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "apps/api/src/platform-settings/platform-settings.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "1f307870f51874798625d578429bf89af2656b72a266d91ae8b38de1e2470fbd",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/api/src/platform-settings/platform-settings.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "44fbe04280c484408a5f21809ceac4c23acf184c2618fc2bbd6251ce16ae052c",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/api/src/production-bootstrap-policy.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "0ea99df7919459be52b6301b703916f157945361fc06612ff1d14aa26fbcc93d",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "apps/api/src/production-bootstrap-policy.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "dcfc68bfd09548bcc37f2c8ad4985feb1803a2187c107de75bb7e613a9ae8143",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/production-bootstrap-policy.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "6fb12ff7ffc37290a4337266db8a46f22589fb24fc167db0f88ac8248cd33385",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/production-bootstrap-policy.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "9fc37ea145195a9795de409037181bdbcc5194dee0bc155b0ee22e5072c1046c",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/production-bootstrap-policy.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "6411c85879ddddf28ca9da6b31632ef82cdf59fdebd1597d2761c1f9ee544b1e",
+      "reason": "Deterministic synthetic JWT/OTP values in production-policy unit tests; no production credential, restored test environment or passed only to the policy validator."
+    },
+    {
+      "path": "apps/api/src/publication/publication-browser.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "a5d95d01ea1f1505775bb8ba12be8ab3417a94c8487279c125a02f2a0c19dc40",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "apps/api/src/publication/publication-browser.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "2ce3a89fa277c836632fbbed59f25aa2205b50fb0f955dded5b18241daadef0b",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "apps/api/src/publication/publication-browser.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "8f0eb12d047b0bd8f39958926536b80035647c1a1c6b18acb69034c336528d41",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "apps/api/src/publication/publication-browser.integration.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "68e0e5423a373210e3c1831455a082756f78ced0c6e7dc5dc4b71ebedb71a118",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "apps/api/src/publication/publication-short-url.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "8cf0f477169647345ffe79d8b78824bf520d2fa6055cf4169dc78c4a86e7f64e",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "apps/api/src/publication/publication-url.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "17edea8cb9865efc195aecab1f3650b1d9815f63bef1ab8578ac2698f240eac6",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "apps/api/src/publication/publication-url.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "0f40885fa5b83d7b1d7e5a5a67d4a0a1b0176fb9fdbc752d0907093d2e66daf2",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "apps/worker/src/employee-notification-worker.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "37965e4c64b22fcb279bd3a0d9438ce405d1d02bf53c2246947eaf193b161b25",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/worker/src/employee-notification-worker.spec.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "ff024c34e488f24ef796ccb5a9abede0c853a98db40298486bdfad48c18dd346",
+      "reason": "Explicit mock subscription credential passed to a stubbed notification gateway; the test does not call the WeChat service."
+    },
+    {
+      "path": "apps/worker/src/employee-notification-worker.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "bb71f20095389cea707fd9b87ad955e1a58ab17456628a0dbb56e075dca951ee",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "apps/worker/src/material-ingestion-worker.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "3a1f745b567ce99a2e4c707d4b021ffeb97b7ab8ec8735aa5c6d704b8628b3c9",
+      "reason": "Generic RFC1918 or cloud-metadata URL deliberately rejected by SSRF/request policy assertions; not a real internal service."
+    },
+    {
+      "path": "apps/worker/src/material-ingestion-worker.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "907584a5cb7c8e8698025a24f9039a50a3cbee62950249a3fb358af0a41e53e3",
+      "reason": "Generic RFC1918 or cloud-metadata URL deliberately rejected by SSRF/request policy assertions; not a real internal service."
+    },
+    {
+      "path": "deploy/.env.example",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "445ab3e8de80beaf55ff52381ae8cc1af7e45660a517dd144031bcff4345a933",
+      "reason": "Deployment template uses explicit replacement placeholders and the generic Docker host alias; the file contains no deployed database credential."
+    },
+    {
+      "path": "deploy/.env.example",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "a93be851aa067022f98bd20439d88657bc0f58a41e5b1fd1b5a8b8ee9f5bc660",
+      "reason": "Deployment template uses explicit replacement placeholders and the generic Docker host alias; the file contains no deployed database credential."
+    },
+    {
+      "path": "deploy/docker/Dockerfile",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "d7b6e49d2f29e69bf1589d1bf9fada020a9bbfdb65dd5168647194a283446976",
+      "reason": "Synthetic loopback build-only database URL for Prisma compilation; not an active runtime database credential."
+    },
+    {
+      "path": "deploy/docker/Dockerfile",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "b11bb5a82f098c36581bf385ed2d4dbe4ac1100749949116cd9b1eebff889a6a",
+      "reason": "Synthetic loopback build-only database URL for Prisma compilation; not an active runtime database credential."
+    },
+    {
+      "path": "deploy/self-host.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "52a6fd3c617e81bfcedeb85201d43d72e2030054df32725d96b911ce839bfcda",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "deploy/worker-preflight.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "4dd254257b9cca058b5167c70fd079ebc96951122bc6bec972d6e1a9b54278c0",
+      "reason": "Synthetic database URL in VM-isolated Worker preflight tests; fake Prisma/Bull constructors prevent use as an actual database credential."
+    },
+    {
+      "path": "packages/ai-gateway/src/openai-compatible-provider.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "af07cdc1fcdb545d1236afa12c9321ab2adbf67d07ba5d8a1693694ef35e4b54",
+      "reason": "Dummy provider credential in protocol/security tests; requests use an injected mock fetcher or constructor validation rejects the unsafe endpoint before a request."
+    },
+    {
+      "path": "packages/ai-gateway/src/openai-compatible-provider.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "2a3d7a4d7f24f99b5e2d40dff5d95420728b4c84fab38ef3976c1943447f4bb8",
+      "reason": "Dummy provider credential in protocol/security tests; requests use an injected mock fetcher or constructor validation rejects the unsafe endpoint before a request."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "ebc3f75f265a09cda123c946682aa3266f7915aad1ca4b814d343f34bd3aba1d",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "036f1174e474d5572547a11f33b361d527abfef6e8568e186277d4a9a4caad19",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "39a81a2a0dfb039809b2a5ecb4136e119d7c156c09d1f4d58c1451b6b784f549",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "ddc170bf434ab625c317d0a26bba8059806a29c75fab411260849bdd0cd518d7",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "766503874cccbc48178f11bc292eec8e33605f0625e0e4e4070647ae3fba30dd",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "c1d216d9978fa04d1d28f5b3b5c65a7aa70842e4f33a3e6a4673c6c2f0028f1f",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "efa882edebd4bfa2ecfe48b4dad6ab50d41592e819e833acde4cbe36939926df",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "0002c9d65c18eb714260d3e749fce6359fe4ed58a00b0db2a6f86711abca8730",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "f5ba09f5fa862f37c387f2ad9d82bb12dc0bdb1db76a902fb5e3152974c98226",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "03e8dd334218408e4bb20817306b3fceaddbba346896a61b0b2292d010feae48",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "2e9146e6cd676930ea1492d481e3faee7fa7a638e05026c90885f6506a3cb9fe",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "2373a29ef356e5918d85fdce97368734655b2b4f051574b915567dcbe18cf350",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "packages/observability/src/index.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "d26530272967aa845440bef67f1f591df838cfc6d1e627f16a3e39279d63a135",
+      "reason": "Synthetic credential-bearing database/cache URL and expected redacted form exercise log redaction; required safety regression fixture."
+    },
+    {
+      "path": "packages/observability/src/index.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "d18785e9f6f697bde7a0254a9b953a02fbdf52d49d086185612837563b36e5f5",
+      "reason": "Synthetic credential-bearing database/cache URL and expected redacted form exercise log redaction; required safety regression fixture."
+    },
+    {
+      "path": "packages/observability/src/index.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "94ba720e2afcc1c63583e0cf142556bca2190fb37e72823cde59b119c177c9f9",
+      "reason": "Synthetic credential-bearing database/cache URL and expected redacted form exercise log redaction; required safety regression fixture."
+    },
+    {
+      "path": "packages/observability/src/index.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "0a0d261d490b45403a76c3c24ef12f6d9a8b239780a1fc690ec524b67916812d",
+      "reason": "Synthetic credential-bearing database/cache URL and expected redacted form exercise log redaction; required safety regression fixture."
+    },
+    {
+      "path": "packages/wechat-miniapp/src/index.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "5939d587f7144520ecdff115e9135c46135d9f467ca50392d2e7963c940d1e7e",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "packages/wechat-miniapp/src/index.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "c37b33c6672e442d30319e8e63b77c84e41d91f12d58ea34417856a97bd1aabc",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "packages/xhs-browser-collector/src/security.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "747b5f4d4afb0a92426622e347ca2829c9eaf6fcf602d6d32776f3c28ec56c35",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "packages/xhs-browser-collector/src/security.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "e31f27e114a4566c3a0590bc49faf7082c57a86bb61bb86ceca00b0bca934c0a",
+      "reason": "Generic RFC1918 or cloud-metadata URL deliberately rejected by SSRF/request policy assertions; not a real internal service."
+    },
+    {
+      "path": "scripts/contracts/check-content-safety-save.cjs",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "25ee01d7b9417fe2151db932f2a11dded174b585080c7dc77de635e8c2924ac6",
+      "reason": "Dummy Bearer value accepted only by the probe own stub authenticator on an ephemeral loopback HTTP server; it is not a credential for the application or any remote server."
+    },
+    {
+      "path": "scripts/dev/verify-migrations.sh",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "c7ac98452b1d671a90d76d5a3a933a96faf185c4c3caf296d2e943e83f2362d5",
+      "reason": "Local shadow migration replay URLs interpolate documented development sample role/password, restrict the development container/database, and do not encode a production credential."
+    },
+    {
+      "path": "scripts/dev/verify-migrations.sh",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "b789fe6c1a59ed8ebaa1d81bc4ca9dca4836a9dcc1ae5791bbd6d1307e721b04",
+      "reason": "Local shadow migration replay URLs interpolate documented development sample role/password, restrict the development container/database, and do not encode a production credential."
+    },
+    {
+      "path": "scripts/ops/local-secret-helpers.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "3b4283256a6c442cd0a1c5596fada02cdb8d7fb1799f3e31e3ae4146459fe990",
+      "reason": "In-memory env text fixture checks that local secret rotation preserves a synthetic database URL; not an actual configuration file."
+    },
+    {
+      "path": "scripts/ops/verify-generation-styles.cjs",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "a233d4c59cb5bdd596cb5dec6552b9f0ace2a0a4580bc10b2e470462b3a9de0b",
+      "reason": "Dummy Bearer value accepted only by the probe own stub authenticator on an ephemeral loopback HTTP server; it is not a credential for the application or any remote server."
+    },
+    {
+      "path": "scripts/publication/README-ssr-probe.md",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "584fa224bb9916d7b647a43a6edec0464d0dfe4475ea52c265e42ae048a1ac1f",
+      "reason": "Standards-defined benchmark/Fake-IP CIDR documented for DNS diagnosis; not a private deployment node, and the document retains the SSRF deny boundaries."
+    },
+    {
+      "path": "scripts/publication/check-git-history.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "02fb6cec95877c1937992bc03ac5845adc31f0262b4f932123c6b23b76fa3396",
+      "reason": "Synthetic credential URL configured only on a temporary test Git repository to ensure the history/config scanner detects and redacts it."
+    },
+    {
+      "path": "scripts/publication/check-source-publication.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "c05bc754f5ae2372b7e94c563e00c798ef750088ec34e21c207a7f2fe897fe23",
+      "reason": "Generic private address in in-memory/temporary-file scanner tests verifies detection and exact-fingerprint invalidation; not an operational node."
+    },
+    {
+      "path": "scripts/publication/check-source-publication.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "ef37cba28fe5c7244c41b2e980d966150468f648f68c6d3d3f11cb15af479829",
+      "reason": "Synthetic credential-bearing URL supplied directly to scanner assertions, including the localhost/password negative case; not a deployment credential and never used for network access."
+    },
+    {
+      "path": "scripts/publication/check-source-publication.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "c28b90cb0e233e53d4b31b378035f1aa6386d5aab20b50a12e13c0ae6c616fd5",
+      "reason": "Generic private address in in-memory/temporary-file scanner tests verifies detection and exact-fingerprint invalidation; not an operational node."
+    },
+    {
+      "path": "scripts/publication/check-source-publication.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "871092c26e7e3ea3c61a3b5d3cd66f5ec6593922adb1ef5dc71f781731fab4a4",
+      "reason": "Generic private address in in-memory/temporary-file scanner tests verifies detection and exact-fingerprint invalidation; not an operational node."
+    },
+    {
+      "path": "scripts/publication/check-source-publication.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "c28dd0a68e14a050f8c314a8f16ce3a17261d0346cb1670e62b878ed30faaff3",
+      "reason": "Synthetic credential-bearing URL supplied directly to scanner assertions, including the localhost/password negative case; not a deployment credential and never used for network access."
+    },
+    {
+      "path": "scripts/publication/check-source-publication.test.mjs",
+      "rule": "EMAIL_IDENTIFIER",
+      "fingerprint": "fe43e4861d2decc932e8b37a410783493ee428696ac000d6cfe9e1c43749906c",
+      "reason": "Synthetic email text passed directly to the detector as a positive regression fixture; no real person, mailbox, or mail sending is involved."
+    },
+    {
+      "path": "scripts/publication/inspect-xhs-ssr.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "652b921c23b76818a6148dc1d5a79e62910672702c036fa9ebd7eed05802e863",
+      "reason": "Synthetic credential-bearing URL supplied to a URL/endpoint validator as an explicit rejection fixture; it must remain to verify credentials are not accepted or leaked."
+    },
+    {
+      "path": "scripts/publication/inspect-xhs-ssr.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "f35b04a3f3705f031fef5828813fe805764fc0c1315b74d29e6cf849de2a3525",
+      "reason": "Generic RFC1918 private-network address, independent of maintainer host configuration; required as a public-IP rejection fixture."
+    },
+    {
+      "path": "scripts/publication/inspect-xhs-ssr.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "1f832d4c49a0ad2c91262c158304f30dae6912563ef6b934a0e2e6d9ed61c049",
+      "reason": "Generic first CGNAT address, independent of maintainer Tailnet nodes; required as a public-IP rejection fixture."
+    },
+    {
+      "path": "scripts/publication/inspect-xhs-ssr.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "9af9c50e1e7300df5411909187b3ba7a55e420121e111ec834547bef9ddf03ce",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "scripts/publication/inspect-xhs-ssr.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "42a6778ba1d99530aea6b5b0b320e99e049c664881ee78c3dcaad871fd63d810",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "scripts/publication/inspect-xhs-ssr.test.mjs",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "11c74f96af630ce45c02c882888714d5811d22cc1db2b2b3cd689dc37062a3b0",
+      "reason": "Generic RFC1918/CGNAT/link-local metadata/benchmark IP or known public resolver address used in network-policy and mock DNS positive/negative assertions; not a deployment endpoint."
+    },
+    {
+      "path": "tests/e2e/miniapp-notification-settings.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "fa5606b4c69ad62e24a067edd70ec8ce09e0811b7c7c10b75d4f35bf7a129305",
+      "reason": "Obviously fictitious repeating/sequential hexadecimal AppID fixture; stubbed notification/settings tests require a format-valid identifier and contain no real application identity."
+    },
+    {
+      "path": "tests/e2e/readback-console.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "a5d95d01ea1f1505775bb8ba12be8ab3417a94c8487279c125a02f2a0c19dc40",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "tests/e2e/readback-console.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "860282dfa7256e85b5f2425953909fb9532d4773f27421613ecb28638812a6b1",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "tests/e2e/readback-console.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "6cd9bbd15259f1ea9f7e34b9ce91f92c668f105a15308a3e141c50eeea65d8dc",
+      "reason": "Generic first CGNAT address used as an authenticated Tailnet panel fixture; production guard accepts only that range, so RFC5737 replacements would break the safety behavior under test."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "1876070ccf5ed2892490395f40642c5392ea98820c8eae3c1cfe0c01f546289c",
+      "reason": "Synthetic IPv4-mapped IPv6 public/private boundary and DNS regression fixtures; these are protocol test addresses, not deployed hosts."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "509e4d9b598023458692284659e2a40ba91875080c57bfda7c0bb82b39505874",
+      "reason": "Synthetic IPv4-mapped IPv6 public/private boundary and DNS regression fixtures; these are protocol test addresses, not deployed hosts."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "95f1315acc8a2419a4fb5c907ba1bccaeba834d513926c3a9c0d506de6185acb",
+      "reason": "Synthetic IPv4-mapped IPv6 public/private boundary and DNS regression fixtures; these are protocol test addresses, not deployed hosts."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "cb2f59235d6128061bd025ca8256a7645edecbdb2fc01a4a1acf1eb9957720b5",
+      "reason": "Synthetic IPv4-mapped IPv6 public/private boundary and DNS regression fixtures; these are protocol test addresses, not deployed hosts."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "977e849e7d65a24eb77b714d28ed43db5f87af689812193c96b5c1d06d078293",
+      "reason": "Synthetic IPv4-mapped IPv6 public/private boundary and DNS regression fixtures; these are protocol test addresses, not deployed hosts."
+    },
+    {
+      "path": "packages/network-security/src/index.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "1013deae47c84e7cb7ab18c3473734e8b6086d4046b93f6c7588133d6576ea2d",
+      "reason": "Synthetic IPv4-mapped IPv6 public/private boundary and DNS regression fixtures; these are protocol test addresses, not deployed hosts."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/note-detail.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "e8a0794e6e0c45a9413ebb81df89ecf3b5911dad93fb473c582aee4821548aa0",
+      "reason": "Intentionally rejected synthetic user:password URL at provider.example.org; verifies that provider endpoint userinfo is forbidden."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/note-detail.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "1d9f85ce9b42e8438c10b128fdadb0fee55f41cb2e2a6f71cdd6f41a5a39ba90",
+      "reason": "Synthetic private-network endpoint rejected by provider URL validation; not a deployment host."
+    },
+    {
+      "path": "apps/api/src/publication/publication-readback.guard.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "91f7c2b1cc6fe3bc014f873d06f342f9e605b68c147006f34abca096cb19ff95",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "apps/api/src/publication/publication-readback.guard.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "255945d85796517d763bc1d3f07df37f7e609881a1ad8f5bac04cc236f2dbde9",
+      "reason": "Synthetic example-domain userinfo URL deliberately rejected by readback URL validation; these are not configured credentials."
+    },
+    {
+      "path": "apps/api/src/publication/publication-readback.service.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "04ee76be290e6f83baed81f61daaa7a9a87ae97b63629d6d89cee26f7d8744ef",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "apps/api/src/publication/publication-readback.service.spec.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "f95203ed66325f82e289e84da2c3e1c6b8b29fa4eb57ef35b2d391cb52e283df",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "apps/api/src/publication/publication-readback.service.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "1150e6c33af4f3581c2d8c78c1101c8e59d37e7d10ee6349a59d023d76a884bf",
+      "reason": "Synthetic example-domain userinfo URL deliberately rejected by readback URL validation; these are not configured credentials."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/job-api.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "b55632b093b900f5ac84fd1959179757f20dc711ec5d7de2a9671537db757c2b",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/job-api.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "cb4374a3651f7cf2228ae29a6758fe1b547b07f608780d94027941c1e1e43a3c",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/job-api.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "d47ac450482ebb402c32861a8d89b88bd859551b531d4c04ef0a73508ea4cebb",
+      "reason": "Synthetic example-domain userinfo URL deliberately rejected by readback URL validation; these are not configured credentials."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/job-api.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "91f7c2b1cc6fe3bc014f873d06f342f9e605b68c147006f34abca096cb19ff95",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/job-api.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "bee4931ba9940151653faf87f43584318d735d0ec87fa9db310a33d2af11bd59",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/job-api.test.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "68461dbc32dfb85f7535a883b46ab06517a929f4666be3666be96ee0b81b79e7",
+      "reason": "Synthetic example-domain userinfo URL deliberately rejected by readback URL validation; these are not configured credentials."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/panel.http.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "28b0199ce547252ab165a19804c94003cba44bedb4c45736f9bcd6360f7dfa8b",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/panel.http.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "92eacf5adec752642d927d52e37232e1e417e301ad68b3efe7089c062349abda",
+      "reason": "Literal password for isolated HTTP boundary tests only; never used by a deployed account or runtime configuration."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/panel.http.test.ts",
+      "rule": "POSSIBLE_SECRET_ASSIGNMENT",
+      "fingerprint": "5adff163e06c10e84aca11cd05490d53daacffe3e81e6564ec0d47d8d67e800f",
+      "reason": "Literal password for isolated HTTP boundary tests only; never used by a deployed account or runtime configuration."
+    },
+    {
+      "path": "packages/xhs-api-collector/src/panel.http.test.ts",
+      "rule": "OPERATIONS_IDENTIFIER",
+      "fingerprint": "cda173a81118c24a17084670ef58a6fa7c454f5fa8fecf9e0e7f6e300f71bec3",
+      "reason": "Synthetic private-network and historical CGNAT address fixtures proving configurable readback networks and old-row compatibility; not deployment identifiers."
+    },
+    {
+      "path": "apps/admin-web/app/lib/api-gateway.spec.ts",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "b2c8a56b7707027b9396e4d53dc95d7866a7084a5f193afd724e2d3e66fab057",
+      "reason": "Synthetic credential-bearing internal URL used only to assert that the fixed-upstream gateway rejects URL userinfo; contains no live credential."
+    },
+    {
+      "path": "deploy/docker/runtime-config.cjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "bdd0d55d63248058d026680e2150d9d5b6e25f5c989c0e90680831b056b940c6",
+      "reason": "Runtime URL assembled from private persisted random passwords and encoded environment values; source contains variable expressions, no literal credential."
+    },
+    {
+      "path": "deploy/docker/runtime-config.cjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "692ddfe40932dc642f289bb3faccb0ab7c5ccb5e7ffa27f7363127ac68d360e3",
+      "reason": "Runtime URL assembled from private persisted random passwords and encoded environment values; source contains variable expressions, no literal credential."
+    },
+    {
+      "path": "deploy/runtime-config.test.mjs",
+      "rule": "CREDENTIAL_URL",
+      "fingerprint": "f967f34daa74fa8805e46953fe1c847b61620661a20f527eb6be5ea8372f90d5",
+      "reason": "Explicit synthetic PostgreSQL credential fixture for testing import of existing private application keys; no connection is attempted."
+    }
+  ],
+  "reviewedAssets": [
+    {
+      "path": "apps/admin-web/public/platform-mark.svg",
+      "sha256": "276ca96a6d7de9930902f0bc415350cc59415b81f501a831ebdf115e98cdfe4f",
+      "reason": "Original geometric SVG authored from scratch for this release, reviewed as text and rendered locally; no external images, scripts, links, customer data or credentials. Distributed under the project Apache-2.0 license."
+    },
+    {
+      "path": "apps/admin-web/public/medical-examples/layout-example.svg",
+      "sha256": "c0bd9edaceb0711c677ca711c58694699b2c6aa11a7c847a5b29ce3b1e763d18",
+      "reason": "Original geometric SVG authored from scratch for this release, reviewed as text and rendered locally; no external images, scripts, links, customer data or credentials. Distributed under the project Apache-2.0 license."
+    },
+    {
+      "path": "docs/images/overview-1080p.png",
+      "sha256": "c102b7f65e51a690e54acf67d3badba59d3c3ff81c50e3dbb8964c79dffb3507",
+      "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
+    },
+    {
+      "path": "docs/images/campaigns-1080p.png",
+      "sha256": "b634ed6a1f1815e6a365e5a29cbd54f9084e866892e5e1b0ed3de7751d16ef22",
+      "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
+    },
+    {
+      "path": "docs/images/geo-coverage-1080p.png",
+      "sha256": "fca4b29dd4f23daacb5e225956a8724fe30a8d26bd4ca785eb1b77045f089ce2",
+      "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
+    },
+    {
+      "path": "docs/images/publication-review-1080p.png",
+      "sha256": "772f6f629fda54b26bfc32b21bb48d776cd4cc8fb1ec904bc3f3daa7982c01dd",
+      "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
+    },
+    {
+      "path": "docs/images/publication-readback-1080p.png",
+      "sha256": "db989c25804eab11e952f63c6df706284f68ce38f5ee9e7b02c52b1a31610b95",
+      "reason": "Native 1920x1080 screenshot individually viewed for the first public release. All organizations, accounts, activity data, counts and links are explicit synthetic fixtures; no real customer records, private addresses, credentials or supplier calls. PNG text and EXIF chunks were absent. Captured from project UI and original demonstration content, distributed under project Apache-2.0; see docs/images/README.md."
+    }
+  ]
+}

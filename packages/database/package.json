@@ -1,0 +1,17 @@
+{
+  "name": "@xhs-agentic/database",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "@xhs-agentic/observability": "workspace:*"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,12 @@
+BEGIN;
+ALTER TABLE "admin_users" ALTER COLUMN "phone" DROP NOT NULL;
+ALTER TABLE "admin_users" ADD COLUMN "username" VARCHAR(64), ADD COLUMN "password_hash" VARCHAR(256);
+CREATE UNIQUE INDEX "admin_users_username_key" ON "admin_users"("username");
+ALTER TABLE "global_users" ALTER COLUMN "phone" DROP NOT NULL;
+ALTER TABLE "admin_users" ADD COLUMN "employee_user_id" TEXT;
+CREATE UNIQUE INDEX "admin_users_employee_user_id_key" ON "admin_users"("employee_user_id");
+ALTER TABLE "admin_users" ADD CONSTRAINT "admin_users_employee_user_id_fkey" FOREIGN KEY ("employee_user_id") REFERENCES "global_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "enterprise_memberships" ADD COLUMN "web_invitation_hash" VARCHAR(64), ADD COLUMN "web_invitation_expires_at" TIMESTAMP(3);
+CREATE UNIQUE INDEX "enterprise_memberships_web_invitation_hash_key" ON "enterprise_memberships"("web_invitation_hash");
+ALTER TABLE "campaigns" DROP CONSTRAINT IF EXISTS "campaigns_no_overlapping_delivery_windows";
+COMMIT;

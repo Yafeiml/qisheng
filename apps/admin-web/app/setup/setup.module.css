@@ -1,0 +1,97 @@
+.card.card {
+  width: min(760px, 100%);
+}
+.form.form {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 24px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.grid > * {
+  min-width: 0;
+}
+.form input,
+.form select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #ccd6cf;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #20362b;
+}
+.form input:focus-visible,
+.form select:focus-visible {
+  outline: 2px solid #387c55;
+  outline-offset: 2px;
+}
+.form input:disabled,
+.form select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.form select:hover:not(:disabled) {
+  border-color: #387c55;
+}
+.form > button {
+  min-height: 44px;
+  justify-self: stretch;
+}
+.form > button:focus-visible {
+  outline: 2px solid #387c55;
+  outline-offset: 3px;
+}
+.form > button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.actions > a,
+.actions > button {
+  min-height: 44px;
+  width: auto;
+}
+.completion {
+  margin-top: 28px;
+  display: grid;
+  gap: 14px;
+}
+.form p,
+.completion p {
+  margin: 0;
+  color: #617168;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.completion > a {
+  min-height: 44px;
+  text-align: center;
+}
+.form code {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .card.card {
+    padding: 24px 18px;
+  }
+  .actions > a,
+  .actions > button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}

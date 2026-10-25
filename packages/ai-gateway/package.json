@@ -1,0 +1,21 @@
+{
+  "name": "@xhs-agentic/ai-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "benchmark:dry-run": "tsx src/benchmark/dry-run.ts",
+    "benchmark:images": "tsx src/benchmark/image-cli.ts",
+    "benchmark:pilot-synthetic": "tsx src/benchmark/pilot-synthetic.ts",
+    "benchmark:real-provider": "tsx src/benchmark/real-provider.ts",
+    "benchmark:verify-real-provider": "tsx src/benchmark/verify-real-provider.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@xhs-agentic/network-security": "workspace:*",
+    "sharp": "0.35.4"
+  },
+  "license": "Apache-2.0"
+}

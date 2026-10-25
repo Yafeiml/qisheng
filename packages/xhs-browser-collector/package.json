@@ -1,0 +1,24 @@
+{
+  "name": "@xhs-agentic/xhs-browser-collector",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=24.21.0 <25"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "bundle:windows": "node scripts/pack-windows.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config vitest.config.mts"
+  },
+  "dependencies": {
+    "playwright-core": "1.63.0",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  },
+  "license": "Apache-2.0"
+}

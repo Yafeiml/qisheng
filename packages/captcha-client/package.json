@@ -1,0 +1,15 @@
+{
+  "name": "@xhs-agentic/captcha-client",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0"
+  },
+  "license": "Apache-2.0"
+}

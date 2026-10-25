@@ -1,0 +1,6 @@
+# Advanced override: pass existing database URLs and the original application keys in .env.
+services:
+  postgres:
+    profiles: [bundled-disabled]
+  redis:
+    profiles: [bundled-disabled]

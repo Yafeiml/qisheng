@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
+  <title id="title">企声发布标识</title>
+  <desc id="description">几何字母 Q 与两条声波线</desc>
+  <!-- Original geometric SVG authored for this release; no third-party media. -->
+  <rect width="64" height="64" rx="14" fill="#b62836"/>
+  <circle cx="27" cy="29" r="15" fill="none" stroke="#fffaf3" stroke-width="5"/>
+  <path d="M36 39 44 47" fill="none" stroke="#fffaf3" stroke-width="5" stroke-linecap="round"/>
+  <path d="M48 22v14M55 26v6" fill="none" stroke="#fffaf3" stroke-width="3" stroke-linecap="round"/>
+</svg>

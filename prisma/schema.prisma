@@ -1,0 +1,2939 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Platform-only experiments. No campaign, task or business storage mutations.
+model GenerationLabRun {
+  id           String               @id @default(cuid())
+  createdBy    String               @map("created_by")
+  tenantId     String               @map("tenant_id")
+  enterpriseId String               @map("enterprise_id")
+  parentId     String?              @map("parent_id")
+  title        String
+  action       String               @default("COPY")
+  status       String               @default("DRAFT")
+  input        Json
+  result       Json?
+  error        String?
+  reviewStatus String               @default("NONE") @map("review_status")
+  review       Json?
+  leaseToken   String?              @map("lease_token")
+  heartbeatAt  DateTime?            @map("heartbeat_at")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+  assets       GenerationLabAsset[]
+  calls        GenerationLabCall[]
+
+  @@index([status, createdAt])
+  @@index([reviewStatus, createdAt])
+  @@index([enterpriseId, createdAt])
+  @@map("generation_lab_runs")
+}
+
+model GenerationLabAsset {
+  id          String           @id @default(cuid())
+  runId       String           @map("run_id")
+  run         GenerationLabRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  kind        String
+  description String
+  mimeType    String           @map("mime_type")
+  checksum    String
+  bytes       Bytes
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  @@index([runId, kind])
+  @@map("generation_lab_assets")
+}
+
+model GenerationLabCall {
+  id         String           @id @default(cuid())
+  runId      String           @map("run_id")
+  run        GenerationLabRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  kind       String
+  providerId String           @map("provider_id")
+  modelId    String           @map("model_id")
+  request    Json
+  status     String           @default("STARTED")
+  usage      Json?
+  error      String?
+  latencyMs  Int?             @map("latency_ms")
+  createdAt  DateTime         @default(now()) @map("created_at")
+
+  @@index([runId, createdAt])
+  @@map("generation_lab_calls")
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TenantCustomerType {
+  SINGLE_ENTERPRISE
+  GROUP
+
+  @@map("tenant_customer_type")
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+
+  @@map("tenant_status")
+}
+
+enum EnterpriseStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("enterprise_status")
+}
+
+enum GlobalUserStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("global_user_status")
+}
+
+enum MembershipStatus {
+  PENDING_BIND
+  ACTIVE
+  DISABLED
+  LEFT
+
+  @@map("membership_status")
+}
+
+enum SeatStatus {
+  NOT_ENABLED
+  ENABLED
+
+  @@map("seat_status")
+}
+
+enum DepartmentStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("department_status")
+}
+
+enum MembershipImportBatchStatus {
+  PREVIEW_READY
+  PREVIEW_FAILED
+  IMPORTED
+
+  @@map("membership_import_batch_status")
+}
+
+enum DirectoryProvider {
+  WECOM
+  FEISHU
+  DINGTALK
+  SIMULATED
+
+  @@map("directory_provider")
+}
+
+enum DirectoryConnectionScopeType {
+  TENANT
+  ENTERPRISE
+
+  @@map("directory_connection_scope_type")
+}
+
+enum DirectoryManagementMode {
+  CENTRALIZED
+  ENTERPRISE_MANAGED
+
+  @@map("directory_management_mode")
+}
+
+enum DirectoryConnectionStatus {
+  DRAFT
+  ACTIVE
+  ERROR
+  DISABLED
+
+  @@map("directory_connection_status")
+}
+
+enum DirectorySyncMode {
+  MANUAL
+  SCHEDULED
+  EVENT
+
+  @@map("directory_sync_mode")
+}
+
+enum DirectoryMappingStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("directory_mapping_status")
+}
+
+enum DirectoryEmploymentStatus {
+  ACTIVE
+  INACTIVE
+  LEFT
+
+  @@map("directory_employment_status")
+}
+
+enum DirectoryMemberLinkStatus {
+  ACTIVE
+  MISSING
+  DISABLED
+
+  @@map("directory_member_link_status")
+}
+
+enum DirectorySyncRunStatus {
+  FETCHING
+  PREVIEW_READY
+  APPLIED
+  FAILED
+  SUPERSEDED
+
+  @@map("directory_sync_run_status")
+}
+
+enum DirectorySyncTrigger {
+  MANUAL
+  SCHEDULED
+  EVENT
+
+  @@map("directory_sync_trigger")
+}
+
+enum DirectorySyncChangeAction {
+  CREATE
+  UPDATE
+  DEPARTURE
+  CONFLICT
+
+  @@map("directory_sync_change_action")
+}
+
+enum DirectorySyncChangeStatus {
+  PENDING
+  APPLIED
+  SKIPPED
+  REJECTED
+
+  @@map("directory_sync_change_status")
+}
+
+enum DirectoryEventStatus {
+  RECEIVED
+  PROCESSING
+  RETRYABLE
+  PROCESSED
+  DEAD_LETTER
+
+  @@map("directory_event_status")
+}
+
+enum DirectoryAlertType {
+  CONNECTION_ERROR
+  PERMISSION_INVALID
+  CONSECUTIVE_FAILURES
+  EVENT_DEAD_LETTER
+  SYNC_STALE
+
+  @@map("directory_alert_type")
+}
+
+enum DirectoryAlertSeverity {
+  WARNING
+  CRITICAL
+
+  @@map("directory_alert_severity")
+}
+
+enum DirectoryAlertStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+
+  @@map("directory_alert_status")
+}
+
+enum MembershipParticipationStatus {
+  PENDING_REVIEW
+  PARTICIPATING
+  PAUSED
+  EXEMPT
+
+  @@map("membership_participation_status")
+}
+
+enum ParticipationControlOwner {
+  TENANT
+  ENTERPRISE
+
+  @@map("participation_control_owner")
+}
+
+enum AccessScopeType {
+  PLATFORM
+  TENANT
+  ENTERPRISE
+
+  @@map("access_scope_type")
+}
+
+enum RoleStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("role_status")
+}
+
+enum AuditActorType {
+  USER
+  SYSTEM
+  INTEGRATION
+
+  @@map("audit_actor_type")
+}
+
+enum CustomerContractStatus {
+  DRAFT
+  SIGNED
+  ACTIVE
+  SUPERSEDED
+  TERMINATED
+
+  @@map("customer_contract_status")
+}
+
+enum MaterialType {
+  TEXT
+  DOCUMENT
+  IMAGE_REFERENCE
+  LINK
+
+  @@map("material_type")
+}
+
+enum MaterialAuthorizationStatus {
+  PENDING
+  AUTHORIZED
+  REJECTED
+  EXPIRED
+
+  @@map("material_authorization_status")
+}
+
+enum MaterialStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("material_status")
+}
+
+enum MaterialIngestionStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+  QUARANTINED
+
+  @@map("material_ingestion_status")
+}
+
+enum MaterialIngestionPurpose {
+  INGEST
+  REINDEX
+
+  @@map("material_ingestion_purpose")
+}
+
+enum MaterialUsabilityStatus {
+  PENDING
+  USABLE
+  NEEDS_INPUT
+
+  @@map("material_usability_status")
+}
+
+enum MaterialArtifactKind {
+  UPLOAD
+  LINK_SNAPSHOT
+  IMAGE_SOURCE
+
+  @@map("material_artifact_kind")
+}
+
+enum MaterialArtifactStatus {
+  PENDING_UPLOAD
+  STORED
+  VERIFIED
+  REJECTED
+
+  @@map("material_artifact_status")
+}
+
+enum SensitiveSeverity {
+  BLOCK
+  WARNING
+  NOTICE
+
+  @@map("sensitive_severity")
+}
+
+enum GeoEntityType {
+  BRAND
+  ENTERPRISE
+  DOCTOR
+  DEVICE
+  TECHNOLOGY
+  SERVICE
+  LOCATION
+
+  @@map("geo_entity_type")
+}
+
+enum CampaignStatus {
+  DRAFT
+  GENERATING
+  REVIEW_PENDING
+  APPROVED
+  ACTIVE
+  COMPLETED
+  EXPIRED
+  GENERATION_FAILED
+  CANCELLED
+
+  @@map("campaign_status")
+}
+
+enum CampaignAudienceMode {
+  ALL
+  DEPARTMENT
+  SELECTED
+
+  @@map("campaign_audience_mode")
+}
+
+enum CampaignPlanningStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("campaign_planning_status")
+}
+
+enum ManagementActionStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+
+  @@map("management_action_status")
+}
+
+enum GenerationRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+
+  @@map("generation_run_status")
+}
+
+enum GenerationWorkItemStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+
+  @@map("generation_work_item_status")
+}
+
+enum ModelInvocationKind {
+  CAMPAIGN_BLUEPRINT
+  EMPLOYEE_COPY
+  EMPLOYEE_IMAGE
+
+  @@map("model_invocation_kind")
+}
+
+enum ModelInvocationStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+
+  @@map("model_invocation_status")
+}
+
+enum GeneratedContentStatus {
+  GENERATED
+  REVIEW_BLOCKED
+  APPROVED
+
+  @@map("generated_content_status")
+}
+
+enum DistributionTaskStatus {
+  LOCKED
+  AVAILABLE
+  VERIFYING
+  COMPLETED
+  EXPIRED
+  CANCELLED
+  LATE_CORRECTED
+
+  @@map("distribution_task_status")
+}
+
+enum PublishVerificationStatus {
+  PENDING
+  VERIFYING
+  VALID
+  INVALID
+  DUPLICATE
+  UNAVAILABLE
+  MANUAL_REVIEW
+  SUPERSEDED
+
+  @@map("publish_verification_status")
+}
+
+enum ModelCapability {
+  TEXT
+  IMAGE
+  MULTIMODAL
+  EMBEDDING
+  VISION
+
+  @@map("model_capability")
+}
+
+enum ModelTier {
+  BASIC
+  STANDARD
+  ADVANCED
+  PREMIUM
+
+  @@map("model_tier")
+}
+
+enum ModelRouteScopeType {
+  PLATFORM
+  TENANT
+  ENTERPRISE
+
+  @@map("model_route_scope_type")
+}
+
+enum ModelResourceStatus {
+  ACTIVE
+  DISABLED
+
+  @@map("model_resource_status")
+}
+
+enum ModelProviderProtocol {
+  SYNTHETIC
+  OPENAI_COMPATIBLE
+
+  @@map("model_provider_protocol")
+}
+
+enum ModelProviderCredentialStatus {
+  ACTIVE
+  REVOKED
+
+  @@map("model_provider_credential_status")
+}
+
+enum ModelProviderHealthStatus {
+  UNKNOWN
+  HEALTHY
+  UNHEALTHY
+
+  @@map("model_provider_health_status")
+}
+
+enum ProviderCircuitState {
+  CLOSED
+  OPEN
+  HALF_OPEN
+
+  @@map("provider_circuit_state")
+}
+
+enum GenerationDeliveryMode {
+  DEVELOPMENT
+  PRODUCTION
+
+  @@map("generation_delivery_mode")
+}
+
+enum ModelRouteQualificationStatus {
+  PASSED
+  FAILED
+
+  @@map("model_route_qualification_status")
+}
+
+enum IdempotencyAudience {
+  SAAS_ADMIN
+  EMPLOYEE
+  INTEGRATION
+
+  @@map("idempotency_audience")
+}
+
+enum PlatformSettingGroup {
+  GENERAL
+  GENERATION
+  RETRIEVAL
+  WORKER
+  STORAGE
+  CONTENT_SAFETY
+  PUBLICATION
+  PAYMENT
+  SECURITY
+  NOTIFICATION
+  MINIAPP
+
+  @@map("platform_setting_group")
+}
+
+enum PlatformSettingValueType {
+  STRING
+  INTEGER
+  DECIMAL
+  BOOLEAN
+  URL
+  ENUM
+  SECRET
+
+  @@map("platform_setting_value_type")
+}
+
+enum IdempotencyStatus {
+  PROCESSING
+  COMPLETED
+
+  @@map("idempotency_status")
+}
+
+enum StorageReservationStatus {
+  RESERVED
+  COMMITTED
+  RELEASED
+
+  @@map("storage_reservation_status")
+}
+
+enum StorageUsageType {
+  RESERVE
+  COMMIT
+  RELEASE
+
+  @@map("storage_usage_type")
+}
+
+model Tenant {
+  id           String             @id @default(cuid())
+  name         String             @db.VarChar(160)
+  customerType TenantCustomerType @map("customer_type")
+  status       TenantStatus       @default(ACTIVE)
+  timezone     String             @default("Asia/Shanghai") @db.VarChar(64)
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+
+  enterprises                 Enterprise[]
+  memberships                 EnterpriseMembership[]
+  roleBindings                RoleBinding[]
+  adminOrganizationProfiles   AdminOrganizationProfile[]
+  auditLogs                   AuditLog[]
+  customerContracts           CustomerContract[]
+  departments                 Department[]
+  membershipImportBatches     MembershipImportBatch[]
+  enterprisePersonnelPolicies EnterprisePersonnelPolicy[]
+  membershipParticipations    MembershipParticipation[]
+  directoryConnections        DirectoryConnection[]
+  directoryEnterpriseMappings DirectoryEnterpriseMapping[]
+  directoryDepartmentLinks    DirectoryDepartmentLink[]
+  directoryMemberLinks        DirectoryMemberLink[]
+  directorySyncRuns           DirectorySyncRun[]
+  directorySyncChanges        DirectorySyncChange[]
+  directoryEventInbox         DirectoryEventInbox[]
+  directoryAlerts             DirectoryAlert[]
+  materials                   Material[]
+  materialArtifacts           MaterialArtifact[]
+  materialIngestionJobs       MaterialIngestionJob[]
+  materialChunks              MaterialChunk[]
+  materialEmbeddings          MaterialEmbedding[]
+  campaignRetrievalEvidence   CampaignRetrievalEvidence[]
+  sensitiveRules              SensitiveRule[]
+  geoEntities                 GeoEntity[]
+  geoTopics                   GeoTopic[]
+  campaigns                   Campaign[]
+  promptTemplates             PromptTemplate[]
+  campaignTemplates           CampaignTemplate[]
+  campaignDrafts              CampaignDraft[]
+  managementActions           ManagementAction[]
+  campaignAudienceSnapshots   CampaignAudienceSnapshot[]
+  campaignBlueprints          CampaignBlueprint[]
+  generationRuns              GenerationRun[]
+  generationWorkItems         GenerationWorkItem[]
+  modelInvocations            ModelInvocation[]
+  employeeContents            EmployeeContent[]
+  generatedImages             GeneratedImage[]
+  distributionTasks           DistributionTask[]
+  publishSubmissions          PublishSubmission[]
+  publishedContentRegistry    PublishedContentRegistry[]
+  publicContentFixtures       PublicContentFixture[]
+  publishMetricSnapshots      PublishMetricSnapshot[]
+  modelRoutes                 ModelRoute[]
+  platformCustomerNotes       PlatformCustomerNote[]
+  employeeContentRevisions    EmployeeContentRevision[]
+  storageAccount              TenantStorageAccount?
+  capabilityPolicy            TenantCapabilityPolicy?
+
+  @@index([status])
+  @@index([createdAt, id])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "tenants_name_trgm_idx")
+  @@map("tenants")
+}
+
+model TenantCapabilityPolicy {
+  tenantId                    String   @id @map("tenant_id")
+  maxEnterprises              Int?     @map("max_enterprises")
+  maxImagesPerContent         Int      @default(1) @map("max_images_per_content")
+  groupSharedMaterialsEnabled Boolean  @default(true) @map("group_shared_materials_enabled")
+  geoEnabled                  Boolean  @default(true) @map("geo_enabled")
+  geoEntityLimit              Int      @default(500) @map("geo_entity_limit")
+  geoTopicLimit               Int      @default(5000) @map("geo_topic_limit")
+  metricsIntegrationEnabled   Boolean  @default(true) @map("metrics_integration_enabled")
+  storageLimitBytes           BigInt   @default(10737418240) @map("storage_limit_bytes")
+  createdAt                   DateTime @default(now()) @map("created_at")
+  updatedAt                   DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@map("tenant_capability_policies")
+}
+
+model Industry {
+  id                 String   @id @default(cuid())
+  name               String   @unique @db.VarChar(100)
+  generationGuidance String   @default("") @map("generation_guidance") @db.Text
+  sortOrder          Int      @default(1000) @map("sort_order")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@index([sortOrder, name])
+  @@map("industries")
+}
+
+model Enterprise {
+  id        String           @id @default(cuid())
+  tenantId  String           @map("tenant_id")
+  name      String           @db.VarChar(160)
+  code      String           @unique @db.VarChar(64)
+  brandName String?          @map("brand_name") @db.VarChar(160)
+  industry  String?          @db.VarChar(100)
+  city      String?          @db.VarChar(100)
+  status    EnterpriseStatus @default(ACTIVE)
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  tenant                    Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  memberships               EnterpriseMembership[]
+  departments               Department[]
+  membershipImportBatches   MembershipImportBatch[]
+  personnelPolicy           EnterprisePersonnelPolicy?
+  membershipParticipations  MembershipParticipation[]
+  directoryConnections      DirectoryConnection[]
+  directoryMappings         DirectoryEnterpriseMapping[]
+  directoryDepartmentLinks  DirectoryDepartmentLink[]
+  directoryMemberLinks      DirectoryMemberLink[]
+  directorySyncRuns         DirectorySyncRun[]
+  directorySyncChanges      DirectorySyncChange[]
+  directoryEventInbox       DirectoryEventInbox[]
+  directoryAlerts           DirectoryAlert[]
+  roleBindings              RoleBinding[]
+  adminOrganizationProfiles AdminOrganizationProfile[]
+  auditLogs                 AuditLog[]
+  materials                 Material[]
+  materialArtifacts         MaterialArtifact[]
+  materialIngestionJobs     MaterialIngestionJob[]
+  materialChunks            MaterialChunk[]
+  materialEmbeddings        MaterialEmbedding[]
+  campaignRetrievalEvidence CampaignRetrievalEvidence[]
+  sensitiveRules            SensitiveRule[]
+  geoEntities               GeoEntity[]
+  geoTopics                 GeoTopic[]
+  campaigns                 Campaign[]
+  promptTemplates           PromptTemplate[]
+  campaignTemplates         CampaignTemplate[]
+  campaignDrafts            CampaignDraft[]
+  managementActions         ManagementAction[]
+  campaignAudienceSnapshots CampaignAudienceSnapshot[]
+  generationWorkItems       GenerationWorkItem[]
+  modelInvocations          ModelInvocation[]
+  employeeContents          EmployeeContent[]
+  distributionTasks         DistributionTask[]
+  modelRoutes               ModelRoute[]
+  employeeContentRevisions  EmployeeContentRevision[]
+
+  @@unique([tenantId, code])
+  @@unique([id, tenantId])
+  @@index([tenantId, status])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "enterprises_name_trgm_idx")
+  @@index([code(ops: raw("gin_trgm_ops"))], type: Gin, map: "enterprises_code_trgm_idx")
+  @@map("enterprises")
+}
+
+model AdminUser {
+  id                         String           @id @default(cuid())
+  name                       String?          @db.VarChar(100)
+  phone                      String?          @unique @db.VarChar(32)
+  username                   String?          @unique @db.VarChar(64)
+  passwordHash               String?          @map("password_hash") @db.VarChar(256)
+  employeeUserId             String?          @unique @map("employee_user_id")
+  email                      String?          @unique @db.VarChar(254)
+  emailVerifiedAt            DateTime?        @map("email_verified_at")
+  emailVerificationTokenHash String?          @unique @map("email_verification_token_hash") @db.VarChar(64)
+  emailVerificationExpiresAt DateTime?        @map("email_verification_expires_at")
+  avatarUrl                  String?          @map("avatar_url") @db.VarChar(1000)
+  phoneVerifiedAt            DateTime?        @map("phone_verified_at")
+  status                     GlobalUserStatus @default(ACTIVE)
+  lastLoginAt                DateTime?        @map("last_login_at")
+  createdAt                  DateTime         @default(now()) @map("created_at")
+  updatedAt                  DateTime         @updatedAt @map("updated_at")
+
+  roleBindings         RoleBinding[]
+  adminSessions        AdminSession[]
+  organizationProfiles AdminOrganizationProfile[]
+  employeeUser         GlobalUser?                @relation(fields: [employeeUserId], references: [id], onDelete: Restrict)
+
+  @@index([status])
+  @@index([name])
+  @@map("admin_users")
+}
+
+model AdminOrganizationProfile {
+  id           String          @id @default(cuid())
+  userId       String          @map("user_id")
+  scopeType    AccessScopeType @map("scope_type")
+  scopeId      String          @map("scope_id") @db.VarChar(64)
+  tenantId     String?         @map("tenant_id")
+  enterpriseId String?         @map("enterprise_id")
+  jobTitle     String?         @map("job_title") @db.VarChar(100)
+  department   String?         @db.VarChar(100)
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  user       AdminUser   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant     Tenant?     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  enterprise Enterprise? @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([userId, scopeType, scopeId])
+  @@index([tenantId, userId])
+  @@index([enterpriseId, userId])
+  @@index([scopeType, scopeId])
+  @@map("admin_organization_profiles")
+}
+
+model GlobalUser {
+  id              String           @id @default(cuid())
+  phone           String?          @unique @db.VarChar(32)
+  phoneVerifiedAt DateTime?        @map("phone_verified_at")
+  wechatOpenId    String?          @unique @map("wechat_open_id") @db.VarChar(128)
+  wechatUnionId   String?          @unique @map("wechat_union_id") @db.VarChar(128)
+  status          GlobalUserStatus @default(ACTIVE)
+  lastLoginAt     DateTime?        @map("last_login_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  memberships             EnterpriseMembership[]
+  wechatMiniappIdentities WechatMiniappIdentity[]
+  taskNotifications       EmployeeTaskNotification[]
+  passwordAccount         AdminUser?
+
+  @@index([status])
+  @@map("global_users")
+}
+
+model WechatMiniappIdentity {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  appId     String   @map("app_id") @db.VarChar(32)
+  openId    String   @map("open_id") @db.VarChar(128)
+  unionId   String?  @map("union_id") @db.VarChar(128)
+  version   Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          GlobalUser                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptions EmployeeNotificationSubscription[]
+  requests      EmployeeSubscriptionRequest[]
+  notifications EmployeeTaskNotification[]
+
+  @@unique([userId, appId])
+  @@unique([appId, openId])
+  @@map("wechat_miniapp_identities")
+}
+
+model EmployeeNotificationSubscription {
+  id                      String    @id @default(cuid())
+  identityId              String    @map("identity_id")
+  templateId              String    @map("template_id") @db.VarChar(160)
+  status                  String    @default("NONE") @db.VarChar(20)
+  remainingSubscriptions  Int       @default(0) @map("remaining_subscriptions")
+  version                 Int       @default(1)
+  authorizationGeneration Int       @default(1) @map("authorization_generation")
+  lastAuthorizedAt        DateTime? @map("last_authorized_at")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  identity      WechatMiniappIdentity      @relation(fields: [identityId], references: [id], onDelete: Cascade)
+  notifications EmployeeTaskNotification[]
+
+  @@unique([identityId, templateId])
+  @@map("employee_notification_subscriptions")
+}
+
+model EmployeeSubscriptionRequest {
+  id         String   @id @db.VarChar(64)
+  identityId String   @map("identity_id")
+  templateId String   @map("template_id") @db.VarChar(160)
+  status     String   @db.VarChar(20)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  identity WechatMiniappIdentity @relation(fields: [identityId], references: [id], onDelete: Cascade)
+
+  @@index([identityId, createdAt])
+  @@map("employee_subscription_requests")
+}
+
+model EmployeeTaskNotification {
+  id                                  String    @id @default(cuid())
+  taskId                              String    @map("task_id")
+  event                               String    @default("NEW_TASK") @db.VarChar(32)
+  userId                              String    @map("user_id")
+  appId                               String    @map("app_id") @db.VarChar(32)
+  templateId                          String    @map("template_id") @db.VarChar(160)
+  identityId                          String?   @map("identity_id")
+  subscriptionId                      String?   @map("subscription_id")
+  identityVersion                     Int       @default(1) @map("identity_version")
+  status                              String    @default("PENDING") @db.VarChar(20)
+  attempts                            Int       @default(0)
+  nextAttemptAt                       DateTime  @default(now()) @map("next_attempt_at")
+  leaseToken                          String?   @map("lease_token") @db.VarChar(64)
+  leaseUntil                          DateTime? @map("lease_until")
+  errorCode                           String?   @map("error_code") @db.VarChar(120)
+  subscriptionReserved                Boolean   @default(false) @map("subscription_reserved")
+  subscriptionAuthorizationGeneration Int?      @map("subscription_authorization_generation")
+  channel                             String    @default("WECHAT_TEMPLATE") @db.VarChar(32)
+  recipientPhone                      String?   @map("recipient_phone") @db.VarChar(32)
+  recipientPhoneVerifiedAt            DateTime? @map("recipient_phone_verified_at")
+  recipientPhoneVersion               Int?      @map("recipient_phone_version")
+  smsBizId                            String?   @map("sms_biz_id") @db.VarChar(160)
+  smsProviderRequestId                String?   @map("sms_provider_request_id") @db.VarChar(160)
+  smsDeliveryStatus                   String?   @map("sms_delivery_status") @db.VarChar(20)
+  smsDeliveryCode                     String?   @map("sms_delivery_code") @db.VarChar(120)
+  smsDeliveredAt                      DateTime? @map("sms_delivered_at")
+  smsQueryAttempts                    Int       @default(0) @map("sms_query_attempts")
+  smsNextQueryAt                      DateTime? @map("sms_next_query_at")
+  lastAttemptAt                       DateTime? @map("last_attempt_at")
+  sentAt                              DateTime? @map("sent_at")
+  createdAt                           DateTime  @default(now()) @map("created_at")
+  updatedAt                           DateTime  @updatedAt @map("updated_at")
+
+  task         DistributionTask                  @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user         GlobalUser                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  identity     WechatMiniappIdentity?            @relation(fields: [identityId], references: [id], onDelete: SetNull)
+  subscription EmployeeNotificationSubscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  @@unique([taskId, event])
+  @@index([status, nextAttemptAt])
+  @@index([userId, createdAt])
+  @@index([smsDeliveryStatus, smsNextQueryAt], map: "employee_task_notifications_sms_delivery_status_sms_next_query_")
+  @@map("employee_task_notifications")
+}
+
+model AdminSession {
+  id               String    @id @default(cuid())
+  userId           String    @map("user_id")
+  refreshTokenHash String    @unique @map("refresh_token_hash") @db.Char(64)
+  expiresAt        DateTime  @map("expires_at")
+  lastUsedAt       DateTime  @default(now()) @map("last_used_at")
+  revokedAt        DateTime? @map("revoked_at")
+  revokeReason     String?   @map("revoke_reason") @db.VarChar(120)
+  userAgent        String?   @map("user_agent") @db.VarChar(300)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user AdminUser @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, revokedAt, expiresAt])
+  @@index([expiresAt])
+  @@map("admin_sessions")
+}
+
+model IdempotencyRecord {
+  id                 String              @id @default(cuid())
+  userId             String              @map("user_id")
+  audience           IdempotencyAudience
+  key                String              @db.VarChar(200)
+  method             String              @db.VarChar(12)
+  requestPath        String              @map("request_path") @db.VarChar(1000)
+  requestHash        String              @map("request_hash") @db.Char(64)
+  status             IdempotencyStatus   @default(PROCESSING)
+  lockToken          String              @map("lock_token") @db.Uuid
+  lockedUntil        DateTime            @map("locked_until")
+  expiresAt          DateTime            @map("expires_at")
+  responseStatusCode Int?                @map("response_status_code")
+  responseBody       Json?               @map("response_body")
+  completedAt        DateTime?           @map("completed_at")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+
+  @@unique([userId, audience, key])
+  @@index([status, lockedUntil])
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+
+model EnterpriseMembership {
+  id                          String           @id @default(cuid())
+  tenantId                    String           @map("tenant_id")
+  enterpriseId                String           @map("enterprise_id")
+  globalUserId                String?          @map("global_user_id")
+  name                        String           @db.VarChar(100)
+  publisherContext            Json?            @map("publisher_context")
+  phone                       String           @db.VarChar(32)
+  webInvitationHash           String?          @unique @map("web_invitation_hash") @db.VarChar(64)
+  webInvitationExpiresAt      DateTime?        @map("web_invitation_expires_at")
+  smsNotificationStatus       String?          @default("PENDING_VERIFICATION") @map("sms_notification_status") @db.VarChar(32)
+  smsNotificationPhoneVersion Int              @default(1) @map("sms_notification_phone_version")
+  smsNotificationStatusAt     DateTime?        @map("sms_notification_status_at")
+  employeeNo                  String?          @map("employee_no") @db.VarChar(64)
+  departmentId                String?          @map("department_id")
+  status                      MembershipStatus @default(PENDING_BIND)
+  seatStatus                  SeatStatus       @default(NOT_ENABLED) @map("seat_status")
+  boundAt                     DateTime?        @map("bound_at")
+  seatEnabledAt               DateTime?        @map("seat_enabled_at")
+  seatDisabledAt              DateTime?        @map("seat_disabled_at")
+  createdAt                   DateTime         @default(now()) @map("created_at")
+  updatedAt                   DateTime         @updatedAt @map("updated_at")
+
+  tenant                    Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise                Enterprise                 @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  globalUser                GlobalUser?                @relation(fields: [globalUserId], references: [id], onDelete: Restrict)
+  department                Department?                @relation(fields: [departmentId, enterpriseId], references: [id, enterpriseId], onDelete: Restrict)
+  campaignAudienceSnapshots CampaignAudienceSnapshot[]
+  employeeContents          EmployeeContent[]
+  distributionTasks         DistributionTask[]
+  generationWorkItems       GenerationWorkItem[]
+  participation             MembershipParticipation?
+  directoryLinks            DirectoryMemberLink[]
+
+  @@unique([enterpriseId, phone])
+  @@unique([enterpriseId, employeeNo])
+  @@unique([enterpriseId, globalUserId])
+  @@unique([id, enterpriseId, tenantId])
+  @@index([tenantId, status])
+  @@index([enterpriseId, status, seatStatus])
+  @@index([enterpriseId, createdAt, id])
+  @@index([globalUserId])
+  @@map("enterprise_memberships")
+}
+
+model Role {
+  id          String          @id @default(cuid())
+  code        String          @unique @db.VarChar(80)
+  name        String          @db.VarChar(100)
+  description String?         @db.VarChar(500)
+  scopeType   AccessScopeType @map("scope_type")
+  isSystem    Boolean         @default(false) @map("is_system")
+  status      RoleStatus      @default(ACTIVE)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  permissions  RolePermission[]
+  roleBindings RoleBinding[]
+
+  @@unique([id, scopeType])
+  @@index([scopeType, status])
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  code        String   @unique @db.VarChar(120)
+  name        String   @db.VarChar(120)
+  description String?  @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String   @map("role_id")
+  permissionId String   @map("permission_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Restrict)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model RoleBinding {
+  id           String          @id @default(cuid())
+  userId       String          @map("user_id")
+  roleId       String          @map("role_id")
+  scopeType    AccessScopeType @map("scope_type")
+  scopeId      String          @map("scope_id") @db.VarChar(64)
+  tenantId     String?         @map("tenant_id")
+  enterpriseId String?         @map("enterprise_id")
+  createdBy    String?         @map("created_by")
+  createdAt    DateTime        @default(now()) @map("created_at")
+
+  user       AdminUser   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  role       Role        @relation(fields: [roleId, scopeType], references: [id, scopeType], onDelete: Restrict)
+  tenant     Tenant?     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([userId, roleId, scopeType, scopeId])
+  @@index([tenantId, userId])
+  @@index([enterpriseId, userId])
+  @@index([scopeType, scopeId])
+  @@map("role_bindings")
+}
+
+model AuditLog {
+  id           String         @id @default(cuid())
+  tenantId     String?        @map("tenant_id")
+  enterpriseId String?        @map("enterprise_id")
+  actorType    AuditActorType @map("actor_type")
+  actorUserId  String?        @map("actor_user_id")
+  action       String         @db.VarChar(120)
+  resourceType String         @map("resource_type") @db.VarChar(120)
+  resourceId   String?        @map("resource_id") @db.VarChar(64)
+  reason       String?        @db.VarChar(500)
+  requestId    String?        @map("request_id") @db.VarChar(100)
+  stateBefore  Json?          @map("state_before")
+  stateAfter   Json?          @map("state_after")
+  metadata     Json?
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  tenant     Tenant?     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@index([tenantId, createdAt])
+  @@index([enterpriseId, createdAt])
+  @@index([enterpriseId, createdAt, id])
+  @@index([actorUserId, createdAt])
+  @@index([resourceType, resourceId])
+  @@index([tenantId, resourceType, resourceId, createdAt, id], map: "audit_logs_resource_timeline_idx")
+  @@map("audit_logs")
+}
+
+model PlatformCustomerNote {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  body      String   @db.VarChar(2000)
+  createdBy String   @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, createdAt, id])
+  @@map("platform_customer_notes")
+}
+
+model Department {
+  id           String           @id @default(cuid())
+  tenantId     String           @map("tenant_id")
+  enterpriseId String           @map("enterprise_id")
+  name         String           @db.VarChar(120)
+  code         String           @db.VarChar(64)
+  status       DepartmentStatus @default(ACTIVE)
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  tenant         Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise     Enterprise                @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  memberships    EnterpriseMembership[]
+  directoryLinks DirectoryDepartmentLink[]
+
+  @@unique([enterpriseId, code])
+  @@unique([id, enterpriseId])
+  @@index([tenantId, enterpriseId, status])
+  @@map("departments")
+}
+
+model MembershipImportBatch {
+  id           String                      @id @default(cuid())
+  tenantId     String                      @map("tenant_id")
+  enterpriseId String                      @map("enterprise_id")
+  fileName     String?                     @map("file_name") @db.VarChar(255)
+  source       String                      @db.VarChar(32)
+  status       MembershipImportBatchStatus
+  rowCount     Int                         @map("row_count")
+  createCount  Int                         @map("create_count")
+  updateCount  Int                         @map("update_count")
+  errorCount   Int                         @map("error_count")
+  report       Json
+  createdBy    String                      @map("created_by")
+  importedAt   DateTime?                   @map("imported_at")
+  createdAt    DateTime                    @default(now()) @map("created_at")
+  updatedAt    DateTime                    @updatedAt @map("updated_at")
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  // PostgreSQL truncates identifiers at 63 bytes; pin the physical name so migration diff remains stable.
+  @@index([tenantId, enterpriseId, createdAt], map: "membership_import_batches_tenant_id_enterprise_id_created_at_id")
+  @@index([enterpriseId, status, createdAt])
+  @@map("membership_import_batches")
+}
+
+model EnterprisePersonnelPolicy {
+  id                                     String                        @id @default(cuid())
+  tenantId                               String                        @map("tenant_id")
+  enterpriseId                           String                        @unique @map("enterprise_id")
+  allowEnterpriseParticipationManagement Boolean                       @default(true) @map("allow_enterprise_participation_management")
+  allowEnterpriseSeatManagement          Boolean                       @default(false) @map("allow_enterprise_seat_management")
+  defaultParticipationStatus             MembershipParticipationStatus @default(PENDING_REVIEW) @map("default_participation_status")
+  updatedBy                              String                        @map("updated_by")
+  createdAt                              DateTime                      @default(now()) @map("created_at")
+  updatedAt                              DateTime                      @updatedAt @map("updated_at")
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([enterpriseId, tenantId])
+  @@index([tenantId, enterpriseId])
+  @@map("enterprise_personnel_policies")
+}
+
+model MembershipParticipation {
+  id             String                        @id @default(cuid())
+  tenantId       String                        @map("tenant_id")
+  enterpriseId   String                        @map("enterprise_id")
+  membershipId   String                        @unique @map("membership_id")
+  status         MembershipParticipationStatus @default(PENDING_REVIEW)
+  reasonCode     String?                       @map("reason_code") @db.VarChar(64)
+  reason         String?                       @db.VarChar(500)
+  effectiveFrom  DateTime?                     @map("effective_from")
+  effectiveUntil DateTime?                     @map("effective_until")
+  controlOwner   ParticipationControlOwner     @default(ENTERPRISE) @map("control_owner")
+  lockedByTenant Boolean                       @default(false) @map("locked_by_tenant")
+  updatedBy      String                        @map("updated_by")
+  version        Int                           @default(1)
+  createdAt      DateTime                      @default(now()) @map("created_at")
+  updatedAt      DateTime                      @updatedAt @map("updated_at")
+
+  tenant     Tenant               @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise           @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  membership EnterpriseMembership @relation(fields: [membershipId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+
+  @@unique([membershipId, enterpriseId, tenantId])
+  @@index([tenantId, enterpriseId, status])
+  @@index([status, effectiveUntil])
+  @@map("membership_participations")
+}
+
+model DirectoryConnection {
+  id                             String                       @id @default(cuid())
+  tenantId                       String                       @map("tenant_id")
+  enterpriseId                   String?                      @map("enterprise_id")
+  name                           String                       @db.VarChar(120)
+  provider                       DirectoryProvider
+  scopeType                      DirectoryConnectionScopeType @map("scope_type")
+  managementMode                 DirectoryManagementMode      @map("management_mode")
+  externalOrganizationId         String                       @map("external_organization_id") @db.VarChar(160)
+  credentialCiphertext           Bytes                        @map("credential_ciphertext")
+  credentialInitializationVector Bytes                        @map("credential_initialization_vector")
+  credentialAuthenticationTag    Bytes                        @map("credential_authentication_tag")
+  credentialKeyVersion           String                       @map("credential_key_version") @db.VarChar(40)
+  credentialLastFour             String                       @map("credential_last_four") @db.VarChar(4)
+  status                         DirectoryConnectionStatus    @default(DRAFT)
+  syncMode                       DirectorySyncMode            @default(MANUAL) @map("sync_mode")
+  syncIntervalMinutes            Int                          @default(1440) @map("sync_interval_minutes")
+  nextSyncAt                     DateTime?                    @map("next_sync_at")
+  lastSyncAt                     DateTime?                    @map("last_sync_at")
+  lastSuccessAt                  DateTime?                    @map("last_success_at")
+  lastEventAt                    DateTime?                    @map("last_event_at")
+  lastErrorCode                  String?                      @map("last_error_code") @db.VarChar(120)
+  consecutiveFailureCount        Int                          @default(0) @map("consecutive_failure_count")
+  automationLeaseOwner           String?                      @map("automation_lease_owner") @db.VarChar(160)
+  automationLeaseExpiresAt       DateTime?                    @map("automation_lease_expires_at")
+  credentialRotatedAt            DateTime?                    @map("credential_rotated_at")
+  credentialRotatedBy            String?                      @map("credential_rotated_by") @db.VarChar(64)
+  createdBy                      String                       @map("created_by")
+  createdAt                      DateTime                     @default(now()) @map("created_at")
+  updatedAt                      DateTime                     @updatedAt @map("updated_at")
+
+  tenant          Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise      Enterprise?                  @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  mappings        DirectoryEnterpriseMapping[]
+  departmentLinks DirectoryDepartmentLink[]
+  memberLinks     DirectoryMemberLink[]
+  syncRuns        DirectorySyncRun[]
+  eventInbox      DirectoryEventInbox[]
+  alerts          DirectoryAlert[]
+
+  @@unique([id, tenantId])
+  @@index([tenantId, scopeType, status])
+  @@index([enterpriseId, status])
+  @@index([syncMode, nextSyncAt, status], map: "directory_connections_automation_due_idx")
+  @@index([automationLeaseExpiresAt])
+  @@map("directory_connections")
+}
+
+model DirectoryEnterpriseMapping {
+  id                              String                 @id @default(cuid())
+  tenantId                        String                 @map("tenant_id")
+  connectionId                    String                 @map("connection_id")
+  enterpriseId                    String                 @map("enterprise_id")
+  externalRootDepartmentId        String                 @map("external_root_department_id") @db.VarChar(160)
+  externalRootPath                String?                @map("external_root_path") @db.VarChar(500)
+  includeChildren                 Boolean                @default(true) @map("include_children")
+  allowEnterpriseSyncConfirmation Boolean                @default(false) @map("allow_enterprise_sync_confirmation")
+  status                          DirectoryMappingStatus @default(ACTIVE)
+  createdBy                       String                 @map("created_by")
+  createdAt                       DateTime               @default(now()) @map("created_at")
+  updatedAt                       DateTime               @updatedAt @map("updated_at")
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  connection DirectoryConnection @relation(fields: [connectionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enterprise Enterprise          @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([connectionId, externalRootDepartmentId, enterpriseId])
+  @@index([tenantId, enterpriseId, status])
+  @@index([enterpriseId, allowEnterpriseSyncConfirmation, status], map: "directory_enterprise_mappings_enterprise_confirmation_idx")
+  @@map("directory_enterprise_mappings")
+}
+
+model DirectoryDepartmentLink {
+  id                         String   @id @default(cuid())
+  tenantId                   String   @map("tenant_id")
+  connectionId               String   @map("connection_id")
+  enterpriseId               String   @map("enterprise_id")
+  departmentId               String   @map("department_id")
+  externalDepartmentId       String   @map("external_department_id") @db.VarChar(160)
+  externalParentDepartmentId String?  @map("external_parent_department_id") @db.VarChar(160)
+  externalPath               String?  @map("external_path") @db.VarChar(500)
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  connection DirectoryConnection @relation(fields: [connectionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enterprise Enterprise          @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  department Department          @relation(fields: [departmentId, enterpriseId], references: [id, enterpriseId], onDelete: Restrict)
+
+  @@unique([connectionId, externalDepartmentId, enterpriseId])
+  @@index([tenantId, enterpriseId, departmentId])
+  @@map("directory_department_links")
+}
+
+model DirectoryMemberLink {
+  id                   String                    @id @default(cuid())
+  tenantId             String                    @map("tenant_id")
+  connectionId         String                    @map("connection_id")
+  enterpriseId         String                    @map("enterprise_id")
+  membershipId         String                    @map("membership_id")
+  externalUserId       String                    @map("external_user_id") @db.VarChar(160)
+  employmentStatus     DirectoryEmploymentStatus @default(ACTIVE) @map("employment_status")
+  sourceSnapshotHash   String                    @map("source_snapshot_hash") @db.Char(64)
+  lastSeenAt           DateTime                  @map("last_seen_at")
+  missingFullSyncCount Int                       @default(0) @map("missing_full_sync_count")
+  status               DirectoryMemberLinkStatus @default(ACTIVE)
+  createdAt            DateTime                  @default(now()) @map("created_at")
+  updatedAt            DateTime                  @updatedAt @map("updated_at")
+
+  tenant     Tenant               @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  connection DirectoryConnection  @relation(fields: [connectionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enterprise Enterprise           @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  membership EnterpriseMembership @relation(fields: [membershipId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+
+  @@unique([connectionId, externalUserId, enterpriseId])
+  @@unique([connectionId, membershipId])
+  @@index([tenantId, enterpriseId, status])
+  @@index([membershipId])
+  @@map("directory_member_links")
+}
+
+model DirectorySyncRun {
+  id             String                 @id @default(cuid())
+  tenantId       String                 @map("tenant_id")
+  enterpriseId   String?                @map("enterprise_id")
+  connectionId   String                 @map("connection_id")
+  status         DirectorySyncRunStatus @default(FETCHING)
+  trigger        DirectorySyncTrigger   @default(MANUAL)
+  initiatedBy    String                 @map("initiated_by")
+  fetchedCount   Int                    @default(0) @map("fetched_count")
+  createCount    Int                    @default(0) @map("create_count")
+  updateCount    Int                    @default(0) @map("update_count")
+  departureCount Int                    @default(0) @map("departure_count")
+  conflictCount  Int                    @default(0) @map("conflict_count")
+  appliedCount   Int                    @default(0) @map("applied_count")
+  errorCode      String?                @map("error_code") @db.VarChar(120)
+  errorMessage   String?                @map("error_message") @db.VarChar(500)
+  startedAt      DateTime               @default(now()) @map("started_at")
+  completedAt    DateTime?              @map("completed_at")
+  createdAt      DateTime               @default(now()) @map("created_at")
+  updatedAt      DateTime               @updatedAt @map("updated_at")
+
+  tenant       Tenant                @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise   Enterprise?           @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  connection   DirectoryConnection   @relation(fields: [connectionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  changes      DirectorySyncChange[]
+  sourceEvents DirectoryEventInbox[]
+
+  @@index([tenantId, connectionId, createdAt])
+  @@index([enterpriseId, createdAt])
+  @@index([tenantId, status, createdAt])
+  @@map("directory_sync_runs")
+}
+
+model DirectorySyncChange {
+  id                   String                    @id @default(cuid())
+  tenantId             String                    @map("tenant_id")
+  enterpriseId         String                    @map("enterprise_id")
+  runId                String                    @map("run_id")
+  externalUserId       String                    @map("external_user_id") @db.VarChar(160)
+  membershipId         String?                   @map("membership_id")
+  externalDepartmentId String?                   @map("external_department_id") @db.VarChar(160)
+  action               DirectorySyncChangeAction
+  status               DirectorySyncChangeStatus @default(PENDING)
+  conflictCode         String?                   @map("conflict_code") @db.VarChar(120)
+  message              String?                   @db.VarChar(500)
+  beforeSnapshot       Json?                     @map("before_snapshot")
+  afterSnapshot        Json                      @map("after_snapshot")
+  appliedAt            DateTime?                 @map("applied_at")
+  createdAt            DateTime                  @default(now()) @map("created_at")
+  updatedAt            DateTime                  @updatedAt @map("updated_at")
+
+  tenant     Tenant           @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise       @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  run        DirectorySyncRun @relation(fields: [runId], references: [id], onDelete: Restrict)
+
+  @@unique([runId, externalUserId, enterpriseId])
+  @@index([tenantId, enterpriseId, status])
+  @@index([runId, action, status])
+  @@map("directory_sync_changes")
+}
+
+model DirectoryEventInbox {
+  id                  String               @id @default(cuid())
+  tenantId            String               @map("tenant_id")
+  enterpriseId        String?              @map("enterprise_id")
+  connectionId        String               @map("connection_id")
+  syncRunId           String?              @map("sync_run_id")
+  providerEventId     String               @map("provider_event_id") @db.VarChar(200)
+  eventType           String               @map("event_type") @db.VarChar(160)
+  occurredAt          DateTime             @map("occurred_at")
+  signatureTimestamp  DateTime             @map("signature_timestamp")
+  nonceHash           String               @map("nonce_hash") @db.Char(64)
+  payloadHash         String               @map("payload_hash") @db.Char(64)
+  normalizedPayload   Json                 @map("normalized_payload")
+  status              DirectoryEventStatus @default(RECEIVED)
+  attemptCount        Int                  @default(0) @map("attempt_count")
+  maxAttempts         Int                  @default(5) @map("max_attempts")
+  nextAttemptAt       DateTime             @default(now()) @map("next_attempt_at")
+  processingStartedAt DateTime?            @map("processing_started_at")
+  processedAt         DateTime?            @map("processed_at")
+  errorCode           String?              @map("error_code") @db.VarChar(120)
+  errorMessage        String?              @map("error_message") @db.VarChar(500)
+  receivedAt          DateTime             @default(now()) @map("received_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise?         @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  connection DirectoryConnection @relation(fields: [connectionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  syncRun    DirectorySyncRun?   @relation(fields: [syncRunId], references: [id], onDelete: SetNull)
+
+  @@unique([connectionId, providerEventId])
+  @@unique([connectionId, nonceHash])
+  @@index([status, nextAttemptAt, receivedAt])
+  @@index([tenantId, connectionId, receivedAt])
+  @@index([enterpriseId, receivedAt])
+  @@map("directory_event_inbox")
+}
+
+model DirectoryAlert {
+  id              String                 @id @default(cuid())
+  tenantId        String                 @map("tenant_id")
+  enterpriseId    String?                @map("enterprise_id")
+  connectionId    String                 @map("connection_id")
+  type            DirectoryAlertType
+  severity        DirectoryAlertSeverity
+  status          DirectoryAlertStatus   @default(OPEN)
+  message         String                 @db.VarChar(500)
+  details         Json?
+  occurrenceCount Int                    @default(1) @map("occurrence_count")
+  firstOccurredAt DateTime               @default(now()) @map("first_occurred_at")
+  lastOccurredAt  DateTime               @default(now()) @map("last_occurred_at")
+  acknowledgedAt  DateTime?              @map("acknowledged_at")
+  acknowledgedBy  String?                @map("acknowledged_by") @db.VarChar(64)
+  resolvedAt      DateTime?              @map("resolved_at")
+  createdAt       DateTime               @default(now()) @map("created_at")
+  updatedAt       DateTime               @updatedAt @map("updated_at")
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise?         @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  connection DirectoryConnection @relation(fields: [connectionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([connectionId, type])
+  @@index([tenantId, status, severity, lastOccurredAt])
+  @@index([enterpriseId, status, lastOccurredAt])
+  @@map("directory_alerts")
+}
+
+model CustomerContract {
+  id                String                 @id @default(cuid())
+  seriesId          String                 @default(cuid()) @map("series_id")
+  version           Int                    @default(1)
+  supersedesId      String?                @map("supersedes_id")
+  tenantId          String                 @map("tenant_id")
+  contractNumber    String                 @map("contract_number") @db.VarChar(120)
+  amountMinor       BigInt                 @map("amount_minor")
+  discountMinor     BigInt                 @default(0) @map("discount_minor")
+  currency          String                 @db.VarChar(3)
+  taxIncluded       Boolean                @default(true) @map("tax_included")
+  startsAt          DateTime               @map("starts_at")
+  endsAt            DateTime               @map("ends_at")
+  signedAt          DateTime?              @map("signed_at")
+  status            CustomerContractStatus @default(DRAFT)
+  changeNote        String?                @map("change_note") @db.VarChar(500)
+  terminatedAt      DateTime?              @map("terminated_at")
+  terminationReason String?                @map("termination_reason") @db.VarChar(500)
+  terminatedBy      String?                @map("terminated_by")
+  createdBy         String                 @map("created_by")
+  createdAt         DateTime               @default(now()) @map("created_at")
+  updatedAt         DateTime               @updatedAt @map("updated_at")
+
+  tenant     Tenant             @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  supersedes CustomerContract?  @relation("CustomerContractVersions", fields: [supersedesId, tenantId, seriesId], references: [id, tenantId, seriesId], onDelete: Restrict)
+  revisions  CustomerContract[] @relation("CustomerContractVersions")
+
+  @@unique([seriesId, version])
+  @@unique([tenantId, contractNumber, version])
+  @@unique([id, tenantId])
+  @@unique([id, tenantId, seriesId])
+  @@index([tenantId, status, createdAt])
+  @@index([supersedesId])
+  @@map("customer_contracts")
+}
+
+model TenantStorageAccount {
+  tenantId      String   @id @map("tenant_id")
+  usedBytes     BigInt   @default(0) @map("used_bytes")
+  reservedBytes BigInt   @default(0) @map("reserved_bytes")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  reservations StorageReservation[]
+  usageLedgers StorageUsageLedger[]
+
+  @@map("tenant_storage_accounts")
+}
+
+model StorageReservation {
+  id             String                   @id @default(cuid())
+  tenantId       String                   @map("tenant_id")
+  reservationKey String                   @map("reservation_key") @db.VarChar(200)
+  resourceType   String                   @map("resource_type") @db.VarChar(80)
+  resourceId     String                   @map("resource_id") @db.VarChar(191)
+  storageKey     String?                  @map("storage_key") @db.VarChar(1000)
+  byteSize       BigInt                   @map("byte_size")
+  status         StorageReservationStatus @default(RESERVED)
+  expiresAt      DateTime                 @map("expires_at")
+  committedAt    DateTime?                @map("committed_at")
+  releasedAt     DateTime?                @map("released_at")
+  createdAt      DateTime                 @default(now()) @map("created_at")
+  updatedAt      DateTime                 @updatedAt @map("updated_at")
+
+  account      TenantStorageAccount @relation(fields: [tenantId], references: [tenantId], onDelete: Restrict)
+  usageLedgers StorageUsageLedger[]
+
+  @@unique([tenantId, reservationKey])
+  @@index([tenantId, status, expiresAt])
+  @@index([tenantId, resourceType, resourceId])
+  @@map("storage_reservations")
+}
+
+model StorageUsageLedger {
+  id                 String           @id @default(cuid())
+  tenantId           String           @map("tenant_id")
+  reservationId      String           @map("reservation_id")
+  type               StorageUsageType
+  byteSize           BigInt           @map("byte_size")
+  usedBytesAfter     BigInt           @map("used_bytes_after")
+  reservedBytesAfter BigInt           @map("reserved_bytes_after")
+  reason             String           @db.VarChar(500)
+  createdAt          DateTime         @default(now()) @map("created_at")
+
+  account     TenantStorageAccount @relation(fields: [tenantId], references: [tenantId], onDelete: Restrict)
+  reservation StorageReservation   @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+
+  @@unique([reservationId, type])
+  @@index([tenantId, createdAt, id])
+  @@map("storage_usage_ledgers")
+}
+
+model Material {
+  id                    String                      @id @default(cuid())
+  seriesId              String                      @default(cuid()) @map("series_id")
+  version               Int                         @default(1)
+  supersedesId          String?                     @map("supersedes_id")
+  changeNote            String?                     @map("change_note") @db.VarChar(500)
+  tenantId              String                      @map("tenant_id")
+  enterpriseId          String?                     @map("enterprise_id")
+  scopeKey              String                      @map("scope_key") @db.VarChar(64)
+  type                  MaterialType
+  title                 String                      @db.VarChar(200)
+  content               String                      @db.Text
+  structuredFacts       Json?                       @map("structured_facts")
+  tags                  String[]                    @default([])
+  sourceUrl             String?                     @map("source_url") @db.VarChar(1000)
+  authorizationStatus   MaterialAuthorizationStatus @default(PENDING) @map("authorization_status")
+  validFrom             DateTime?                   @map("valid_from")
+  expiresAt             DateTime?                   @map("expires_at")
+  status                MaterialStatus              @default(ACTIVE)
+  ingestionStatus       MaterialIngestionStatus     @default(PENDING) @map("ingestion_status")
+  usabilityStatus       MaterialUsabilityStatus     @default(USABLE) @map("usability_status")
+  sourceText            String?                     @map("source_text") @db.Text
+  supplement            String?                     @db.Text
+  analysis              Json?
+  contentChecksum       String?                     @map("content_checksum") @db.VarChar(64)
+  parserVersion         String?                     @map("parser_version") @db.VarChar(80)
+  ingestionErrorCode    String?                     @map("ingestion_error_code") @db.VarChar(120)
+  ingestionErrorMessage String?                     @map("ingestion_error_message") @db.VarChar(500)
+  extractedMetadata     Json?                       @map("extracted_metadata")
+  readyAt               DateTime?                   @map("ready_at")
+  createdBy             String                      @map("created_by")
+  createdAt             DateTime                    @default(now()) @map("created_at")
+  updatedAt             DateTime                    @updatedAt @map("updated_at")
+
+  tenant            Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise        Enterprise?                 @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  artifacts         MaterialArtifact[]
+  ingestionJobs     MaterialIngestionJob[]
+  chunks            MaterialChunk[]
+  embeddings        MaterialEmbedding[]
+  retrievalEvidence CampaignRetrievalEvidence[]
+
+  @@unique([seriesId, version])
+  @@unique([id, tenantId])
+  @@unique([id, tenantId, scopeKey])
+  @@index([tenantId, status, authorizationStatus])
+  @@index([enterpriseId, status, authorizationStatus])
+  @@index([tenantId, scopeKey, ingestionStatus, status, authorizationStatus])
+  @@index([supersedesId])
+  @@map("materials")
+}
+
+model MaterialArtifact {
+  id               String                 @id @default(cuid())
+  tenantId         String                 @map("tenant_id")
+  enterpriseId     String?                @map("enterprise_id")
+  scopeKey         String                 @map("scope_key") @db.VarChar(64)
+  materialId       String                 @map("material_id")
+  kind             MaterialArtifactKind
+  status           MaterialArtifactStatus @default(PENDING_UPLOAD)
+  objectKey        String?                @map("object_key") @db.VarChar(1000)
+  originalFileName String?                @map("original_file_name") @db.VarChar(255)
+  sourceUrl        String?                @map("source_url") @db.VarChar(1000)
+  mimeType         String                 @map("mime_type") @db.VarChar(160)
+  byteSize         Int?                   @map("byte_size")
+  checksum         String?                @db.VarChar(64)
+  metadata         Json?
+  storedAt         DateTime?              @map("stored_at")
+  verifiedAt       DateTime?              @map("verified_at")
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
+
+  tenant                Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise            Enterprise?            @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  material              Material               @relation(fields: [materialId, tenantId, scopeKey], references: [id, tenantId, scopeKey], onDelete: Restrict)
+  materialIngestionJobs MaterialIngestionJob[]
+
+  @@unique([id, tenantId])
+  @@unique([materialId, id, tenantId, scopeKey])
+  @@index([tenantId, checksum])
+  @@index([materialId, status])
+  @@map("material_artifacts")
+}
+
+model MaterialIngestionJob {
+  id             String                   @id @default(cuid())
+  tenantId       String                   @map("tenant_id")
+  enterpriseId   String?                  @map("enterprise_id")
+  scopeKey       String                   @map("scope_key") @db.VarChar(64)
+  materialId     String                   @map("material_id")
+  artifactId     String?                  @map("artifact_id")
+  purpose        MaterialIngestionPurpose @default(INGEST)
+  status         MaterialIngestionStatus  @default(PENDING)
+  attemptCount   Int                      @default(0) @map("attempt_count")
+  maxAttempts    Int                      @default(5) @map("max_attempts")
+  queueVersion   Int                      @default(1) @map("queue_version")
+  parserVersion  String                   @map("parser_version") @db.VarChar(80)
+  leaseOwner     String?                  @map("lease_owner") @db.VarChar(180)
+  leaseToken     String?                  @map("lease_token") @db.VarChar(64)
+  leaseExpiresAt DateTime?                @map("lease_expires_at")
+  heartbeatAt    DateTime?                @map("heartbeat_at")
+  nextRetryAt    DateTime?                @map("next_retry_at")
+  errorCode      String?                  @map("error_code") @db.VarChar(120)
+  errorMessage   String?                  @map("error_message") @db.VarChar(500)
+  startedAt      DateTime?                @map("started_at")
+  finishedAt     DateTime?                @map("finished_at")
+  createdAt      DateTime                 @default(now()) @map("created_at")
+  updatedAt      DateTime                 @updatedAt @map("updated_at")
+
+  tenant     Tenant            @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise?       @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  material   Material          @relation(fields: [materialId, tenantId, scopeKey], references: [id, tenantId, scopeKey], onDelete: Restrict)
+  artifact   MaterialArtifact? @relation(fields: [artifactId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([materialId, queueVersion])
+  @@index([tenantId, status, nextRetryAt, createdAt])
+  @@index([purpose, status, createdAt])
+  @@index([status, leaseExpiresAt])
+  @@map("material_ingestion_jobs")
+}
+
+model MaterialChunk {
+  id              String                   @id @default(cuid())
+  tenantId        String                   @map("tenant_id")
+  enterpriseId    String?                  @map("enterprise_id")
+  scopeKey        String                   @map("scope_key") @db.VarChar(64)
+  materialId      String                   @map("material_id")
+  ordinal         Int
+  text            String                   @db.Text
+  textChecksum    String                   @map("text_checksum") @db.VarChar(64)
+  characterCount  Int                      @map("character_count")
+  tokenCount      Int                      @map("token_count")
+  structuredFacts Json?                    @map("structured_facts")
+  metadata        Json?
+  searchVector    Unsupported("tsvector")? @map("search_vector")
+  createdAt       DateTime                 @default(now()) @map("created_at")
+
+  tenant            Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise        Enterprise?                 @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  material          Material                    @relation(fields: [materialId, tenantId, scopeKey], references: [id, tenantId, scopeKey], onDelete: Restrict)
+  embeddings        MaterialEmbedding[]
+  retrievalEvidence CampaignRetrievalEvidence[]
+
+  @@unique([materialId, ordinal])
+  @@unique([id, materialId, tenantId, scopeKey])
+  @@index([tenantId, scopeKey, materialId])
+  @@index([searchVector], type: Gin, map: "material_chunks_search_vector_idx")
+  @@index([text(ops: raw("gin_trgm_ops"))], type: Gin, map: "material_chunks_text_trgm_idx")
+  @@map("material_chunks")
+}
+
+model MaterialEmbedding {
+  id                String   @id @default(cuid())
+  tenantId          String   @map("tenant_id")
+  enterpriseId      String?  @map("enterprise_id")
+  scopeKey          String   @map("scope_key") @db.VarChar(64)
+  materialId        String   @map("material_id")
+  chunkId           String   @map("chunk_id")
+  modelDefinitionId String?  @map("model_definition_id")
+  profileVersion    String   @map("profile_version") @db.VarChar(120)
+  dimension         Int
+  vector            Float[]
+  indexedAt         DateTime @default(now()) @map("indexed_at")
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise      Enterprise?      @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  material        Material         @relation(fields: [materialId, tenantId, scopeKey], references: [id, tenantId, scopeKey], onDelete: Restrict)
+  chunk           MaterialChunk    @relation(fields: [chunkId, materialId, tenantId, scopeKey], references: [id, materialId, tenantId, scopeKey], onDelete: Restrict)
+  modelDefinition ModelDefinition? @relation(fields: [modelDefinitionId], references: [id], onDelete: Restrict)
+
+  @@unique([chunkId, profileVersion])
+  @@index([tenantId, scopeKey, profileVersion])
+  @@index([materialId])
+  @@map("material_embeddings")
+}
+
+model SensitiveRule {
+  id                    String            @id @default(cuid())
+  seriesId              String            @default(cuid()) @map("series_id")
+  version               Int               @default(1)
+  supersedesId          String?           @map("supersedes_id")
+  changeNote            String?           @map("change_note") @db.VarChar(500)
+  tenantId              String            @map("tenant_id")
+  enterpriseId          String?           @map("enterprise_id")
+  scopeKey              String            @map("scope_key") @db.VarChar(64)
+  key                   String            @db.VarChar(240)
+  term                  String            @db.VarChar(200)
+  severity              SensitiveSeverity
+  riskType              String            @map("risk_type") @db.VarChar(80)
+  replacementSuggestion String?           @map("replacement_suggestion") @db.VarChar(500)
+  effectiveFrom         DateTime?         @map("effective_from")
+  effectiveTo           DateTime?         @map("effective_to")
+  status                MaterialStatus    @default(ACTIVE)
+  createdBy             String            @map("created_by")
+  createdAt             DateTime          @default(now()) @map("created_at")
+  updatedAt             DateTime          @updatedAt @map("updated_at")
+
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([seriesId, version])
+  @@index([tenantId, status, severity])
+  @@index([enterpriseId, status, severity])
+  @@index([tenantId, scopeKey, key, status])
+  @@index([supersedesId])
+  @@map("sensitive_rules")
+}
+
+model GeoEntity {
+  id           String         @id @default(cuid())
+  seriesId     String         @default(cuid()) @map("series_id")
+  version      Int            @default(1)
+  supersedesId String?        @map("supersedes_id")
+  changeNote   String?        @map("change_note") @db.VarChar(500)
+  tenantId     String         @map("tenant_id")
+  enterpriseId String?        @map("enterprise_id")
+  scopeKey     String         @map("scope_key") @db.VarChar(64)
+  key          String         @db.VarChar(240)
+  type         GeoEntityType
+  name         String         @db.VarChar(200)
+  aliases      String[]       @default([])
+  facts        Json?
+  status       MaterialStatus @default(ACTIVE)
+  createdBy    String         @map("created_by")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  topics     GeoTopic[]
+
+  @@unique([id, tenantId])
+  @@unique([seriesId, version])
+  @@index([tenantId, status, type])
+  @@index([enterpriseId, status, type])
+  @@index([tenantId, scopeKey, key, status])
+  @@index([supersedesId])
+  @@map("geo_entities")
+}
+
+model GeoTopic {
+  id           String         @id @default(cuid())
+  seriesId     String         @default(cuid()) @map("series_id")
+  version      Int            @default(1)
+  supersedesId String?        @map("supersedes_id")
+  changeNote   String?        @map("change_note") @db.VarChar(500)
+  tenantId     String         @map("tenant_id")
+  enterpriseId String?        @map("enterprise_id")
+  entityId     String         @map("entity_id")
+  question     String         @db.VarChar(500)
+  intent       String         @db.VarChar(100)
+  priority     Int            @default(0)
+  status       MaterialStatus @default(ACTIVE)
+  createdBy    String         @map("created_by")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  entity     GeoEntity   @relation(fields: [entityId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([seriesId, version])
+  @@index([tenantId, status, priority])
+  @@index([enterpriseId, status, priority])
+  @@index([supersedesId])
+  @@map("geo_topics")
+}
+
+model PromptTemplate {
+  id                       String                 @id @default(cuid())
+  tenantId                 String                 @map("tenant_id")
+  enterpriseId             String                 @map("enterprise_id")
+  name                     String                 @db.VarChar(120)
+  content                  String                 @db.Text
+  contentDirection         String?                @map("content_direction") @db.VarChar(120)
+  contentDirectionPresetId String?                @map("content_direction_preset_id") @db.VarChar(64)
+  status                   CampaignPlanningStatus @default(ACTIVE)
+  createdBy                String                 @map("created_by")
+  createdAt                DateTime               @default(now()) @map("created_at")
+  updatedAt                DateTime               @updatedAt @map("updated_at")
+
+  tenant            Tenant             @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise        Enterprise         @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict, map: "prompt_templates_enterprise_scope_fkey")
+  campaigns         Campaign[]
+  campaignTemplates CampaignTemplate[]
+
+  @@unique([enterpriseId, name], map: "prompt_templates_enterprise_name_key")
+  @@unique([id, enterpriseId, tenantId], map: "prompt_templates_scope_key")
+  @@index([tenantId, enterpriseId, status, createdAt], map: "prompt_templates_scope_status_idx")
+  @@map("prompt_templates")
+}
+
+model CampaignTemplate {
+  id                       String                 @id @default(cuid())
+  tenantId                 String                 @map("tenant_id")
+  enterpriseId             String                 @map("enterprise_id")
+  promptTemplateId         String?                @map("prompt_template_id")
+  name                     String                 @db.VarChar(120)
+  title                    String                 @db.VarChar(200)
+  prompt                   String                 @db.Text
+  selectionSnapshot        Json?                  @map("selection_snapshot")
+  contentDirection         String?                @map("content_direction") @db.VarChar(120)
+  imageStyle               String?                @map("image_style") @db.VarChar(120)
+  imageCount               Int                    @default(1) @map("image_count")
+  reminderOffsetsHours     Int[]                  @default([]) @map("reminder_offsets_hours")
+  contentDirectionPresetId String?                @map("content_direction_preset_id") @db.VarChar(64)
+  imageStylePresetId       String?                @map("image_style_preset_id") @db.VarChar(64)
+  status                   CampaignPlanningStatus @default(ACTIVE)
+  createdBy                String                 @map("created_by")
+  createdAt                DateTime               @default(now()) @map("created_at")
+  updatedAt                DateTime               @updatedAt @map("updated_at")
+
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise     Enterprise      @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict, map: "campaign_templates_enterprise_scope_fkey")
+  promptTemplate PromptTemplate? @relation(fields: [promptTemplateId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict, map: "campaign_templates_prompt_scope_fkey")
+  campaigns      Campaign[]
+
+  @@unique([enterpriseId, name], map: "campaign_templates_enterprise_name_key")
+  @@unique([id, enterpriseId, tenantId], map: "campaign_templates_scope_key")
+  @@index([tenantId, enterpriseId, status, createdAt], map: "campaign_templates_scope_status_idx")
+  @@index([promptTemplateId], map: "campaign_templates_prompt_idx")
+  @@map("campaign_templates")
+}
+
+model CampaignDraft {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  enterpriseId String   @map("enterprise_id")
+  createdBy    String   @map("created_by")
+  step         Int      @default(1)
+  payload      Json
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict, map: "campaign_drafts_enterprise_scope_fkey")
+
+  @@unique([enterpriseId, createdBy], map: "campaign_drafts_enterprise_creator_key")
+  @@index([tenantId, enterpriseId, updatedAt], map: "campaign_drafts_scope_updated_idx")
+  @@map("campaign_drafts")
+}
+
+model ManagementAction {
+  id           String                 @id @default(cuid())
+  tenantId     String                 @map("tenant_id")
+  enterpriseId String                 @map("enterprise_id")
+  campaignId   String?                @map("campaign_id")
+  title        String                 @db.VarChar(200)
+  description  String?                @db.VarChar(1000)
+  assignee     String?                @db.VarChar(120)
+  status       ManagementActionStatus @default(OPEN)
+  dueAt        DateTime?              @map("due_at")
+  note         String?                @db.Text
+  createdBy    String                 @map("created_by")
+  resolvedAt   DateTime?              @map("resolved_at")
+  createdAt    DateTime               @default(now()) @map("created_at")
+  updatedAt    DateTime               @updatedAt @map("updated_at")
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict, map: "management_actions_enterprise_scope_fkey")
+  campaign   Campaign?  @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict, map: "management_actions_campaign_scope_fkey")
+
+  @@unique([id, enterpriseId, tenantId], map: "management_actions_scope_key")
+  @@index([tenantId, enterpriseId, status, dueAt], map: "management_actions_scope_status_due_idx")
+  @@index([campaignId], map: "management_actions_campaign_idx")
+  @@map("management_actions")
+}
+
+model Campaign {
+  id                       String               @id @default(cuid())
+  tenantId                 String               @map("tenant_id")
+  enterpriseId             String               @map("enterprise_id")
+  title                    String               @db.VarChar(200)
+  prompt                   String               @db.Text
+  selectionSnapshot        Json?                @map("selection_snapshot")
+  contentDirection         String?              @map("content_direction") @db.VarChar(120)
+  imageStyle               String?              @map("image_style") @db.VarChar(120)
+  reminderOffsetsHours     Int[]                @default([]) @map("reminder_offsets_hours")
+  promptTemplateId         String?              @map("prompt_template_id")
+  campaignTemplateId       String?              @map("campaign_template_id")
+  contentDirectionPresetId String?              @map("content_direction_preset_id") @db.VarChar(64)
+  imageStylePresetId       String?              @map("image_style_preset_id") @db.VarChar(64)
+  generationStyleSnapshot  Json?                @map("generation_style_snapshot")
+  status                   CampaignStatus       @default(DRAFT)
+  visibleAt                DateTime             @map("visible_at")
+  expiresAt                DateTime             @map("expires_at")
+  imageCount               Int                  @default(1) @map("image_count")
+  audienceMode             CampaignAudienceMode @default(ALL) @map("audience_mode")
+  audienceSelector         Json?                @map("audience_selector")
+  audienceCount            Int                  @default(0) @map("audience_count")
+  generatedCount           Int                  @default(0) @map("generated_count")
+  createdBy                String               @map("created_by")
+  approvedBy               String?              @map("approved_by")
+  approvedAt               DateTime?            @map("approved_at")
+  cancelledAt              DateTime?            @map("cancelled_at")
+  cancelledBy              String?              @map("cancelled_by")
+  cancellationReason       String?              @map("cancellation_reason") @db.VarChar(500)
+  cancellationSummary      Json?                @map("cancellation_summary")
+  lastRescheduledAt        DateTime?            @map("last_rescheduled_at")
+  lastRescheduledBy        String?              @map("last_rescheduled_by")
+  archivedAt               DateTime?            @map("archived_at")
+  archivedBy               String?              @map("archived_by")
+  createdAt                DateTime             @default(now()) @map("created_at")
+  updatedAt                DateTime             @updatedAt @map("updated_at")
+
+  tenant                   Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise               Enterprise                  @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  audienceSnapshots        CampaignAudienceSnapshot[]
+  blueprint                CampaignBlueprint?
+  generationRuns           GenerationRun[]
+  generationWorkItems      GenerationWorkItem[]
+  modelInvocations         ModelInvocation[]
+  employeeContents         EmployeeContent[]
+  generatedImages          GeneratedImage[]
+  distributionTasks        DistributionTask[]
+  publishedContent         PublishedContentRegistry[]
+  metricSnapshots          PublishMetricSnapshot[]
+  preflightSnapshot        CampaignPreflightSnapshot?
+  retrievalEvidence        CampaignRetrievalEvidence[]
+  employeeContentRevisions EmployeeContentRevision[]
+  promptTemplate           PromptTemplate?             @relation(fields: [promptTemplateId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict, map: "campaigns_prompt_template_scope_fkey")
+  campaignTemplate         CampaignTemplate?           @relation(fields: [campaignTemplateId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict, map: "campaigns_campaign_template_scope_fkey")
+  managementActions        ManagementAction[]
+  effectObservations       CampaignEffectObservation[]
+
+  @@unique([id, tenantId])
+  @@unique([id, enterpriseId, tenantId])
+  @@index([tenantId, status, visibleAt])
+  @@index([enterpriseId, status, visibleAt])
+  @@index([tenantId, enterpriseId, createdAt, id])
+  @@index([tenantId, archivedAt, createdAt, id], map: "campaigns_tenant_archive_cursor_idx")
+  @@index([enterpriseId, archivedAt, createdAt, id], map: "campaigns_enterprise_archive_cursor_idx")
+  @@index([enterpriseId, status, archivedAt, createdAt, id], map: "campaigns_enterprise_status_filter_idx")
+  @@index([enterpriseId, createdBy, archivedAt, createdAt, id], map: "campaigns_enterprise_creator_filter_idx")
+  @@index([enterpriseId, visibleAt, archivedAt, id], map: "campaigns_enterprise_visible_filter_idx")
+  @@index([enterpriseId, contentDirection, createdAt], map: "campaigns_direction_created_idx")
+  @@index([enterpriseId, imageStyle, createdAt], map: "campaigns_image_style_created_idx")
+  @@index([promptTemplateId], map: "campaigns_prompt_template_idx")
+  @@index([campaignTemplateId], map: "campaigns_campaign_template_idx")
+  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "campaigns_title_trgm_idx")
+  @@index([prompt(ops: raw("gin_trgm_ops"))], type: Gin, map: "campaigns_prompt_trgm_idx")
+  @@map("campaigns")
+}
+
+model CampaignRetrievalEvidence {
+  id               String       @id @default(cuid())
+  tenantId         String       @map("tenant_id")
+  enterpriseId     String       @map("enterprise_id")
+  campaignId       String       @map("campaign_id")
+  materialId       String       @map("material_id")
+  materialScopeKey String       @map("material_scope_key") @db.VarChar(64)
+  chunkId          String       @map("chunk_id")
+  materialSeriesId String       @map("material_series_id")
+  materialVersion  Int          @map("material_version")
+  materialTitle    String       @map("material_title") @db.VarChar(200)
+  materialType     MaterialType @map("material_type")
+  frozenSnippet    String       @map("frozen_snippet") @db.Text
+  score            Decimal      @db.Decimal(12, 8)
+  lexicalScore     Decimal      @map("lexical_score") @db.Decimal(12, 8)
+  vectorScore      Decimal      @map("vector_score") @db.Decimal(12, 8)
+  tagScore         Decimal      @map("tag_score") @db.Decimal(12, 8)
+  rank             Int
+  hitReasons       String[]     @default([]) @map("hit_reasons")
+  strategyVersion  String       @map("strategy_version") @db.VarChar(120)
+  createdAt        DateTime     @default(now()) @map("created_at")
+
+  tenant     Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise Enterprise    @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign   Campaign      @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  material   Material      @relation(fields: [materialId, tenantId, materialScopeKey], references: [id, tenantId, scopeKey], onDelete: Restrict)
+  chunk      MaterialChunk @relation(fields: [chunkId, materialId, tenantId, materialScopeKey], references: [id, materialId, tenantId, scopeKey], onDelete: Restrict)
+
+  @@unique([campaignId, rank])
+  @@unique([campaignId, chunkId])
+  @@index([tenantId, enterpriseId, campaignId])
+  @@index([materialId, chunkId])
+  @@index([tenantId, materialScopeKey, enterpriseId, createdAt], map: "campaign_evidence_shared_usage_idx")
+  @@map("campaign_retrieval_evidence")
+}
+
+model CampaignAudienceSnapshot {
+  id             String   @id @default(cuid())
+  tenantId       String   @map("tenant_id")
+  enterpriseId   String   @map("enterprise_id")
+  campaignId     String   @map("campaign_id")
+  membershipId   String   @map("membership_id")
+  employeeName   String   @map("employee_name") @db.VarChar(100)
+  employeePhone  String   @map("employee_phone") @db.VarChar(32)
+  departmentName String?  @map("department_name") @db.VarChar(120)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  tenant              Tenant               @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise          Enterprise           @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign            Campaign             @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  membership          EnterpriseMembership @relation(fields: [membershipId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  employeeContent     EmployeeContent?
+  generationWorkItems GenerationWorkItem[]
+
+  @@unique([campaignId, membershipId])
+  @@unique([id, tenantId])
+  @@index([tenantId, enterpriseId, campaignId])
+  @@index([membershipId])
+  @@map("campaign_audience_snapshots")
+}
+
+model CampaignBlueprint {
+  campaignId       String   @id @map("campaign_id")
+  tenantId         String   @map("tenant_id")
+  masterCopy       String   @map("master_copy") @db.Text
+  imageDirection   String   @map("image_direction") @db.Text
+  sourceContext    Json     @map("source_context")
+  generationPolicy Json     @map("generation_policy")
+  synthetic        Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  campaign Campaign @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([campaignId, tenantId])
+  @@index([tenantId])
+  @@map("campaign_blueprints")
+}
+
+model GenerationRun {
+  id               String              @id @default(cuid())
+  tenantId         String              @map("tenant_id")
+  campaignId       String              @map("campaign_id")
+  status           GenerationRunStatus @default(QUEUED)
+  provider         String              @db.VarChar(80)
+  textProvider     String              @default("") @map("text_provider") @db.VarChar(80)
+  imageProvider    String              @default("") @map("image_provider") @db.VarChar(80)
+  textModel        String              @map("text_model") @db.VarChar(120)
+  imageModel       String              @map("image_model") @db.VarChar(120)
+  routingPolicy    Json?               @map("routing_policy")
+  generationInput  Json?               @map("generation_input")
+  synthetic        Boolean             @default(false)
+  requestedCount   Int                 @map("requested_count")
+  completedCount   Int                 @default(0) @map("completed_count")
+  failedCount      Int                 @default(0) @map("failed_count")
+  attemptCount     Int                 @default(0) @map("attempt_count")
+  maxAttempts      Int                 @default(5) @map("max_attempts")
+  queueVersion     Int                 @default(1) @map("queue_version")
+  executionVersion Int                 @default(0) @map("execution_version")
+  recoveryCount    Int                 @default(0) @map("recovery_count")
+  leaseOwner       String?             @map("lease_owner") @db.VarChar(180)
+  leaseToken       String?             @map("lease_token") @db.VarChar(64)
+  leaseExpiresAt   DateTime?           @map("lease_expires_at")
+  heartbeatAt      DateTime?           @map("heartbeat_at")
+  nextRetryAt      DateTime?           @map("next_retry_at")
+  errorCode        String?             @map("error_code") @db.VarChar(120)
+  errorRetryable   Boolean?            @map("error_retryable")
+  errorMessage     String?             @map("error_message") @db.Text
+  startedAt        DateTime?           @map("started_at")
+  finishedAt       DateTime?           @map("finished_at")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+
+  tenant      Tenant               @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  campaign    Campaign             @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  workItems   GenerationWorkItem[]
+  invocations ModelInvocation[]
+
+  @@index([tenantId, status, createdAt])
+  @@index([status, nextRetryAt, createdAt])
+  @@index([status, leaseExpiresAt])
+  @@index([campaignId, createdAt])
+  @@index([createdAt, id])
+  @@map("generation_runs")
+}
+
+model GenerationWorkItem {
+  id                      String                   @id @default(cuid())
+  tenantId                String                   @map("tenant_id")
+  enterpriseId            String                   @map("enterprise_id")
+  campaignId              String                   @map("campaign_id")
+  generationRunId         String                   @map("generation_run_id")
+  audienceSnapshotId      String                   @map("audience_snapshot_id")
+  membershipId            String                   @map("membership_id")
+  status                  GenerationWorkItemStatus @default(QUEUED)
+  attemptCount            Int                      @default(0) @map("attempt_count")
+  maxAttempts             Int                      @default(6) @map("max_attempts")
+  reservationVersion      Int                      @default(1) @map("reservation_version")
+  reviewFeedback          String?                  @map("review_feedback") @db.VarChar(1000)
+  reviewRegenerationCount Int                      @default(0) @map("review_regeneration_count")
+  queueVersion            Int                      @default(1) @map("queue_version")
+  executionVersion        Int                      @default(0) @map("execution_version")
+  recoveryCount           Int                      @default(0) @map("recovery_count")
+  leaseOwner              String?                  @map("lease_owner") @db.VarChar(180)
+  leaseToken              String?                  @map("lease_token") @db.VarChar(64)
+  leaseExpiresAt          DateTime?                @map("lease_expires_at")
+  heartbeatAt             DateTime?                @map("heartbeat_at")
+  nextRetryAt             DateTime?                @map("next_retry_at")
+  errorCode               String?                  @map("error_code") @db.VarChar(120)
+  errorRetryable          Boolean?                 @map("error_retryable")
+  errorMessage            String?                  @map("error_message") @db.Text
+  startedAt               DateTime?                @map("started_at")
+  finishedAt              DateTime?                @map("finished_at")
+  createdAt               DateTime                 @default(now()) @map("created_at")
+  updatedAt               DateTime                 @updatedAt @map("updated_at")
+
+  tenant           Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise       Enterprise               @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign         Campaign                 @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  generationRun    GenerationRun            @relation(fields: [generationRunId], references: [id], onDelete: Restrict)
+  audienceSnapshot CampaignAudienceSnapshot @relation(fields: [audienceSnapshotId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  membership       EnterpriseMembership     @relation(fields: [membershipId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  invocations      ModelInvocation[]
+
+  @@unique([generationRunId, audienceSnapshotId])
+  @@unique([id, tenantId])
+  @@index([tenantId, status, createdAt])
+  @@index([status, nextRetryAt, createdAt])
+  @@index([status, leaseExpiresAt])
+  @@index([campaignId, status])
+  @@index([membershipId, status])
+  @@index([tenantId, enterpriseId, campaignId, status, createdAt, id], map: "generation_work_items_campaign_filter_idx")
+  @@map("generation_work_items")
+}
+
+model ModelInvocation {
+  id                   String                @id @default(cuid())
+  tenantId             String                @map("tenant_id")
+  enterpriseId         String                @map("enterprise_id")
+  campaignId           String                @map("campaign_id")
+  generationRunId      String                @map("generation_run_id")
+  generationWorkItemId String?               @map("generation_work_item_id")
+  kind                 ModelInvocationKind
+  provider             String                @db.VarChar(80)
+  model                String                @db.VarChar(200)
+  status               ModelInvocationStatus @default(RUNNING)
+  attempt              Int                   @default(1)
+  providerRequestId    String?               @map("provider_request_id") @db.VarChar(200)
+  latencyMs            Int?                  @map("latency_ms")
+  inputUnits           Int?                  @map("input_units")
+  outputUnits          Int?                  @map("output_units")
+  imageCount           Int                   @default(0) @map("image_count")
+  estimatedCost        Decimal               @default(0) @map("estimated_cost") @db.Decimal(18, 6)
+  errorCode            String?               @map("error_code") @db.VarChar(120)
+  errorMessage         String?               @map("error_message") @db.Text
+  retryable            Boolean?
+  idempotencyKey       String                @map("idempotency_key") @db.VarChar(200)
+  metadata             Json?
+  startedAt            DateTime              @default(now()) @map("started_at")
+  finishedAt           DateTime?             @map("finished_at")
+  createdAt            DateTime              @default(now()) @map("created_at")
+
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise         Enterprise          @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign           Campaign            @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  generationRun      GenerationRun       @relation(fields: [generationRunId], references: [id], onDelete: Restrict)
+  generationWorkItem GenerationWorkItem? @relation(fields: [generationWorkItemId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, createdAt])
+  @@index([generationRunId, status])
+  @@index([generationWorkItemId, kind])
+  @@map("model_invocations")
+}
+
+model EmployeeContent {
+  id                 String                 @id @default(cuid())
+  tenantId           String                 @map("tenant_id")
+  enterpriseId       String                 @map("enterprise_id")
+  campaignId         String                 @map("campaign_id")
+  audienceSnapshotId String                 @unique @map("audience_snapshot_id")
+  membershipId       String                 @map("membership_id")
+  title              String                 @db.VarChar(200)
+  body               String                 @db.Text
+  hashtags           String[]               @default([])
+  imagePrompt        String                 @map("image_prompt") @db.Text
+  contentFingerprint String                 @map("content_fingerprint") @db.VarChar(64)
+  status             GeneratedContentStatus @default(GENERATED)
+  riskAssessment     Json                   @map("risk_assessment")
+  synthetic          Boolean                @default(false)
+  revision           Int                    @default(1)
+  createdAt          DateTime               @default(now()) @map("created_at")
+  updatedAt          DateTime               @updatedAt @map("updated_at")
+
+  tenant           Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise       Enterprise                @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign         Campaign                  @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  audienceSnapshot CampaignAudienceSnapshot  @relation(fields: [audienceSnapshotId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  membership       EnterpriseMembership      @relation(fields: [membershipId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  images           GeneratedImage[]
+  distributionTask DistributionTask?
+  revisions        EmployeeContentRevision[]
+
+  @@unique([campaignId, membershipId])
+  @@unique([audienceSnapshotId, tenantId])
+  @@unique([id, tenantId])
+  @@index([tenantId, enterpriseId, campaignId, status])
+  @@index([membershipId, createdAt])
+  @@map("employee_contents")
+}
+
+model EmployeeContentRevision {
+  id                String   @id @default(cuid())
+  tenantId          String   @map("tenant_id")
+  enterpriseId      String   @map("enterprise_id")
+  campaignId        String   @map("campaign_id")
+  employeeContentId String   @map("employee_content_id")
+  revision          Int
+  snapshot          Json
+  reviewFeedback    String?  @map("review_feedback") @db.VarChar(1000)
+  createdBy         String   @map("created_by")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise      Enterprise      @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign        Campaign        @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  employeeContent EmployeeContent @relation(fields: [employeeContentId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([employeeContentId, revision])
+  @@index([tenantId, enterpriseId, campaignId, createdAt])
+  @@map("employee_content_revisions")
+}
+
+model GeneratedImage {
+  id                String   @id @default(cuid())
+  tenantId          String   @map("tenant_id")
+  campaignId        String   @map("campaign_id")
+  employeeContentId String   @map("employee_content_id")
+  sequence          Int      @default(1)
+  imageUrl          String   @map("image_url") @db.Text
+  storageKey        String?  @map("storage_key") @db.VarChar(1000)
+  storageEtag       String?  @map("storage_etag") @db.VarChar(255)
+  byteSize          BigInt?  @map("byte_size")
+  mimeType          String   @map("mime_type") @db.VarChar(100)
+  checksum          String   @db.VarChar(64)
+  perceptualHash    String?  @map("perceptual_hash") @db.VarChar(16)
+  width             Int
+  height            Int
+  prompt            String   @db.Text
+  provider          String   @db.VarChar(80)
+  model             String   @db.VarChar(120)
+  synthetic         Boolean  @default(false)
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  campaign        Campaign        @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  employeeContent EmployeeContent @relation(fields: [employeeContentId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([employeeContentId, sequence])
+  @@index([checksum])
+  @@index([campaignId, perceptualHash])
+  @@index([tenantId, createdAt])
+  @@map("generated_images")
+}
+
+model DistributionTask {
+  id                     String                 @id @default(cuid())
+  tenantId               String                 @map("tenant_id")
+  enterpriseId           String                 @map("enterprise_id")
+  campaignId             String                 @map("campaign_id")
+  employeeContentId      String                 @unique @map("employee_content_id")
+  membershipId           String                 @map("membership_id")
+  status                 DistributionTaskStatus @default(LOCKED)
+  visibleAt              DateTime               @map("visible_at")
+  expiresAt              DateTime               @map("expires_at")
+  firstViewedAt          DateTime?              @map("first_viewed_at")
+  factsConfirmedAt       DateTime?              @map("facts_confirmed_at")
+  factsConfirmedRevision Int?                   @map("facts_confirmed_revision")
+  factsReturnedAt        DateTime?              @map("facts_returned_at")
+  factsReturnReason      String?                @map("facts_return_reason") @db.VarChar(64)
+  copiedAt               DateTime?              @map("copied_at")
+  downloadedAt           DateTime?              @map("downloaded_at")
+  submittedAt            DateTime?              @map("submitted_at")
+  verifiedAt             DateTime?              @map("verified_at")
+  expiredAt              DateTime?              @map("expired_at")
+  createdAt              DateTime               @default(now()) @map("created_at")
+  updatedAt              DateTime               @updatedAt @map("updated_at")
+
+  tenant          Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise      Enterprise                 @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  campaign        Campaign                   @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  employeeContent EmployeeContent            @relation(fields: [employeeContentId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  membership      EnterpriseMembership       @relation(fields: [membershipId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  submissions     PublishSubmission[]
+  registry        PublishedContentRegistry?
+  fixture         PublicContentFixture?
+  notifications   EmployeeTaskNotification[]
+
+  @@unique([campaignId, membershipId])
+  @@unique([employeeContentId, tenantId])
+  @@unique([id, tenantId])
+  @@index([tenantId, enterpriseId, status, visibleAt])
+  @@index([membershipId, status, visibleAt])
+  @@map("distribution_tasks")
+}
+
+model CampaignEffectObservation {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  enterpriseId String   @map("enterprise_id")
+  campaignId   String   @map("campaign_id")
+  kind         String   @db.VarChar(16)
+  observedAt   DateTime @map("observed_at")
+  payload      Json
+  createdBy    String   @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict, map: "campaign_effect_observations_scope_fkey")
+
+  @@index([tenantId, enterpriseId, campaignId, kind, observedAt], map: "campaign_effect_observations_scope_kind_observed_idx")
+  @@map("campaign_effect_observations")
+}
+
+model PublishSubmission {
+  id                        String                    @id @default(cuid())
+  tenantId                  String                    @map("tenant_id")
+  taskId                    String                    @map("task_id")
+  rawUrl                    String                    @map("raw_url") @db.Text
+  extractedUrl              String?                   @map("extracted_url") @db.Text
+  resolvedUrl               String?                   @map("resolved_url") @db.Text
+  normalizedUrl             String                    @map("normalized_url") @db.Text
+  canonicalKey              String                    @map("canonical_key") @db.VarChar(180)
+  status                    PublishVerificationStatus @default(PENDING)
+  extractedTitle            String?                   @map("extracted_title") @db.VarChar(500)
+  extractedBody             String?                   @map("extracted_body") @db.Text
+  extractedImageUrls        String[]                  @default([]) @map("extracted_image_urls")
+  matchScore                Float?                    @map("match_score")
+  textSimilarityScore       Float?                    @map("text_similarity_score")
+  imageSimilarityScore      Float?                    @map("image_similarity_score")
+  factMatchScore            Float?                    @map("fact_match_score")
+  failureReason             String?                   @map("failure_reason") @db.VarChar(500)
+  verifier                  String                    @db.VarChar(100)
+  verificationPolicyVersion String                    @default("development-v1") @map("verification_policy_version") @db.VarChar(120)
+  verificationAttempt       Int                       @default(1) @map("verification_attempt")
+  verificationStartedAt     DateTime?                 @map("verification_started_at")
+  verificationFinishedAt    DateTime?                 @map("verification_finished_at")
+  adapterRequestId          String?                   @map("adapter_request_id") @db.VarChar(200)
+  adapterProvider           String?                   @map("adapter_provider") @db.VarChar(100)
+  adapterModel              String?                   @map("adapter_model") @db.VarChar(160)
+  adapterReference          String?                   @map("adapter_reference") @db.Text
+  externalPublishedAt       DateTime?                 @map("external_published_at")
+  lateCorrection            Boolean                   @default(false) @map("late_correction")
+  correctionReason          String?                   @map("correction_reason") @db.VarChar(500)
+  synthetic                 Boolean                   @default(false)
+  submittedAt               DateTime                  @default(now()) @map("submitted_at")
+  verifiedAt                DateTime?                 @map("verified_at")
+
+  tenant            Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  task              DistributionTask           @relation(fields: [taskId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  registry          PublishedContentRegistry?
+  collectionJobs    PublicationCollectionJob[]
+  readbackSnapshots PublishReadbackSnapshot[]
+
+  @@index([tenantId, taskId, submittedAt])
+  @@index([tenantId, status, submittedAt, id])
+  @@index([tenantId, lateCorrection, status, submittedAt], map: "publish_submissions_tenant_id_late_correction_status_submitted_")
+  @@index([canonicalKey, status])
+  @@map("publish_submissions")
+}
+
+model PublishedContentRegistry {
+  id                 String   @id @default(cuid())
+  tenantId           String   @map("tenant_id")
+  campaignId         String   @map("campaign_id")
+  taskId             String   @unique @map("task_id")
+  submissionId       String   @unique @map("submission_id")
+  canonicalKey       String   @unique @map("canonical_key") @db.VarChar(180)
+  normalizedUrl      String   @map("normalized_url") @db.Text
+  contentFingerprint String   @map("content_fingerprint") @db.VarChar(64)
+  verifiedAt         DateTime @map("verified_at")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  tenant     Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  campaign   Campaign                @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  task       DistributionTask        @relation(fields: [taskId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  submission PublishSubmission       @relation(fields: [submissionId], references: [id], onDelete: Restrict)
+  metrics    PublishMetricSnapshot[]
+
+  @@unique([taskId, tenantId])
+  @@index([tenantId, campaignId, verifiedAt])
+  @@map("published_content_registry")
+}
+
+// Durable outbox: a browser collector may read only a due leased job. The
+// submission remains the source of truth for the employee's submission time.
+model PublicationCollectionJob {
+  id             String    @id @default(cuid())
+  submissionId   String    @map("submission_id")
+  kind           String    @db.VarChar(16)
+  windowHours    Int       @default(0) @map("window_hours")
+  status         String    @default("QUEUED") @db.VarChar(24)
+  dueAt          DateTime  @map("due_at")
+  attempts       Int       @default(0)
+  leaseOwner     String?   @map("lease_owner") @db.VarChar(80)
+  leaseToken     String?   @map("lease_token") @db.Uuid
+  leaseExpiresAt DateTime? @map("lease_expires_at")
+  heartbeatAt    DateTime? @map("heartbeat_at")
+  observedAt     DateTime? @map("observed_at")
+  evidence       Json?
+  errorCode      String?   @map("error_code") @db.VarChar(80)
+  completedAt    DateTime? @map("completed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  submission PublishSubmission @relation(fields: [submissionId], references: [id], onDelete: Restrict)
+
+  @@unique([submissionId, kind, windowHours])
+  @@index([status, dueAt, id])
+  @@index([submissionId, status])
+  @@index([kind, updatedAt(sort: Desc), id(sort: Desc)], map: "publication_collection_jobs_kind_updated_at_id_idx")
+  @@map("publication_collection_jobs")
+}
+
+// Only the human-admin endpoint may clear a risk pause.
+model PublicationCollectorState {
+  id          String    @id @db.VarChar(64)
+  dailyLimit  Int?      @map("daily_limit")
+  pausedAt    DateTime? @map("paused_at")
+  pauseReason String?   @map("pause_reason") @db.VarChar(160)
+  resumedAt   DateTime? @map("resumed_at")
+  lastSeenAt  DateTime? @map("last_seen_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("publication_collector_state")
+}
+
+// A durable unique nonce prevents a recorded request from claiming another job.
+model PublicationCollectorRequestNonce {
+  id         String   @id @db.Uuid
+  receivedAt DateTime @default(now()) @map("received_at")
+
+  @@index([receivedAt])
+  @@map("publication_collector_request_nonces")
+}
+
+// A signed node request records liveness and its optional HTTP(S) panel address.
+model PublicationReadbackNode {
+  id         String   @id @db.VarChar(80)
+  panelHost  String?  @map("panel_host") @db.VarChar(15)
+  panelUrl   String?  @map("panel_url") @db.Text
+  lastSeenAt DateTime @map("last_seen_at")
+
+  @@index([lastSeenAt])
+  @@map("publication_readback_nodes")
+}
+
+model PublicContentFixture {
+  id            String   @id @default(cuid())
+  tenantId      String   @map("tenant_id")
+  taskId        String   @unique @map("task_id")
+  normalizedUrl String   @unique @map("normalized_url") @db.Text
+  canonicalKey  String   @unique @map("canonical_key") @db.VarChar(180)
+  title         String   @db.VarChar(500)
+  body          String   @db.Text
+  imageUrls     String[] @default([]) @map("image_urls")
+  synthetic     Boolean  @default(true)
+  publishedAt   DateTime @default(now()) @map("published_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant           @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  task   DistributionTask @relation(fields: [taskId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([taskId, tenantId])
+  @@index([tenantId, createdAt])
+  @@map("public_content_fixtures")
+}
+
+model PublishMetricSnapshot {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  campaignId  String   @map("campaign_id")
+  registryId  String   @map("registry_id")
+  observedAt  DateTime @map("observed_at")
+  windowHours Int?     @map("window_hours")
+  source      String   @db.VarChar(80)
+  views       Int?
+  likes       Int?
+  comments    Int?
+  favorites   Int?
+  shares      Int?
+  rawData     Json?    @map("raw_data")
+  ingestedAt  DateTime @default(now()) @map("ingested_at")
+
+  tenant   Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  campaign Campaign                 @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  registry PublishedContentRegistry @relation(fields: [registryId], references: [id], onDelete: Restrict)
+
+  @@unique([registryId, observedAt, source])
+  @@index([tenantId, campaignId, observedAt])
+  @@map("publish_metric_snapshots")
+}
+
+// Provider-independent observation. It exists even when the submitted note
+// needs manual review and there is no verified registry record yet.
+model PublishReadbackSnapshot {
+  id           String   @id @default(cuid())
+  submissionId String   @map("submission_id")
+  jobId        String   @unique @map("job_id")
+  tenantId     String   @map("tenant_id")
+  campaignId   String   @map("campaign_id")
+  observedAt   DateTime @map("observed_at")
+  windowHours  Int      @map("window_hours")
+  source       String   @db.VarChar(80)
+  likes        Int?
+  comments     Int?
+  favorites    Int?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  submission PublishSubmission @relation(fields: [submissionId], references: [id], onDelete: Restrict)
+
+  @@unique([submissionId, windowHours])
+  @@index([tenantId, campaignId, observedAt])
+  @@map("publish_readback_snapshots")
+}
+
+model PublicationReadbackBudget {
+  day       String   @id @db.VarChar(10)
+  used      Int      @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("publication_readback_budget")
+}
+
+model ModelProvider {
+  id                        String                    @id @default(cuid())
+  code                      String                    @unique @db.VarChar(80)
+  name                      String                    @db.VarChar(120)
+  baseUrl                   String                    @map("base_url") @db.VarChar(1000)
+  timeoutMs                 Int                       @default(60000) @map("timeout_ms")
+  protocol                  ModelProviderProtocol     @default(OPENAI_COMPATIBLE)
+  status                    ModelResourceStatus       @default(ACTIVE)
+  synthetic                 Boolean                   @default(false)
+  activeCredentialId        String?                   @unique @map("active_credential_id")
+  healthStatus              ModelProviderHealthStatus @default(UNKNOWN) @map("health_status")
+  lastHealthCheckedAt       DateTime?                 @map("last_health_checked_at")
+  lastHealthLatencyMs       Int?                      @map("last_health_latency_ms")
+  lastHealthErrorCode       String?                   @map("last_health_error_code") @db.VarChar(80)
+  consecutiveHealthFailures Int                       @default(0) @map("consecutive_health_failures")
+  circuitState              ProviderCircuitState      @default(CLOSED) @map("circuit_state")
+  runtimeFailureCount       Int                       @default(0) @map("runtime_failure_count")
+  circuitOpenedAt           DateTime?                 @map("circuit_opened_at")
+  circuitOpenUntil          DateTime?                 @map("circuit_open_until")
+  circuitProbeToken         String?                   @map("circuit_probe_token") @db.VarChar(64)
+  circuitProbeExpiresAt     DateTime?                 @map("circuit_probe_expires_at")
+  lastRuntimeFailureAt      DateTime?                 @map("last_runtime_failure_at")
+  lastRuntimeErrorCode      String?                   @map("last_runtime_error_code") @db.VarChar(120)
+  createdAt                 DateTime                  @default(now()) @map("created_at")
+  updatedAt                 DateTime                  @updatedAt @map("updated_at")
+
+  activeCredential ModelProviderCredential?       @relation("ActiveProviderCredential", fields: [activeCredentialId], references: [id], onDelete: SetNull)
+  credentials      ModelProviderCredential[]      @relation("ProviderCredentialHistory")
+  healthChecks     ModelProviderHealthCheck[]
+  invocationLeases ModelProviderInvocationLease[]
+  models           ModelDefinition[]
+
+  @@index([status])
+  @@index([circuitState, circuitOpenUntil])
+  @@map("model_providers")
+}
+
+model ModelProviderCredential {
+  id                   String                        @id @default(cuid())
+  providerId           String                        @map("provider_id")
+  ciphertext           Bytes
+  initializationVector Bytes                         @map("initialization_vector")
+  authenticationTag    Bytes                         @map("authentication_tag")
+  keyVersion           String                        @map("key_version") @db.VarChar(40)
+  lastFour             String                        @map("last_four") @db.VarChar(8)
+  status               ModelProviderCredentialStatus @default(ACTIVE)
+  createdBy            String                        @map("created_by")
+  createdAt            DateTime                      @default(now()) @map("created_at")
+  revokedBy            String?                       @map("revoked_by")
+  revokedAt            DateTime?                     @map("revoked_at")
+  revokeReason         String?                       @map("revoke_reason") @db.VarChar(500)
+
+  provider          ModelProvider  @relation("ProviderCredentialHistory", fields: [providerId], references: [id], onDelete: Restrict)
+  activeForProvider ModelProvider? @relation("ActiveProviderCredential")
+
+  @@index([providerId, status, createdAt])
+  @@map("model_provider_credentials")
+}
+
+model ModelProviderHealthCheck {
+  id           String                    @id @default(cuid())
+  providerId   String                    @map("provider_id")
+  status       ModelProviderHealthStatus
+  latencyMs    Int                       @map("latency_ms")
+  httpStatus   Int?                      @map("http_status")
+  errorCode    String?                   @map("error_code") @db.VarChar(80)
+  errorMessage String?                   @map("error_message") @db.VarChar(300)
+  checkedBy    String                    @map("checked_by")
+  createdAt    DateTime                  @default(now()) @map("created_at")
+
+  provider ModelProvider @relation(fields: [providerId], references: [id], onDelete: Restrict)
+
+  @@index([providerId, createdAt])
+  @@map("model_provider_health_checks")
+}
+
+model ModelProviderInvocationLease {
+  id         String   @id @default(cuid())
+  providerId String   @map("provider_id")
+  leaseOwner String   @map("lease_owner") @db.VarChar(200)
+  kind       String   @db.VarChar(32)
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  provider ModelProvider @relation(fields: [providerId], references: [id], onDelete: Restrict)
+
+  @@index([providerId, expiresAt])
+  @@index([expiresAt])
+  @@map("model_provider_invocation_leases")
+}
+
+model ModelDefinition {
+  id              String              @id @default(cuid())
+  providerId      String              @map("provider_id")
+  code            String              @db.VarChar(100)
+  displayName     String              @map("display_name") @db.VarChar(160)
+  externalModelId String              @map("external_model_id") @db.VarChar(200)
+  capabilities    ModelCapability[]   @default([])
+  tier            ModelTier           @default(STANDARD)
+  status          ModelResourceStatus @default(ACTIVE)
+  synthetic       Boolean             @default(false)
+  metadata        Json?
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+
+  provider                 ModelProvider       @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  textRoutes               ModelRoute[]        @relation("TextModelRoute")
+  imageRoutes              ModelRoute[]        @relation("ImageModelRoute")
+  materialEmbeddings       MaterialEmbedding[]
+  embeddingRuntimePolicies RuntimePolicy[]     @relation("RuntimePolicyEmbeddingModel")
+  analysisRuntimePolicies  RuntimePolicy[]     @relation("RuntimePolicyMaterialAnalysisModel")
+
+  @@unique([providerId, code])
+  @@index([status])
+  @@map("model_definitions")
+}
+
+model ModelRoute {
+  id                    String              @id @default(cuid())
+  scopeType             ModelRouteScopeType @map("scope_type")
+  scopeId               String              @map("scope_id") @db.VarChar(64)
+  tenantId              String?             @map("tenant_id")
+  enterpriseId          String?             @map("enterprise_id")
+  textModelId           String              @map("text_model_id")
+  imageModelId          String              @map("image_model_id")
+  textFallbackModelIds  String[]            @default([]) @map("text_fallback_model_ids")
+  imageFallbackModelIds String[]            @default([]) @map("image_fallback_model_ids")
+  maxAttemptsPerModel   Int                 @default(2) @map("max_attempts_per_model")
+  createdBy             String              @map("created_by")
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+
+  tenant           Tenant?                   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  enterprise       Enterprise?               @relation(fields: [enterpriseId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  textModel        ModelDefinition           @relation("TextModelRoute", fields: [textModelId], references: [id], onDelete: Restrict)
+  imageModel       ModelDefinition           @relation("ImageModelRoute", fields: [imageModelId], references: [id], onDelete: Restrict)
+  qualifications   ModelRouteQualification[]
+  runtimeIncidents ModelRouteIncident[]
+
+  @@unique([scopeType, scopeId])
+  @@index([tenantId, scopeType])
+  @@index([enterpriseId, scopeType])
+  @@map("model_routes")
+}
+
+model ModelRouteIncident {
+  id                       String                 @id @default(cuid())
+  routeId                  String                 @map("route_id")
+  deliveryMode             GenerationDeliveryMode @map("delivery_mode")
+  configurationFingerprint String                 @map("configuration_fingerprint") @db.VarChar(64)
+  qualificationId          String                 @map("qualification_id")
+  status                   String                 @default("OPEN") @db.VarChar(20)
+  revision                 Int                    @default(1)
+  textFailures             Int                    @default(0) @map("text_failures")
+  imageFailures            Int                    @default(0) @map("image_failures")
+  notificationStatus       String                 @default("PENDING") @map("notification_status") @db.VarChar(20)
+  notificationAttempts     Int                    @default(0) @map("notification_attempts")
+  nextNotificationAt       DateTime               @default(now()) @map("next_notification_at")
+  notificationLeaseToken   String?                @map("notification_lease_token") @db.VarChar(64)
+  notificationLeaseUntil   DateTime?              @map("notification_lease_until")
+  notificationError        String?                @map("notification_error") @db.VarChar(250)
+  notifiedAt               DateTime?              @map("notified_at")
+  openedAt                 DateTime               @default(now()) @map("opened_at")
+  resolvedAt               DateTime?              @map("resolved_at")
+  updatedAt                DateTime               @updatedAt @map("updated_at")
+  route                    ModelRoute             @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@unique([routeId, deliveryMode])
+  @@index([status, notificationStatus, nextNotificationAt])
+  @@map("model_route_incidents")
+}
+
+model RuntimePolicy {
+  id                               String   @id @db.VarChar(40)
+  providerHealthMaxAgeSeconds      Int      @default(900) @map("provider_health_max_age_seconds")
+  routeQualificationMaxAgeSeconds  Int      @default(86400) @map("route_qualification_max_age_seconds")
+  minimumGenerationWorkers         Int      @default(1) @map("minimum_generation_workers")
+  maxQueueBacklog                  Int      @default(10000) @map("max_queue_backlog")
+  maxActiveGenerationJobs          Int      @default(1000) @map("max_active_generation_jobs")
+  maxProviderConcurrentInvocations Int      @default(10) @map("max_provider_concurrent_invocations")
+  costWarningThreshold             Decimal  @default(100) @map("cost_warning_threshold") @db.Decimal(18, 6)
+  costCurrency                     String   @default("CNY") @map("cost_currency") @db.VarChar(8)
+  embeddingModelId                 String?  @map("embedding_model_id")
+  materialAnalysisModelId          String?  @map("material_analysis_model_id")
+  retrievalTopK                    Int      @default(8) @map("retrieval_top_k")
+  retrievalMaxContextCharacters    Int      @default(12000) @map("retrieval_max_context_characters")
+  materialChunkSizeCharacters      Int      @default(1200) @map("material_chunk_size_characters")
+  materialChunkOverlapCharacters   Int      @default(160) @map("material_chunk_overlap_characters")
+  retrievalStrategyVersion         String   @default("hybrid-v1") @map("retrieval_strategy_version") @db.VarChar(120)
+  updatedBy                        String   @map("updated_by") @db.VarChar(100)
+  createdAt                        DateTime @default(now()) @map("created_at")
+  updatedAt                        DateTime @updatedAt @map("updated_at")
+
+  campaignPreflightSnapshots CampaignPreflightSnapshot[]
+  embeddingModel             ModelDefinition?            @relation("RuntimePolicyEmbeddingModel", fields: [embeddingModelId], references: [id], onDelete: Restrict)
+  materialAnalysisModel      ModelDefinition?            @relation("RuntimePolicyMaterialAnalysisModel", fields: [materialAnalysisModelId], references: [id], onDelete: Restrict)
+
+  @@map("runtime_policies")
+}
+
+model PlatformSetting {
+  key                  String                   @id @db.VarChar(120)
+  group                PlatformSettingGroup
+  valueType            PlatformSettingValueType @map("value_type")
+  value                Json?
+  ciphertext           Bytes?
+  initializationVector Bytes?                   @map("initialization_vector")
+  authenticationTag    Bytes?                   @map("authentication_tag")
+  keyVersion           String?                  @map("key_version") @db.VarChar(40)
+  secretLastFour       String?                  @map("secret_last_four") @db.VarChar(4)
+  version              Int                      @default(1)
+  updatedBy            String                   @map("updated_by") @db.VarChar(100)
+  createdAt            DateTime                 @default(now()) @map("created_at")
+  updatedAt            DateTime                 @updatedAt @map("updated_at")
+
+  @@index([group, key])
+  @@map("platform_settings")
+}
+
+model RegistrationApplication {
+  id                 String    @id @default(cuid())
+  contactName        String    @map("contact_name") @db.VarChar(80)
+  phone              String    @db.VarChar(11)
+  companyName        String    @map("company_name") @db.VarChar(160)
+  companySize        String?   @map("company_size") @db.VarChar(32)
+  message            String?   @db.VarChar(500)
+  status             String    @default("NEW") @db.VarChar(20)
+  notificationStatus String    @default("PENDING") @map("notification_status") @db.VarChar(20)
+  notificationError  String?   @map("notification_error") @db.VarChar(200)
+  notifiedPhones     Json      @default("[]") @map("notified_phones")
+  notifiedAt         DateTime? @map("notified_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@index([createdAt, id])
+  @@index([phone, createdAt])
+  @@map("registration_applications")
+}
+
+model PublicationVerificationPolicyEvidence {
+  id                       String   @id @default(cuid())
+  benchmarkId              String   @map("benchmark_id") @db.VarChar(128)
+  acceptanceReportSha256   String   @unique(map: "publication_verification_policy_evidence_acceptance_report_sha2") @map("acceptance_report_sha256") @db.Char(64)
+  providerCode             String   @map("provider_code") @db.VarChar(100)
+  providerEndpoint         String   @map("provider_endpoint") @db.VarChar(1000)
+  policyVersion            String   @map("policy_version") @db.VarChar(120)
+  scoringProfileVersion    String   @map("scoring_profile_version") @db.VarChar(160)
+  textSimilarityThreshold  Decimal  @map("text_similarity_threshold") @db.Decimal(6, 5)
+  imageSimilarityThreshold Decimal  @map("image_similarity_threshold") @db.Decimal(6, 5)
+  manualReviewMargin       Decimal  @map("manual_review_margin") @db.Decimal(6, 5)
+  requireImageMatch        Boolean  @map("require_image_match")
+  sampleCount              Int      @map("sample_count")
+  reportCheckedAt          DateTime @map("report_checked_at")
+  reviewer                 String   @db.VarChar(160)
+  registeredBy             String   @map("registered_by") @db.VarChar(100)
+  report                   Json
+  createdAt                DateTime @default(now()) @map("created_at")
+
+  @@index([providerCode, policyVersion, scoringProfileVersion, createdAt], map: "publication_verification_policy_evidence_provider_policy_profil")
+  @@index([benchmarkId, createdAt], map: "publication_verification_policy_evidence_benchmark_id_created_a")
+  @@map("publication_verification_policy_evidence")
+}
+
+model ModelRouteQualification {
+  id                       String                        @id @default(cuid())
+  routeId                  String                        @map("route_id")
+  status                   ModelRouteQualificationStatus
+  deliveryMode             GenerationDeliveryMode        @map("delivery_mode")
+  configurationFingerprint String                        @map("configuration_fingerprint") @db.VarChar(64)
+  textProviderId           String                        @map("text_provider_id")
+  textModelId              String                        @map("text_model_id")
+  imageProviderId          String                        @map("image_provider_id")
+  imageModelId             String                        @map("image_model_id")
+  textLatencyMs            Int?                          @map("text_latency_ms")
+  imageLatencyMs           Int?                          @map("image_latency_ms")
+  estimatedCost            Decimal                       @default(0) @map("estimated_cost") @db.Decimal(18, 6)
+  storageVerified          Boolean                       @default(false) @map("storage_verified")
+  diagnostics              Json?
+  errorCode                String?                       @map("error_code") @db.VarChar(120)
+  errorMessage             String?                       @map("error_message") @db.VarChar(500)
+  checkedBy                String                        @map("checked_by")
+  checkedAt                DateTime                      @default(now()) @map("checked_at")
+  expiresAt                DateTime                      @map("expires_at")
+
+  route              ModelRoute                  @relation(fields: [routeId], references: [id], onDelete: Restrict)
+  preflightSnapshots CampaignPreflightSnapshot[]
+
+  @@index([routeId, status, checkedAt])
+  @@index([configurationFingerprint, status, expiresAt])
+  @@map("model_route_qualifications")
+}
+
+model CampaignPreflightSnapshot {
+  campaignId               String                 @id @map("campaign_id")
+  tenantId                 String                 @map("tenant_id")
+  enterpriseId             String                 @map("enterprise_id")
+  runtimePolicyId          String                 @map("runtime_policy_id") @db.VarChar(40)
+  routeQualificationId     String?                @map("route_qualification_id")
+  deliveryMode             GenerationDeliveryMode @map("delivery_mode")
+  configurationFingerprint String                 @map("configuration_fingerprint") @db.VarChar(64)
+  checks                   Json
+  queueMetrics             Json                   @map("queue_metrics")
+  estimatedCost            Decimal                @default(0) @map("estimated_cost") @db.Decimal(18, 6)
+  createdAt                DateTime               @default(now()) @map("created_at")
+
+  campaign           Campaign                 @relation(fields: [campaignId, enterpriseId, tenantId], references: [id, enterpriseId, tenantId], onDelete: Restrict)
+  runtimePolicy      RuntimePolicy            @relation(fields: [runtimePolicyId], references: [id], onDelete: Restrict)
+  routeQualification ModelRouteQualification? @relation(fields: [routeQualificationId], references: [id], onDelete: Restrict)
+
+  @@unique([campaignId, enterpriseId, tenantId])
+  @@index([tenantId, enterpriseId, createdAt])
+  @@index([routeQualificationId])
+  @@map("campaign_preflight_snapshots")
+}
+
+model GenerationStyleConfiguration {
+  id            String   @id @default("platform")
+  version       Int      @default(1)
+  configuration Json
+  updatedBy     String   @map("updated_by")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("generation_style_configurations")
+}

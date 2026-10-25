@@ -1,0 +1,35 @@
+{
+  "name": "@xhs-agentic/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx watch src/lifecycle.ts",
+    "lifecycle": "tsx src/lifecycle.ts",
+    "lifecycle:once": "tsx src/lifecycle.ts --once",
+    "probe": "tsx src/probe.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@xhs-agentic/ai-gateway": "workspace:*",
+    "@xhs-agentic/content-safety": "workspace:*",
+    "@xhs-agentic/network-security": "workspace:*",
+    "@xhs-agentic/object-storage": "workspace:*",
+    "@xhs-agentic/observability": "workspace:*",
+    "@xhs-agentic/sms": "workspace:*",
+    "bullmq": "6.3.9",
+    "cheerio": "1.2.0",
+    "file-type": "22.1.1",
+    "mammoth": "1.13.0",
+    "pdf-parse": "2.4.5",
+    "pg": "8.23.0",
+    "sharp": "0.35.4",
+    "@xhs-agentic/database": "workspace:*",
+    "@xhs-agentic/wechat-miniapp": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1",
+    "typescript": "7.0.2"
+  },
+  "license": "Apache-2.0"
+}

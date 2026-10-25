@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>笔记回读 · 采集节点</title>
+  <link rel="stylesheet" href="/app.css" />
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span><span>笔记回读 <small>采集节点控制台</small></span></div>
+      <span class="network"><span class="network-dot"></span> 独立采集节点</span>
+    </header>
+
+    <main>
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <section id="gate" class="gate" hidden>
+        <div class="gate-aside"><p class="eyebrow">DISTRIBUTED READBACK</p><h1>把采集管理<br/>放在手边。</h1><p>节点独立运行。您可以在这里配置自行选择的供应商 API 地址与 Token、查看执行记录及预算占用，主站业务不会因为采集故障停摆。</p><div class="aside-line"><span>01</span> 设置密码 <span>→</span> 配置接口 <span>→</span> 验收样本</div></div>
+        <div class="gate-card">
+          <div id="setupView" hidden>
+            <p class="eyebrow">首次使用</p><h2>设置控制台密码</h2><p class="muted">至少 12 位。只在首次设置时显示此页面；初始化设备由部署者配置，不限操作系统或网络。</p>
+            <form id="setupForm" class="form-stack">
+              <label for="setupPassword">登录密码</label><input id="setupPassword" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="不少于 12 位" />
+              <label for="setupRepeat">再次输入</label><input id="setupRepeat" type="password" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="再次确认密码" />
+              <button type="submit" class="button primary">完成设置并进入</button>
+            </form>
+          </div>
+          <div id="loginView" hidden>
+            <p class="eyebrow">采集节点</p><h2>欢迎回来</h2><p class="muted">输入控制台密码，查看节点的最新状态。</p>
+            <form id="loginForm" class="form-stack"><label for="loginPassword">登录密码</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="请输入登录密码" /><button type="submit" class="button primary">登录控制台</button></form>
+          </div>
+          <div id="setupBlocked" class="blocked" hidden><h2>等待授权设备初始化</h2><p>此节点尚未设置密码。请从允许初始化的设备打开控制台，或由部署者调整初始化设备地址配置。</p></div>
+        </div>
+      </section>
+
+      <section id="dashboard" hidden>
+        <div class="page-heading"><div><p class="eyebrow">COLLECTOR / CONTROL</p><h1>采集控制台</h1><p class="muted">任务由主服务统一分配，节点负责按预算领取和回写。</p></div><button id="logoutButton" type="button" class="button subtle">退出登录</button></div>
+        <nav class="tabs" aria-label="控制台页面"><button type="button" class="tab active" data-tab="overview" aria-current="page">概览</button><button type="button" class="tab" data-tab="history">任务记录</button><button type="button" class="tab" data-tab="settings">节点设置</button></nav>
+
+        <div id="overviewTab" class="tab-panel">
+          <div id="statusBanner" class="status-banner"><div><p class="eyebrow">NODE STATUS</p><h2 id="statusTitle">正在读取状态…</h2><p id="statusDetail">请稍候</p></div><button id="refreshButton" type="button" class="button secondary">刷新数据</button></div>
+          <div class="stats"><article class="stat"><span>今日额度占用</span><strong id="statBudget">—</strong><small id="statBudgetDetail">以主服务预算计数</small></article><article class="stat"><span>完成回读</span><strong id="statCompleted">—</strong><small>已回写的工作单</small></article><article class="stat"><span>待处理 / 重试</span><strong id="statQueued">—</strong><small id="statQueuedDetail">含等待中的任务</small></article><article class="stat cost"><span>今日查询额度计数</span><strong id="statCost">—</strong><small>领取额度与人工测试合计；费用以供应商账单为准</small></article></div>
+          <div class="overview-grid"><section class="card"><div class="card-heading"><h2>最近 14 天领取额度</h2><span>UTC 自然日</span></div><div id="budgetBars" class="budget-bars"></div></section><section class="card action-card"><p class="eyebrow">NEXT STEP</p><h2>采集由您掌控</h2><p id="nextStep" class="muted">先设置供应商 API 地址与 Token，再用一条真实笔记完成验收。</p><button id="goSettings" type="button" class="button secondary">打开节点设置 <span aria-hidden="true">↗</span></button></section></div>
+        </div>
+
+        <div id="historyTab" class="tab-panel" hidden>
+          <div class="section-heading"><div><h2>任务记录</h2><p>仅展示最近 50 条工作单的状态与时间，不展示员工链接或笔记正文。</p></div><label class="select-label" for="historyFilter">筛选状态 <select id="historyFilter"><option value="all">全部任务</option><option value="COMPLETED">已完成</option><option value="QUEUED">排队 / 重试</option><option value="LEASED">处理中</option><option value="NEEDS_REVIEW">需复核</option><option value="CANCELLED">已取消</option></select></label></div>
+          <div class="table-wrap"><table><thead><tr><th>工作单</th><th>状态</th><th>尝试次数</th><th>最近更新</th><th>原因代码</th></tr></thead><tbody id="historyRows"></tbody></table></div><p id="historyEmpty" class="empty" hidden>当前没有符合条件的采集任务。新提交需要满 24 小时才会进入领取队列。</p>
+        </div>
+
+        <div id="settingsTab" class="tab-panel" hidden>
+          <div class="section-heading"><div><h2>节点设置</h2><p>敏感信息只保存在这台采集机，页面不会回显 Token。</p></div></div>
+          <div class="settings-grid"><section class="card"><p class="eyebrow">01 / PROVIDER</p><h3>供应商接口</h3><p id="tokenState" class="muted">正在读取配置…</p><form id="tokenForm" class="form-stack"><label for="vendorEndpoint">供应商 API 地址</label><input id="vendorEndpoint" type="url" autocomplete="off" spellcheck="false" maxlength="8192" pattern="https://.*" required placeholder="填写供应商提供的完整 HTTPS 接口地址" aria-describedby="endpointHelp" /><p id="endpointHelp" class="field-help">这是供应商的笔记详情接口，不是企声主服务地址。节点以 GET 请求自动追加 noteId；请勿在地址中放入密钥。</p><label for="vendorToken">Authorization Token</label><input id="vendorToken" type="password" autocomplete="off" maxlength="4096" required placeholder="首次填写完整 Token，之后留空保留" aria-describedby="tokenHelp" /><p id="tokenHelp" class="field-help">可填写 Bearer 或 Token 前缀；无前缀时按 Token 发送。密钥加密保存在本机，不会回显。</p><button type="submit" class="button primary">保存接口配置</button></form><details class="protocol-help"><summary>接口需要返回什么内容？</summary><p>仅支持上述 GET 查询和以下 JSON 协议。自行选择的供应商若使用其他参数、鉴权或响应格式，需要先通过自己的网关适配。</p><pre><code>{
+  "noteId": "请求中的笔记 ID",
+  "title": "笔记标题",
+  "body": "笔记正文"
+}</code></pre><p>可选字段：authorId、publishedAt、imageCount、hashtags、likes、comments、favorites。样本验收还需非空标题与正文，以及点赞、评论、收藏数量。仍兼容旧版双层 JSON 响应。地址或 Token 变更会暂停节点，需重新验收样本。</p></details></section>
+            <section class="card"><p class="eyebrow">02 / PAID PILOT</p><h3>真实样本验收</h3><p class="muted">输入有权核查的笔记链接或 ID；只查询一次，不领取任务。每天最多 3 次测试。</p><form id="probeForm" class="form-stack"><label for="probeLink">笔记链接或 ID</label><input id="probeLink" type="text" autocomplete="off" maxlength="2048" required placeholder="https://www.xiaohongshu.com/explore/…" /><label class="check-row"><input id="probeConfirmed" class="check" type="checkbox" required /><span>我确认这次查询可能产生供应商费用</span></label><button type="submit" class="button secondary">测试并检查字段</button></form><p id="probeResult" class="result" role="status" aria-live="polite"></p></section>
+            <section class="card"><p class="eyebrow">03 / COLLECTION</p><h3>自动采集</h3><p id="workerState" class="muted">验收通过后可启用；主服务若暂停回读，节点会保持待命。</p><button id="toggleWorker" type="button" class="button secondary" disabled>启用节点</button></section>
+            <section class="card"><p class="eyebrow">04 / SECURITY</p><h3>修改登录密码</h3><form id="passwordForm" class="form-stack"><label for="oldPassword">当前密码</label><input id="oldPassword" type="password" autocomplete="current-password" required /><label for="newPassword">新密码</label><input id="newPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required /><button type="submit" class="button secondary">更新密码</button></form></section></div>
+        </div>
+      </section>
+    </main>
+    <footer>笔记回读节点 · 数据保留在主服务，供应商 Token 保留在本机</footer>
+  </div>
+</body>
+</html>

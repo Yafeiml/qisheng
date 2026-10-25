@@ -1,0 +1,33 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Use pnpm's POSIX shell so inline environment assignments also work on Windows.
+shellEmulator: true
+
+# Explicit lifecycle policy; dependency telemetry is disabled.
+allowBuilds:
+  "@alicloud/openapi-core": true
+  "@biomejs/biome": true
+  "@prisma/engines": true
+  "@scarf/scarf": false
+  "esbuild": true
+  "msgpackr-extract": true
+  "prisma": true
+  "sharp": true
+
+overrides:
+  # The OpenAPI generator still uses js-yaml 4; pin its security fix.
+  "@redocly/openapi-core>js-yaml": "4.3.2"
+  # Prisma Studio pins mysql2; use the patched upstream release.
+  "mysql2": "3.24.4"
+  # Cheerio uses the same decoding API; v1 replaces deprecated whatwg-encoding.
+  "cheerio>encoding-sniffer": "1.0.2"
+  "deepmerge-ts": "8.0.2"
+  "multer": "2.4.0"
+  "qs": "6.16.0"
+  "openapi-typescript>typescript": "5.9.3"
+  "@nestjs/swagger>typescript": "6.0.3"
+
+minimumReleaseAgeExclude:
+  - mammoth@1.13.0

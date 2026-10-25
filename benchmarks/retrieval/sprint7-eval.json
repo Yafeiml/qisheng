@@ -1,0 +1,79 @@
+{
+  "corpus": [
+    {
+      "id": "fs-pro-device",
+      "title": "全飞秒 Pro 设备与流程",
+      "tags": ["全飞秒Pro", "设备", "术前评估"],
+      "text": "全飞秒 Pro 的传播应说明专业设备、规范术前评估、适用条件和个体差异，避免绝对化效果承诺。"
+    },
+    {
+      "id": "icl-lens",
+      "title": "ICL 晶体植入科普",
+      "tags": ["ICL", "晶体植入", "高度近视"],
+      "text": "ICL 晶体植入适用于部分近视人群，需要通过眼部检查评估前房深度、角膜内皮和个体适用性。"
+    },
+    {
+      "id": "myopia-child",
+      "title": "青少年近视防控",
+      "tags": ["青少年", "近视防控", "户外活动"],
+      "text": "青少年近视管理强调定期视力检查、增加户外活动、规范用眼和专业医疗评估。"
+    },
+    {
+      "id": "dry-eye",
+      "title": "干眼诊疗基础",
+      "tags": ["干眼", "睑板腺", "用眼习惯"],
+      "text": "干眼可能与泪膜稳定性、睑板腺功能和长期用眼习惯相关，应根据检查结果制定个体化管理方案。"
+    },
+    {
+      "id": "cataract-device",
+      "title": "白内障手术设备",
+      "tags": ["白内障", "人工晶体", "手术设备"],
+      "text": "白内障手术内容可介绍手术设备、人工晶体选择、术前检查和术后随访，但不承诺固定视力结果。"
+    },
+    {
+      "id": "brand-compliance",
+      "title": "医疗品牌合规口径",
+      "tags": ["品牌", "医疗合规", "个体差异"],
+      "text": "医疗健康传播需要专业克制，明确效果存在个体差异，避免使用绝对治愈、百分百安全等表达。"
+    },
+    {
+      "id": "hospital-service",
+      "title": "院内服务流程",
+      "tags": ["预约", "到院", "术后随访"],
+      "text": "患者服务流程包括线上预约、到院建档、专业检查、医生沟通和术后随访。"
+    },
+    {
+      "id": "geo-shanghai",
+      "title": "上海院区 GEO 信息",
+      "tags": ["上海", "院区", "交通"],
+      "text": "上海院区内容可准确说明所在区域、交通方式、门诊时间和预约方式，不虚构地理信息。"
+    }
+  ],
+  "queries": [
+    { "query": "全飞秒 Pro 宣传，侧重设备和规范术前评估", "relevant": ["fs-pro-device"] },
+    { "query": "高度近视 ICL 晶体植入检查与适用性", "relevant": ["icl-lens"] },
+    { "query": "青少年近视防控和户外活动科普", "relevant": ["myopia-child"] },
+    { "query": "干眼睑板腺和用眼习惯", "relevant": ["dry-eye"] },
+    { "query": "白内障人工晶体与手术设备介绍", "relevant": ["cataract-device"] },
+    {
+      "query": "医疗宣传如何表达个体差异并避免绝对治愈",
+      "relevant": ["brand-compliance", "fs-pro-device"]
+    },
+    {
+      "query": "患者预约到院检查和术后随访流程",
+      "relevant": ["hospital-service", "cataract-device"]
+    },
+    { "query": "上海院区交通门诊时间和预约方式", "relevant": ["geo-shanghai", "hospital-service"] },
+    { "query": "全飞秒术后随访和服务流程", "relevant": ["fs-pro-device", "hospital-service"] },
+    {
+      "query": "专业医疗设备内容不能承诺固定效果",
+      "relevant": ["fs-pro-device", "cataract-device", "brand-compliance"]
+    }
+  ],
+  "baseline": {
+    "topK": 2,
+    "minimumRecallAtK": 0.9,
+    "maximumWrongCitationRate": 0.3,
+    "maximumContextCharacters": 12000
+  }
+}

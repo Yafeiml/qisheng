@@ -1,0 +1,122 @@
+name: qisheng
+
+x-runtime: &runtime
+  restart: unless-stopped
+  init: true
+  read_only: true
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  extra_hosts: ["host.docker.internal:host-gateway"]
+  env_file: [{ path: .env, required: false }]
+  volumes: ["${QISHENG_DATA_DIR:-./data}/config:/run/qisheng:ro"]
+  tmpfs: ["/tmp:uid=1000,gid=1000,mode=0700"]
+  logging:
+    driver: json-file
+    options: { max-size: "10m", max-file: "3" }
+
+services:
+  bootstrap:
+    <<: *runtime
+    image: qisheng/api:${QISHENG_VERSION:-local}
+    user: "0:0"
+    restart: "no"
+    cap_add: ["CHOWN", "FOWNER", "DAC_OVERRIDE", "SETUID", "SETGID"]
+    environment: { OBJECT_STORAGE_LOCAL_ROOT: /var/lib/qisheng/storage }
+    volumes:
+      - "${QISHENG_DATA_DIR:-./data}/config:/run/qisheng"
+      - "${QISHENG_DATA_DIR:-./data}/storage:/var/lib/qisheng/storage"
+    entrypoint: ["node", "/app/ops/runtime-config.cjs"]
+    command: ["initialize"]
+
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg18-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER_FILE: /run/qisheng/postgres-user
+      POSTGRES_DB_FILE: /run/qisheng/postgres-database
+      POSTGRES_PASSWORD_FILE: /run/qisheng/postgres-password
+    volumes:
+      - "${QISHENG_DATA_DIR:-./data}/postgresql:/var/lib/postgresql"
+      - "${QISHENG_DATA_DIR:-./data}/config:/run/qisheng:ro"
+    depends_on:
+      bootstrap: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$(cat \"$$POSTGRES_USER_FILE\")\" -d \"$$(cat \"$$POSTGRES_DB_FILE\")\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  redis:
+    image: redis:8.2-alpine
+    restart: unless-stopped
+    command: ["sh", "-c", "export REDISCLI_AUTH=\"$$(cat /run/qisheng/redis-password)\"; exec docker-entrypoint.sh redis-server --appendonly yes --requirepass \"$$REDISCLI_AUTH\""]
+    volumes:
+      - "${QISHENG_DATA_DIR:-./data}/redis:/data"
+      - "${QISHENG_DATA_DIR:-./data}/config:/run/qisheng:ro"
+    depends_on:
+      bootstrap: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$(cat /run/qisheng/redis-password)\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  migrate:
+    <<: *runtime
+    image: qisheng/migrate:${QISHENG_VERSION:-local}
+    restart: "no"
+    depends_on:
+      bootstrap: { condition: service_completed_successfully }
+      postgres: { condition: service_healthy, required: false }
+      redis: { condition: service_healthy, required: false }
+
+  api:
+    <<: *runtime
+    image: qisheng/api:${QISHENG_VERSION:-local}
+    environment: { API_HOST: 0.0.0.0, API_PORT: "3100", OBJECT_STORAGE_LOCAL_ROOT: /var/lib/qisheng/storage }
+    volumes:
+      - "${QISHENG_DATA_DIR:-./data}/config:/run/qisheng:ro"
+      - "${QISHENG_DATA_DIR:-./data}/storage:/var/lib/qisheng/storage"
+    expose: ["3100"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3100/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  web:
+    restart: unless-stopped
+    init: true
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    image: qisheng/web:${QISHENG_VERSION:-local}
+    environment: { HOSTNAME: 0.0.0.0, PORT: "3101", INTERNAL_API_BASE_URL: "http://api:3100" }
+    ports: ["${WEB_BIND_PORT:-3101}:3101"]
+    tmpfs:
+      - /tmp:uid=1000,gid=1000,mode=0700
+      - /app/apps/admin-web/.next/cache:uid=1000,gid=1000,mode=0700
+    depends_on:
+      # Neither DNS nor object storage readiness can block the web installer.
+      api: { condition: service_started }
+
+  worker:
+    <<: *runtime
+    image: qisheng/worker:${QISHENG_VERSION:-local}
+    environment: { OBJECT_STORAGE_LOCAL_ROOT: /var/lib/qisheng/storage }
+    volumes:
+      - "${QISHENG_DATA_DIR:-./data}/config:/run/qisheng:ro"
+      - "${QISHENG_DATA_DIR:-./data}/storage:/var/lib/qisheng/storage"
+    stop_grace_period: 45s
+    depends_on:
+      api: { condition: service_started }
+

@@ -1,0 +1,269 @@
+.login-page {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page::before {
+  position: absolute;
+  top: -160rpx;
+  right: -180rpx;
+  width: 520rpx;
+  height: 520rpx;
+  background: #ffdce1;
+  border-radius: 50%;
+  content: "";
+  opacity: 0.7;
+}
+
+.login-hero {
+  position: relative;
+  z-index: 1;
+  padding: 26rpx 10rpx 42rpx;
+}
+
+.hero-title {
+  width: 620rpx;
+  margin: 15rpx 0 18rpx;
+  font-family: "STSong", "Songti SC", serif;
+  font-size: 60rpx;
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.hero-copy {
+  width: 600rpx;
+  color: #74696b;
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.hero-stickers {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 25rpx;
+}
+
+.hero-stickers text {
+  padding: 8rpx 16rpx;
+  color: #a01c3b;
+  background: #fff;
+  border: 2rpx solid #f2d6da;
+  border-radius: 999rpx;
+  font-size: 21rpx;
+  font-weight: 700;
+  transform: rotate(-2deg);
+}
+
+.hero-stickers text:nth-child(2) {
+  color: #72550f;
+  background: #fff3bd;
+  border-color: #f4df82;
+  transform: rotate(2deg);
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  padding: 34rpx 30rpx;
+}
+
+.step-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 38rpx;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 7rpx;
+  color: #a49a9b;
+  font-size: 21rpx;
+}
+
+.step text {
+  display: grid;
+  width: 34rpx;
+  height: 34rpx;
+  place-items: center;
+  background: #eee9e7;
+  border-radius: 50%;
+  font-size: 19rpx;
+}
+
+.step.active,
+.step.done {
+  color: #b51f40;
+  font-weight: 700;
+}
+
+.step.active text,
+.step.done text {
+  color: #fff;
+  background: #ff2442;
+}
+
+.step-line {
+  width: 42rpx;
+  height: 2rpx;
+  margin: 0 9rpx;
+  background: #e5dcda;
+}
+
+.card-heading {
+  margin-bottom: 30rpx;
+}
+
+.card-heading > view {
+  margin: 9rpx 0 8rpx;
+  font-size: 38rpx;
+  font-weight: 750;
+}
+
+.card-heading > text:last-child {
+  color: #766d6e;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.text-field {
+  margin-bottom: 24rpx;
+}
+
+.code-field {
+  font-size: 42rpx;
+  font-weight: 750;
+  letter-spacing: 18rpx;
+  text-align: center;
+}
+
+.login-card .primary-button {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 88rpx;
+  padding: 0 24rpx;
+}
+
+.login-card .button-hover:not([disabled]) {
+  opacity: 0.85;
+}
+
+.development-code {
+  margin: 0 0 28rpx;
+  padding: 22rpx;
+  text-align: center;
+  background: #fff3bd;
+  border: 2rpx dashed #e7ca5d;
+  border-radius: 18rpx;
+}
+
+.development-code text {
+  display: block;
+  color: #846313;
+  font-size: 19rpx;
+  font-weight: 800;
+  letter-spacing: 2rpx;
+}
+
+.development-code-value {
+  display: block;
+  margin: 8rpx 0;
+  font-size: 46rpx;
+  letter-spacing: 12rpx;
+}
+
+.development-code view {
+  color: #7e6b37;
+  font-size: 21rpx;
+}
+
+.link-button {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 14rpx;
+  color: #a01c3b;
+  background: transparent;
+  font-size: 24rpx;
+  line-height: 66rpx;
+}
+
+.link-button[disabled] {
+  color: #a49a9b;
+  background: transparent;
+}
+
+.candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  max-height: 580rpx;
+  margin-bottom: 26rpx;
+}
+
+.candidate {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 22rpx;
+  background: #fffdfc;
+  border: 2rpx solid #e9dfdc;
+  border-radius: 20rpx;
+}
+
+.candidate.selected {
+  background: #fff4f5;
+  border-color: #ff9eac;
+}
+
+.candidate-check {
+  display: grid;
+  flex: 0 0 38rpx;
+  width: 38rpx;
+  height: 38rpx;
+  color: #fff;
+  background: #fff;
+  border: 2rpx solid #cfbfc0;
+  border-radius: 10rpx;
+  place-items: center;
+}
+
+.candidate.selected .candidate-check {
+  background: #ff2442;
+  border-color: #ff2442;
+}
+
+.candidate-main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.candidate-title {
+  color: #292324;
+  font-size: 26rpx;
+  font-weight: 650;
+}
+
+.candidate-main > text {
+  overflow: hidden;
+  color: #776d6e;
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidate-meta {
+  color: #766d6e;
+}
+
+.privacy-note {
+  position: relative;
+  z-index: 1;
+  padding: 28rpx 20rpx 0;
+  color: #988d8e;
+  font-size: 20rpx;
+  line-height: 1.6;
+  text-align: center;
+}

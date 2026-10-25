@@ -1,0 +1,232 @@
+.purposeNotice {
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+
+.purposeNotice p,
+.help {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.purposeBadge {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.editor {
+  width: 100%;
+  min-width: 0;
+}
+
+.contextFields,
+.confirmations {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.contextFields :global(.field) {
+  margin: 0;
+}
+
+.evidenceGuide {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  min-width: 0;
+}
+
+.evidenceGuide p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.templateButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.editor .templateButtons button {
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.templateConfirm {
+  margin: 12px 0 0;
+  padding: 8px 0 0;
+  min-width: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.evidenceGuide details {
+  margin-top: 12px;
+}
+
+.evidenceGuide summary {
+  padding: 6px 0;
+  color: var(--accent-ink);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.evidenceGuide summary:hover {
+  text-decoration: underline;
+}
+
+.evidenceGuide summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.contentExamples {
+  min-width: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.editor select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 36px 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--fg);
+  background-color: var(--surface);
+  font: inherit;
+  cursor: pointer;
+}
+
+.editor select:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.editor select:focus-visible,
+.editor button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.editor button {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  min-height: 36px;
+  justify-self: start;
+}
+
+.editor button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.editor button:disabled,
+.editor select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--fg);
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.confirmation input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin: 1px 0 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.confirmation input:hover:not(:disabled),
+.usageToggle input:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.confirmation input:checked,
+.usageToggle input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.confirmation input:checked::after,
+.usageToggle input:checked::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.confirmation input:focus-visible,
+.usageToggle input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.confirmation input:disabled,
+.usageToggle input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.usageToggle input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.usageToggle input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.usageToggle input:checked::after {
+  top: 1px;
+  left: 4px;
+  width: 4px;
+  height: 8px;
+}

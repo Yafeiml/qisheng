@@ -1,0 +1,134 @@
+<view class="page-shell detail-page">
+  <view wx:if="{{loading}}" class="detail-loading">
+    <view class="loading-ring"></view>
+    <text>正在校验本人任务权限…</text>
+  </view>
+
+  <block wx:elif="{{task}}">
+    <view class="detail-head">
+      <view class="enterprise-row">
+        <text>{{task.enterprise.name}}</text>
+        <text class="status-badge {{task.tone}}">{{task.statusLabel}}</text>
+      </view>
+      <view class="detail-title">{{task.campaign.title}}</view>
+      <view class="timing-card {{task.tone}}">
+        <view class="timing-icon">{{task.status === 'LOCKED' ? '锁' : ((task.status === 'COMPLETED' || task.status === 'LATE_CORRECTED') ? '✓' : ((task.status === 'CANCELLED' || task.status === 'EXPIRED') ? '!' : '24h'))}}</view>
+        <view>
+          <text class="timing-title">{{task.timingLabel}}</text>
+          <text wx:if="{{task.status !== 'CANCELLED' && task.status !== 'COMPLETED' && task.status !== 'LATE_CORRECTED' && task.status !== 'EXPIRED'}}">开放 {{task.visibleLabel}} · 提交截止 {{task.expiresLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{task.factsConfirmationRequired && task.status === 'AVAILABLE' && task.contentRevision}}" class="facts-section surface">
+      <text class="section-title">{{task.contentVisible && task.content ? '确认真实后再发布' : '发布安排需要企业复核'}}</text>
+      <text>{{task.contentVisible && task.content ? '请查看文案与图片，核对本人事实、真实岗位和素材授权。无需选择账号、定位或营销策略。' : '当前内容暂不可用。发现实际发布条件变化时，可以退回企业处理，无需自行换号或调整定位。'}}</text>
+      <block wx:if="{{task.factsReturned}}"><text class="facts-state">已退回企业复核，请等待更新后的内容。</text></block>
+      <block wx:elif="{{task.factsConfirmed && task.contentVisible && task.content}}"><text class="facts-state">✓ 已确认当前版本真实</text></block>
+      <button wx:elif="{{task.contentVisible && task.content}}" class="primary-button facts-confirm" disabled="{{actionBusy}}" loading="{{actionBusy}}" bindtap="confirmFacts">我已核对，事实与素材真实</button>
+      <button class="secondary-button" disabled="{{actionBusy || task.factsReturned}}" bindtap="returnFacts">内容或发布条件有变化，退回企业</button>
+    </view>
+
+    <view wx:if="{{task.status === 'CANCELLED' || task.status === 'EXPIRED'}}" class="locked-card surface">
+      <view class="lock-shape">!</view>
+      <text class="locked-title">{{task.status === 'CANCELLED' ? '本期任务已取消' : '本期未按时提交发布链接'}}</text>
+      <text>{{task.status === 'CANCELLED' ? '企业已经停止本期活动，你无需再复制、发布或提交链接。' : '开放后 24 小时内没有提交发布链接，本期已记为未完成。'}}</text>
+    </view>
+
+    <view wx:elif="{{!task.contentVisible || !task.content}}" class="locked-card surface">
+      <view class="lock-shape">锁</view>
+      <text class="locked-title">{{task.status === 'AVAILABLE' && task.factsConfirmationRequired ? '当前内容暂不可用' : '专属图文尚未开放'}}</text>
+      <text>{{task.status === 'AVAILABLE' && task.factsConfirmationRequired ? '请将实际变化退回企业，等待发布安排复核。' : ('企业安排的开放时间是 ' + task.visibleLabel + '，请到时再来查看。')}}</text>
+    </view>
+
+    <block wx:else>
+      <view wx:if="{{task.publishingArrangement}}" class="arrangement-section surface"><text class="section-title">企业已安排发布</text><text>{{task.publishingArrangement}}</text></view>
+      <view wx:if="{{task.status === 'AVAILABLE' && task.submissionFailureReason}}" class="repair-section surface" role="region" aria-label="重新提交说明">
+        <view class="repair-icon">!</view>
+        <view>
+          <text class="repair-title">上次提交未通过，请修正后重试</text>
+          <text>{{task.failureReasonText}}</text>
+        </view>
+      </view>
+
+      <view class="image-section surface">
+        <view class="section-heading">
+          <view>
+            <text class="section-title">本任务发布图片</text>
+          </view>
+        </view>
+        <view wx:for="{{task.content.images}}" wx:key="id" class="assigned-image">
+          <image src="{{item.imageUrl}}" mode="widthFix" data-image-url="{{item.imageUrl}}" bindtap="previewImage" />
+          <view class="image-meta">
+            <text>图片 {{index + 1}} · {{item.width}}×{{item.height}}</text>
+            <button wx:if="{{task.canUseContentActions}}" class="secondary-button mini-button" loading="{{actionBusy}}" disabled="{{actionBusy}}" data-image-id="{{item.id}}" bindtap="saveImage">保存图片</button>
+          </view>
+        </view>
+        <view class="unique-note">请使用本任务分配的图片，授权素材可能按企业安排复用。</view>
+      </view>
+
+      <view class="copy-section surface">
+        <view class="section-heading">
+          <view>
+            <text class="section-title">小红书风格文案</text>
+          </view>
+          <text class="copy-state">不可编辑</text>
+        </view>
+        <view class="copy-title">{{task.content.title}}</view>
+        <view class="copy-body">{{task.content.body}}</view>
+        <view class="hashtags">{{task.hashtagsText}}</view>
+        <button wx:if="{{task.canUseContentActions}}" class="primary-button" loading="{{actionBusy}}" disabled="{{actionBusy}}" bindtap="copyContent">复制完整文案</button>
+      </view>
+
+      <view wx:if="{{task.canSubmit}}" class="publication-section surface">
+        <view class="section-heading">
+          <view>
+            <text class="section-title">回填发布链接</text>
+          </view>
+          <text class="step-mark">最后一步</text>
+        </view>
+        <view class="verify-policy">按企业既定安排发布后回填。系统核对链接、正文和图片；需要时核验实际作者。</view>
+        <textarea class="publication-field" value="{{publicationUrl}}" bindinput="onPublicationInput" maxlength="4000" placeholder="粘贴小红书链接，或包含链接的分享文本" auto-height />
+        <view wx:if="{{task.content.synthetic}}" class="adapter-note" bindtap="createDevelopmentFixture">开发测试：生成本机测试链接</view>
+        <button class="primary-button" loading="{{actionBusy}}" disabled="{{actionBusy}}" bindtap="submitPublication">提交发布链接</button>
+      </view>
+
+      <view wx:elif="{{task.status === 'VERIFYING'}}" class="review-pending-section surface">
+        <view class="review-pending-icon">审</view>
+        <view class="success-title">{{task.reviewTitle}}</view>
+        <text>{{task.reviewDetail}}</text>
+      </view>
+
+      <view wx:elif="{{task.status === 'COMPLETED' || task.status === 'LATE_CORRECTED'}}" class="success-section surface">
+        <view class="success-check">✓</view>
+        <view class="success-title">发布已验证</view>
+        <text>本次发布已完成核验，结果以企业与系统核验记录为准。</text>
+        <view class="verified-url" bindtap="copyPublicationUrl">{{task.publication.normalizedUrl}}</view>
+        <view class="metric-grid">
+          <view>
+            <text class="metric-value">{{task.publication.latestMetrics && task.publication.latestMetrics.views != null ? task.publication.latestMetrics.views : '—'}}</text>
+            <text>阅读</text>
+          </view>
+          <view>
+            <text class="metric-value">{{task.publication.latestMetrics && task.publication.latestMetrics.likes != null ? task.publication.latestMetrics.likes : '—'}}</text>
+            <text>点赞</text>
+          </view>
+          <view>
+            <text class="metric-value">{{task.publication.latestMetrics && task.publication.latestMetrics.favorites != null ? task.publication.latestMetrics.favorites : '—'}}</text>
+            <text>收藏</text>
+          </view>
+          <view>
+            <text class="metric-value">{{task.publication.latestMetrics && task.publication.latestMetrics.comments != null ? task.publication.latestMetrics.comments : '—'}}</text>
+            <text>评论</text>
+          </view>
+        </view>
+        <view wx:if="{{!task.publication.latestMetrics}}" class="metric-pending">公开指标将在外部采集回填后显示；员工只能看到本人数据。</view>
+      </view>
+    </block>
+
+    <view wx:if="{{error}}" class="message error">{{error}}</view>
+    <view wx:if="{{notice}}" class="message success">{{notice}}</view>
+  </block>
+
+  <view wx:elif="{{error}}" class="message error">{{error}}</view>
+</view>

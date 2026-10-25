@@ -1,0 +1,15 @@
+{
+  "name": "@xhs-agentic/content-safety",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@xhs-agentic/network-security": "workspace:*"
+  },
+  "license": "Apache-2.0"
+}
